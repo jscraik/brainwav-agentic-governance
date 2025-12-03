@@ -1,0 +1,137 @@
+metadata:
+  schemaVersion: https://cortex-os.brainwav.dev/schemas/agentic.core.schema.json
+  packVersion: 0.1.0
+  generatedAt: ${generatedAt}
+  sourceShas: {}
+workflow:
+  phases:
+    - id: R
+      name: Ready
+      description: Plan and preflight
+    - id: G
+      name: Green
+      description: Implement under guardrails
+    - id: F
+      name: Finish
+      description: Stabilise and verify
+    - id: REVIEW
+      name: Review
+      description: Human review and signoff
+  gates:
+    - id: G0
+      name: Initialize
+      summary: Classify task, create folder, capture metadata + tier.
+      phase: R
+    - id: G1
+      name: Discover / Research
+      summary: Understand existing behaviour, dependencies, academic context.
+      phase: R
+    - id: G2
+      name: Plan / Design
+      summary: Produce PLAN.md, risk register, and aegis-validated approach.
+      phase: R
+    - id: G3
+      name: Scaffold
+      summary: Establish failing tests, feature flags, contracts, and wiring.
+      phase: G
+    - id: G4
+      name: Implement
+      summary: Execute plan (≤7 steps per arc) with TDD micro-loops.
+      phase: G
+    - id: G5
+      name: Verify
+      summary: Run tests, security/a11y/perf checks, gather Evidence Triplet.
+      phase: F
+    - id: G6
+      name: Review
+      summary: AI reviewer + human reviewer dispositions, waiver handling.
+      phase: F
+    - id: G7
+      name: Document
+      summary: Update docs, changelog, runbooks, arc manifests.
+      phase: F
+    - id: G8
+      name: Ship
+      summary: Deploy & flag management with rollback paths.
+      phase: REVIEW
+    - id: G9
+      name: Monitor
+      summary: Observe telemetry, model health, error budgets.
+      phase: REVIEW
+    - id: G10
+      name: Archive
+      summary: Preserve artefacts, update memory, close task.
+      phase: REVIEW
+  flows:
+    - id: feature
+      summary: Requires North-Star test + Aegis at G2 and G5.
+      phases: [R, G, F]
+      gates: [G0, G1, G2, G3, G4, G5, G6, G7]
+      gatesOptional: [G8, G9, G10]
+    - id: research
+      summary: Produces decision memo; code optional; Aegis validates sources/time freshness.
+      phases: [R, G]
+      gates: [G0, G1, G2, G3]
+      gatesOptional: [G10]
+    - id: fix
+      summary: Needs reproducer, failing test, and postmortem if SEV ≥ 2.
+      phases: [R, G, F]
+      gates: [G0, G1, G2, G3, G4, G5, G6, G7]
+      gatesOptional: [G8, G9, G10]
+    - id: refactor
+      summary: Behaviour-preserving; emphasise invariants + perf baselines.
+      phases: [R, G, F]
+      gates: [G0, G1, G2, G3, G4, G5, G6, G7]
+      gatesOptional: [G10]
+    - id: review
+      summary: No authoring; consumes Evidence Triplet + manifests.
+      phases: [F, REVIEW]
+      gates: [G5, G6, G7, G10]
+      gatesOptional: []
+  transitions:
+    - from: R
+      to: G
+      requirements:
+        - New acceptance/unit tests **fail first**, then **pass** on the next commit
+        - "`TIME_FRESHNESS:OK tz=<IANA> today=<YYYY-MM-DD>` token present"
+        - Oversight log present at ${vibeCheckLogPath}
+    - from: G
+      to: F
+      requirements:
+        - "`${pkgManager} test` **passes**"
+        - Coverage ≥ **${coverageGlobal}%** global & **${coverageChanged}%** changed lines
+        - Mutation ≥ **${mutationGlobal}%** (where enabled)
+        - Latest model-health log recorded at ${modelsHealthLogPath}
+    - from: F
+      to: REVIEW
+      requirements:
+        - A11y reports attached
+        - Security scanners clean (${securityScanners})
+        - Structure validation passes
+        - Models health & smoke evidence attached (live only)
+        - Local memory parity entry appended
+limits:
+  stepBudget: ${stepBudget}
+  askFirst: ${askFirst}
+evidence:
+  tripletRequired: ${tripletRequired}
+  runManifestRequired: ${runManifestRequired}
+  requiredTokens: ${evidenceTokens}
+qualityGates:
+  coverage:
+    global: ${coverageGlobal}
+    changedLines: ${coverageChanged}
+  mutation:
+    global: ${mutationGlobal}
+  a11y:
+    standard: ${a11yStandard}
+  securityScanners: ${securityScanners}
+  supplyChain:
+    sbom: ${sbomSpec}
+    slsa: ${slsaLevel}
+    signing: ${signingSpec}
+governance:
+  precedence: ${precedenceDocs}
+  hashIndexPath: ${hashIndexPath}
+  requireHashVerification: ${requireHashVerification}
+profiles: {}

@@ -1,0 +1,71 @@
+variables:
+  pkgManager: ${pkgManager}
+  lintCmd: ${lintCmd}
+  typecheckCmd: ${typecheckCmd}
+  buildCmd: ${buildCmd}
+  runManifestPath: ${runManifestPath}
+  a11yCmd: ${a11yCmd}
+  securityCmd: ${securityCmd}
+
+checklists:
+  items:
+    - id: lint-passes
+      description: "Lint passes: `${lintCmd}`."
+      severity: MAJOR
+      appliesTo:
+        phases: [PLAN]
+    - id: typecheck-passes
+      description: "Typecheck passes: `${typecheckCmd}`."
+      severity: MAJOR
+      appliesTo:
+        phases: [PLAN]
+    - id: tests-and-coverage
+      description: "Tests run and coverage thresholds met (global ${coverageGlobal} / changed ${coverageChanged})."
+      severity: MAJOR
+      appliesTo:
+        phases: [VERIFY]
+        gates: [G5]
+    - id: plan-within-7-steps
+      description: "Plan documented in PLAN.md with ≤7 steps."
+      severity: MAJOR
+      appliesTo:
+        phases: [PLAN]
+        gates: [G2]
+    - id: evidence-triplet-complete
+      description: "Evidence Triplet captured (failing→passing test, contract snapshot, reviewer pointer)."
+      severity: MAJOR
+      appliesTo:
+        phases: [VERIFY, REVIEW]
+    - id: run-manifest-present
+      description: "Run manifest present and updated at `${runManifestPath}`."
+      severity: MAJOR
+      appliesTo:
+        phases: [PLAN, VERIFY, REVIEW]
+    - id: a11y-check
+      description: "A11y check executed: `${a11yCmd}`; WCAG standard ${a11yStandard}."
+      severity: MAJOR
+      appliesTo:
+        phases: [VERIFY]
+        gates: [G5]
+    - id: security-scan
+      description: "Security scan executed: `${securityCmd}`."
+      severity: MAJOR
+      appliesTo:
+        phases: [VERIFY]
+        gates: [G5]
+  byPhase:
+    PLAN:
+      - lint-passes
+      - typecheck-passes
+      - plan-within-7-steps
+      - run-manifest-present
+    IMPLEMENT: []
+    VERIFY:
+      - tests-and-coverage
+      - a11y-check
+      - security-scan
+      - evidence-triplet-complete
+      - run-manifest-present
+    REVIEW:
+      - evidence-triplet-complete
+      - run-manifest-present

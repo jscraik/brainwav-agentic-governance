@@ -1,0 +1,33 @@
+{
+  "repo_root": "/Users/jamiecraik/Cortex-OS",
+  "agents_md_path": "/Users/jamiecraik/Cortex-OS/AGENTS.md",
+  "AGENTS_MD_SHA": "0b01eb761bc1bf873a02943163f998a797a1ba7c26d62be7c03b06e7b2a77179",
+  "governance_index_path": "/Users/jamiecraik/Cortex-OS/.cortex/rules/governance-index.json",
+  "workflows": {
+    "feature": {
+      "label": "Feature implementation workflow",
+      "doc": ".cortex/rules/AGENTIC_WORKFLOWS.cortex-os.md",
+      "section_hint": "See §8.1 Feature implementation (task_type = \"feature\")."
+    },
+    "fix": {
+      "label": "Fix implementation workflow",
+      "doc": ".cortex/rules/AGENTIC_WORKFLOWS.cortex-os.md",
+      "section_hint": "See §8.2 Fix implementation (task_type = \"fix\")."
+    },
+    "refactor": {
+      "label": "Refactor workflow",
+      "doc": ".cortex/rules/AGENTIC_WORKFLOWS.cortex-os.md",
+      "section_hint": "See §8.3 Refactor (task_type = \"refactor\")."
+    },
+    "research": {
+      "label": "Research / design workflow",
+      "doc": ".cortex/rules/AGENTIC_WORKFLOWS.cortex-os.md",
+      "section_hint": "See §8.4 Research / design (task_type = \"research\")."
+    },
+    "code_review": {
+      "label": "Code review workflow",
+      "doc": ".cortex/rules/AGENTIC_WORKFLOWS.cortex-os.md",
+      "section_hint": "See §8.5 Code review (task_type = \"code_review\")."
+    }
+  }
+}

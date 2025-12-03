@@ -1,0 +1,22 @@
+{
+  "mcpServers": {
+    "gitmcp": {
+      "type": "sse",
+      "url": "https://gitmcp.io/idosal/git-mcp"
+    },
+    "Ref": {
+      "type": "http",
+      "url": "https://api.ref.tools/mcp",
+      "headers": {
+        "Authorization": "Bearer ${REF_MCP_TOKEN}"
+      }
+    },
+    "GitKraken": {
+      "type": "stdio",
+      "command": "gk",
+      "args": [
+        "mcp"
+      ]
+    }
+  }
+}

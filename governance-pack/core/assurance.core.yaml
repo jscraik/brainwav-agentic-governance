@@ -1,0 +1,10 @@
+assurance:
+  aegis:
+    enabled: true
+    requiredGates: ${aegisRequiredGates}
+    endpointEnv: ${aegisEndpointEnv}
+    verdicts: ${aegisVerdicts}
+  timeFreshness:
+    required: true
+    anchorRules: "See ${timeFreshnessDoc} for freshness anchors; convert relative language to ISO-8601; distinguish past/future explicitly."
+    allowedDrift: "See ${timeFreshnessDoc}"

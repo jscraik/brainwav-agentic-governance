@@ -1,0 +1,5 @@
+structure:
+  importBoundaries: {}
+  snapshotValidation:
+    enabled: true
+    snapshotFile: export-freeze.snapshot.json
