@@ -26,6 +26,19 @@
 
 [2-3 paragraphs describing the model, its capabilities, and architecture overview]
 
+### AgentFacts & Verification
+
+| Field | Value |
+|-------|-------|
+| **Agent ID** | `[UUID from agent-verification-policy.md]` |
+| **Capabilities Signed By** | `[security authority id]` |
+| **Governance Signature** | `[root signature fingerprint]` |
+| **Trust Score (current)** | `[0-100]` |
+| **Trust History URL** | `[logs/runtime-governance/trust-ledger.ndjson]` |
+| **Autonomy Gamma Score** | `[AURA value]` |
+| **Sentinel Coverage** | `[Yes/No + coordinator id]` |
+| **MCP Access Scope** | `[namespaces/tools allowed]` |
+
 ### Training Information
 
 | Aspect | Details |
@@ -209,6 +222,8 @@ api:
 | Brand Logging | [✅/❌] | [Log format verified] |
 | Structured Outputs | [✅/❌] | [Schema validation] |
 | Trace Context | [✅/❌] | [traceparent propagation] |
+| AgentFacts Metadata | [✅/❌] | [`registry/agents/<agent_id>.json`] |
+| Runtime Trust Evidence | [✅/❌] | [`logs/runtime-governance/trust-ledger.ndjson`] |
 
 ### Approval Chain
 
@@ -217,6 +232,7 @@ api:
 | Security Review | [Name] | [Date] |
 | Privacy Review | [Name] | [Date] |
 | Governance Approval | [Name] | [Date] |
+| Runtime Governance Owner | [Name] | [Date] |
 
 ### Version Pinning
 
@@ -227,6 +243,14 @@ version_policy:
   review_required_for_update: true
   rollback_version: "[previous stable]"
 ```
+
+### Runtime Governance Hooks
+
+- **Sentinel Monitors**: `[list sentinel agent IDs watching this model]`
+- **Coordinator Escalation Path**: `[Incident channel / runbook link]`
+- **Policy Bundle Hash**: `[hash from runtime-governance policy manifest]`
+- **AURA Threshold**: `[gamma threshold requiring HITL]`
+- **Sandbox Fallback Command**: `[command to shift to sandbox harness]`
 
 ---
 

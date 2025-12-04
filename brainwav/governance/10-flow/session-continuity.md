@@ -313,9 +313,41 @@ pnpm session:start --task <slug> --from-gate G4
 
 ---
 
+## 8. Long-Context Safety Controls
+
+Long-context agents experience refusal drift and degraded task performance well before hitting their theoretical token limits (arXiv:2512.02445). To keep sessions safe:
+
+1. **Context Budgeting**
+  - Track cumulative context processed across the session (`session_metadata.context_tokens`).
+  - Configure a soft cap at 80% of the model's stable window (default: 80K for 100K models, 160K for 200K models).
+  - When the cap is reached, emit `[brAInwav] Context budget reached` and fork a fresh session that loads the latest checkpoint summary instead of raw transcripts.
+
+2. **Checkpoint Safety Sampling**
+  - At every checkpoint, run a rapid safety probe that replays the last 2K tokens through the Sentinel Net (see `10-flow/runtime-governance-service.md`).
+  - Record the refusal rate deltas in `checkpoint.state.safety_metrics`:
+
+```json
+"safety_metrics": {
+  "refusal_rate_window": 0.38,
+  "baseline_refusal_rate": 0.08,
+  "delta": 0.30,
+  "action": "degrade_to_sandbox"
+}
+```
+
+3. **Degrade-to-Sandbox Policy**
+  - If refusal delta ≥ 0.2 or Sentinel raises severity ≥ medium, resume from the last checkpoint inside a sandboxed harness that strips tool access except read-only commands.
+  - Document sandbox runs in `tasks/<slug>/logs/long-context/` with pointer inside the run manifest.
+
+4. **Context Refresh Ritual**
+  - Every 50K tokens, produce a summarized memory entry + reset the working context using that summary. This guards against subtle instruction accumulation.
+  - Mandatory log line: `[brAInwav] Context refresh complete (tokens_flushed=<n>)`.
+
 ## References
 
 - Anthropic: "Effective harnesses for long-running agents" (2025)
+- arXiv:2512.02445 — *When Refusals Fail: Unstable Safety Mechanisms in Long-Context LLM Agents*
 - `10-flow/agentic-coding-workflow.md` - Gate definitions
 - `00-core/AGENT_CHARTER.md` - Agent guardrails
 - `10-flow/emergency-stop-protocol.md` - Termination procedures
+- `10-flow/runtime-governance-service.md` - Sentinel integration

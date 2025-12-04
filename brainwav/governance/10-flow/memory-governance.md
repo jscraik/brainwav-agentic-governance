@@ -371,10 +371,36 @@ pnpm memory:health
 
 ---
 
+## 10. MCP Security & AgentFacts Provenance
+
+Research on MCP threats (arXiv:2511.20920) and AgentFacts (arXiv:2506.13794) requires additional controls:
+
+1. **Scoped Authentication**
+  - Every memory operation carries a scoped token referencing `agentfacts.capabilities[*].scope`.
+  - Tokens expire in ≤15 minutes and are bound to `agent_id`, `session_id`, and namespace.
+
+2. **Signed Provenance Tuples**
+  - Extend the schema with `"provenance": {"agentfacts_signature": "...", "content_hash": "sha256:..."}`.
+  - Reject writes lacking a valid signature issued by the AgentFacts registry.
+
+3. **Gateway Policy Checks**
+  - All MCP routes pass through the runtime governance service which enforces DLP, anomaly detection, and ESRH hooks before touching storage.
+  - Blocklist compromised servers using a signed registry refreshed hourly.
+
+4. **Audit Expansion**
+  - Log `supply_chain_source` and `tool_server_id` for every operation to trace supply-chain attacks.
+  - Attach sentinel alert IDs when memory writes are part of coordinated incidents.
+
+5. **Model Card Linkage**
+  - Model cards must state whether memory access is enabled and cite the MCP controls in effect.
+
 ## References
 
 - OpenMemory MCP Architecture (2025)
+- arXiv:2511.20920 — *Securing the Model Context Protocol (MCP): Risks, Controls, and Governance*
+- arXiv:2506.13794 — *AgentFacts: Universal KYA Standard for Verified AI Agent Metadata & Deployment*
 - GDPR Articles 13-22 (Data Subject Rights)
 - `00-core/constitution.md` - §II.3 Memory Core
+- `00-core/agent-verification-policy.md` - AgentFacts adoption
 - `commands/memorize.md` - Memory command reference
 - `commands/recall.md` - Recall command reference

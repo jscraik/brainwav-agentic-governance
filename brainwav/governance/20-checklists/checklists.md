@@ -107,6 +107,13 @@
 - [ ] `ops/rollout-plan.md` + `ops/rollback-plan.md` committed when rollout/flags apply.
 - [ ] Changelog entry created (`pnpm changelog:new --slug <slug> --tier <type>` or successor tooling) and referenced in PR.
 
+### 3.5 Agent Metadata & Runtime Governance
+
+- [ ] AgentFacts record exists for every deployed agent touching this PR (`registry/agents/<agent_id>.json` plus signature evidence).
+- [ ] Model cards updated with AgentFacts, trust score, and runtime hooks when models/agents change.
+- [ ] Runtime governance artefacts attached when relevant: Trust Factor delta, sentinel alerts, ESRH metrics, and sandbox drill logs.
+- [ ] New runtime policies include bundle hash + AURA gamma impact noted in `run-manifest.json`.
+
 ---
 
 ## 4. Code Review Checklist (Human + AI)
@@ -148,6 +155,8 @@
 - [ ] Live model usage only; `logs/models/*` show health/smoke runs with IDs + latency.
 - [ ] Prompt/schema changes versioned + tested; MCP connectors documented + healthy.
 - [ ] Reviewer notes include disposition for each AI finding (Accept/Reject/Follow-up) in `evidence/review-notes.md`.
+- [ ] AgentFacts metadata + trust evidence verified (signature valid, trust score ≥ thresholds, runtime governance logs referenced).
+- [ ] Sentinel/coordinator alerts reviewed; ESRH ≥0.4 escalations acknowledged.
 
 ---
 

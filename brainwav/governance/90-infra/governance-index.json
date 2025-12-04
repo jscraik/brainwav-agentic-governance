@@ -5,14 +5,17 @@
     "precedence": [
         "00-core/constitution.md",
         "00-core/AGENT_CHARTER.md",
+        "00-core/agent-verification-policy.md",
         "10-flow/governance-quickstart.md",
         "10-flow/agentic-coding-workflow.md",
         "10-flow/assurance-system.md",
         "10-flow/emergency-stop-protocol.md",
         "10-flow/session-continuity.md",
         "10-flow/memory-governance.md",
+        "10-flow/runtime-governance-service.md",
         "20-checklists/checklists.md",
         "30-compliance/eu-ai-act.md",
+        "docs/research/arxiv-agentic-governance-summary.md",
         "00-core/CHARTER_FRAGMENT.md",
         "00-core/vision.md",
         "00-core/llm-threat-controls.md",
@@ -33,6 +36,11 @@
             "path": "00-core/AGENT_CHARTER.md",
             "sha256": "PENDING_RECALC",
             "required_tokens": ["[brAInwav]", "MODELS:LIVE:OK", "NORTH_STAR:RED_FIRST"]
+        },
+        "agent-verification-policy.md": {
+            "path": "00-core/agent-verification-policy.md",
+            "sha256": "PENDING_RECALC",
+            "required_tokens": ["AgentFacts", "trust score", "KYA"]
         },
         "CHARTER_FRAGMENT.md": {
             "path": "00-core/CHARTER_FRAGMENT.md",
@@ -129,6 +137,11 @@
             "sha256": "PENDING_RECALC",
             "required_tokens": ["memory", "retention", "access control"]
         },
+        "runtime-governance-service.md": {
+            "path": "10-flow/runtime-governance-service.md",
+            "sha256": "PENDING_RECALC",
+            "required_tokens": ["sentinel", "trust factor", "policy gate"]
+        },
         "eu-ai-act.md": {
             "path": "30-compliance/eu-ai-act.md",
             "sha256": "PENDING_RECALC",
@@ -138,6 +151,11 @@
             "path": "90-infra/egress-governance.md",
             "sha256": "PENDING_RECALC",
             "required_tokens": ["egress", "allowlist", "rate limit"]
+        },
+        "arxiv-agentic-governance-summary.md": {
+            "path": "docs/research/arxiv-agentic-governance-summary.md",
+            "sha256": "PENDING_RECALC",
+            "required_tokens": ["arXiv", "mapping", "research summary"]
         }
     }
 }

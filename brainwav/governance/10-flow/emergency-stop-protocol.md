@@ -208,9 +208,38 @@ Test results stored in `audit/drills/emergency-stop-<date>.md`.
 
 ---
 
+## 8. Sentinel & Coordinator Integration
+
+Sentinel agents (arXiv:2509.14956) continuously monitor inter-agent traffic, tool calls, and memory writes. Their alerts feed into the coordinator agent, which has authority to initiate emergency stops.
+
+| Component | Responsibility | Escalation Path |
+| --- | --- | --- |
+| Sentinel | Detect prompt injection, hallucination cascades, data exfiltration | Raise `sentinel.alert` with severity + evidence |
+| Coordinator | Correlate alerts, run ESRH scoring (see §9), decide kill/quarantine | Trigger `pnpm agent:kill`, isolate namespace, notify incident channel |
+| Runtime Governance Service | Enforce containment actions across the mesh | Logs action into `logs/runtime-governance/sentinel-alerts.ndjson` |
+
+Implementation requirements:
+- Every sentinel alert ≥ severity *medium* MUST either produce a graceful shutdown signal or an explicit ACK from the coordinator within 30 seconds.
+- Emergency checkpoints now include `"sentinel_alert_id"` when triggered.
+- Coordinators run inside the governance namespace with access to the Trust Factor ledger to prioritize high-risk agents.
+
+## 9. Emergent Systemic Risk Horizon (ESRH)
+
+Multi-agent chains can accumulate risk even when each agent is locally aligned (arXiv:2512.02682). Incorporate ESRH analysis before and after each emergency stop event:
+
+1. **Detection**: When >3 agents in a chain trigger medium alerts within 5 minutes, compute ESRH score.
+2. **Thresholds**:
+  - ESRH ≥ 0.6 → Immediate kill of the entire chain + tooling quarantine.
+  - ESRH 0.4–0.59 → Trigger degrade-to-sandbox; require human approval to resume.
+3. **Reporting**: Append ESRH metrics to incident report and store in `audit/incidents/<date>-esrh.json`.
+4. **Feedback Loop**: Runtime governance service ingests ESRH outcome to adjust Trust Factor deltas.
+
 ## References
 
 - NIST AI RMF - Govern function (risk management)
 - EU AI Act Article 14 - Human oversight requirements
+- arXiv:2509.14956 — *Sentinel Agents for Secure and Trustworthy Agentic AI in Multi-Agent Systems*
+- arXiv:2512.02682 — *Beyond Single-Agent Safety: A Taxonomy of Risks in LLM-to-LLM Interactions*
 - `00-core/AGENT_CHARTER.md` - Guardrails
 - `10-flow/agentic-coding-workflow.md` - Gate definitions
+- `10-flow/runtime-governance-service.md` - Coordinator expectations
