@@ -83,7 +83,7 @@ All reasoning anchored to harness "today"; convert relative dates to **ISO-8601*
 
 ### 8. Hybrid Model Solution — **Live Only**
 
-Embeddings, rerankers, generations must use **live** engines (MLX, Ollama, or approved Frontier). **No stubs, recorded outputs, or "dry_run" modes.** Pre-merge evidence requires `pnpm models:health && pnpm models:smoke` logs (engine, model IDs, vector dims/norms, latency).
+Embeddings, rerankers, generations must use **live** engines (Ollama or approved Frontier). **No stubs, recorded outputs, or "dry_run" modes.** Pre-merge evidence requires `pnpm models:health && pnpm models:smoke` logs (engine, model IDs, vector dims/norms, latency).
 
 ### 9. Governance Hooks (AGENTS.md + Vibe-Check)
 

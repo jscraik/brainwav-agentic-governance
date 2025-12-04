@@ -31,7 +31,7 @@ Version: 2025-08-29
 
 - Optional/Extended (scored as headroom)
 
-  - MLX Ops via DI: `ai/embeddings`, `ai/rerank`, `ai/chat`
+  - Local AI Ops via DI: `ai/embeddings`, `ai/rerank`, `ai/chat`
 
 - Error Mapping
   - Parse error → -32700
@@ -85,7 +85,7 @@ Version: 2025-08-29
 - Extended Features (20)
   - Push Notification Config set/get/delete/list (5)
   - Extended Agent Card (authenticated) (5)
-  - MLX DI RPCs (embeddings/rerank/chat) (10)
+  - Local AI DI RPCs (embeddings/rerank/chat) (10)
 - Production Readiness (15)
   - File-backed store toggle + durability tests (5)
   - Client auth hooks & retry (5)
@@ -110,7 +110,7 @@ Version: 2025-08-29
 
   - Push Notification Config: Implemented (5/5)
   - Extended Agent Card (auth): Implemented (5/5)
-  - MLX DI (`ai/embeddings|rerank|chat`): Implemented (10/10)
+  - Local AI DI (`ai/embeddings|rerank|chat`): Implemented (10/10)
 
 - Production Readiness (10/15)
   - File-backed store + tests: Implemented (5/5)
@@ -123,9 +123,9 @@ Notes: Remaining 0–5 pts margin reserved for broader negative-path matrices, r
 
 ## 9) Gaps & Recommendations
 
-- Expand negative-path coverage (timeouts, model-not-found) across server MLX RPCs
-- Add OTEL exporter & dashboards for MLX latency p50/p95/p99 and SSE stream durations
-- Offer a default “file” storage preset in production mode (currently via env or option)
+- Expand negative-path coverage (timeouts, model-not-found) across server local AI RPCs
+- Add OTEL exporter & dashboards for local inference latency p50/p95/p99 and SSE stream durations
+- Offer a default "file" storage preset in production mode (currently via env or option)
 
 ## 10) File Pointers (Implementation)
 
@@ -134,7 +134,7 @@ Notes: Remaining 0–5 pts margin reserved for broader negative-path matrices, r
 - File Store: `packages/a2a/a2a-protocol/src/http/file-store.ts`
 - Resubscribe mapping: `packages/a2a/a2a-protocol/src/http/resubscribe.ts`
 - State machine: `packages/a2a/a2a-protocol/src/http/state.ts`
-- MLX provider (HTTP to model-gateway): `packages/a2a/a2a-protocol/src/providers/mlx-gateway.ts`
+- Local AI provider (HTTP to model-gateway): `packages/a2a/a2a-protocol/src/providers/local-gateway.ts`
 - OTEL adapter: `packages/a2a/a2a-protocol/src/telemetry/otel-adapter.ts`
 - Readiness report: `packages/a2a/docs/report/a2a-readiness-report.md`
-- Bench script: `scripts/a2a-mlx-bench.mjs`
+- Bench script: `scripts/a2a-local-bench.mjs`

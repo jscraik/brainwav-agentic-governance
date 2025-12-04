@@ -35,7 +35,7 @@
 **Allowed**
 
 - Code to satisfy tests; refactor strictly to green
-- Live model probes: `pnpm models:health && pnpm models:smoke` (Frontier/MLX/Ollama)
+- Live model probes: `pnpm models:health && pnpm models:smoke` (Frontier/Ollama)
 - Security scanners (Semgrep, OSV) and secret scans (gitleaks)
 - **Structured outputs required** for any machine-consumed LLM result (JSON-Schema or tool/function calling)
 
@@ -100,7 +100,7 @@
 4. **Observability.** All charter-governed logs carry `[brAInwav]`, `brand:"brAInwav"`, ISO-8601 timestamp, `trace_id` (32 lower-hex), and **HTTP `traceparent`** for correlation. Missing fields fail gates.
 5. **Supply-chain.** Generate **CycloneDX 1.7** SBOM; produce **SLSA v1.1** provenance; sign/verify with **Cosign v3 bundle**.
 6. **Identity & secrets.** CI authenticates to cloud via **OIDC/WIF** only. Secrets are fetched at runtime using the **1Password CLI** (`op`); never persisted.
-7. **Hybrid models — live only.** No stubs/recordings/dry-runs for embeddings/rerankers/generation. Frontier/MLX/Ollama health logs required.
+7. **Hybrid models — live only.** No stubs/recordings/dry-runs for embeddings/rerankers/generation. Frontier/Ollama health logs required.
 8. **A11y baseline.** WCAG 2.2 AA (ISO/IEC 40500:2025).
 
 ---
@@ -111,7 +111,7 @@
 - `PHASE_TRANSITION:<from>-><to>`  
 - `brAInwav-vibe-check`  
 - `TIME_FRESHNESS:OK tz=<tz> today=<yyyy-mm-dd>`  
-- `MODELS:LIVE:OK engine=<mlx|ollama|frontier> model=<id> dims=<n> norm≈<v> latency_ms=<n>`  
+- `MODELS:LIVE:OK engine=<ollama|frontier> model=<id> dims=<n> norm≈<v> latency_ms=<n>`  
 - `A11Y_REPORT:OK`  
 - `STRUCTURE_GUARD:OK`  
 - `COVERAGE:OK CHANGED_LINES:OK MUTATION:OK`  

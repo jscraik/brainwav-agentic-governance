@@ -562,10 +562,10 @@ Run manifest MUST track tier, arcs (≤7 steps), session resets, and evidence po
 
 ---
 
-## 25) Hybrid Model Solution — **Live Only** (MLX / Ollama / Frontier) 〔AGENTS‑HMS‑003〕
+## 25) Hybrid Model Solution — **Live Only** (Ollama / Frontier) 〔AGENTS‑HMS‑003〕
 
-**Rules:** No stubs/fakes/recordings/“dry_run” for embeddings/rerankers/generation.
-Real engines only; fallback chain MLX → Ollama → Frontier (all live). If
+**Rules:** No stubs/fakes/recordings/"dry_run" for embeddings/rerankers/generation.
+Real engines only; fallback chain Ollama → Frontier (all live). If
 unavailable, mark **blocked**; seek waiver.
 
 **Evidence:**

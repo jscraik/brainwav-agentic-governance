@@ -180,7 +180,6 @@ Never claim "production-ready/complete/operational" if any prod path contains:
 
 **Hard rule**: Embeddings, rerankers, generations must use **live** engines:
 
-- **MLX** (local on-device)
 - **Ollama** (local server)  
 - **Frontier APIs** (OpenAI/Anthropic/Google/etc.)
 
@@ -188,7 +187,7 @@ Never claim "production-ready/complete/operational" if any prod path contains:
 
 **Evidence before merge**: `pnpm models:health && pnpm models:smoke`; attach logs (engine, model IDs, vector norms/shape, latency).
 
-**Fallback chain**: MLX → Ollama → Frontier (if live). If unavailable, mark task **blocked**; escalate per Constitution.
+**Fallback chain**: Ollama → Frontier (if live). If unavailable, mark task **blocked**; escalate per Constitution.
 
 ### Performance Standards (Constitutional)
 
@@ -302,7 +301,7 @@ Detection relies on CI Conftest failures, observability counters tracking `NORTH
   1. **Cortex Vibe (Oversight)** – `pnpm oversight:vibe-check` or JSON-RPC to `${CORTEX_VIBE_HTTP_URL:-http://127.0.0.1:2001}`
      - Required headers: `Accept: application/json, text/event-stream`
      - Log saved to `logs/vibe-check/<task>.json`
-  2. **Hybrid Model Health** – `pnpm models:health && pnpm models:smoke` with live MLX/Ollama/Frontier engines (no stubs)
+  2. **Hybrid Model Health** – `pnpm models:health && pnpm models:smoke` with live Ollama/Frontier engines (no stubs)
   3. **Knowledge Connector Health** – Verify `${WIKIDATA_MCP_URL}/healthz` and `${ARXIV_MCP_URL}/healthz`; log to `research/connectors-health.log`
   4. **Trace Context Verification** – `pnpm tsx scripts/ci/verify-trace-context.ts <logfile>` ensures W3C `trace_id` in all logs
   5. **Supply-Chain Evidence** – `pnpm sbom:generate && pnpm attest:sign && pnpm verify:attest && pnpm sbom:scan`; store in `sbom/`

@@ -266,7 +266,7 @@ Result: Agents interact with GitHub via MCP, not other packages.
 
 ## Config examples (reference paths)
 
-- Model Gateway models config: `config/mlx-models.json`
+- Model Gateway models config: `config/models.json`
 - Model Gateway server: `packages/model-gateway/src/server.ts` (HTTP on 127.0.0.1:8081)
 - MCP registry/config: `packages/mcp/` (see README and configs)
 - A2A services (rate limiting, schema registry): `packages/a2a-services/*`

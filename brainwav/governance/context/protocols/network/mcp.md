@@ -236,7 +236,7 @@
 
 │ │ ✅ <200ms API response time │ │
 
-│ │ ✅ 5x MLX performance vs PyTorch │ │
+│ │ ✅ Optimized local inference performance │ │
 
 │ │ ✅ Full documentation and traceability │ │
 

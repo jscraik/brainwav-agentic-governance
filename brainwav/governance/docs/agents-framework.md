@@ -1,6 +1,6 @@
 # Cortex‑OS Agents Framework
 
-This document describes the architecture, runtime workflow, providers, and eventing model of the `@cortex-os/agents` package, including Security Guard integration, Model Gateway interactions (MLX → Ollama → MCP), and two‑stage retrieval for memories.
+This document describes the architecture, runtime workflow, providers, and eventing model of the `@cortex-os/agents` package, including Security Guard integration, Model Gateway interactions (Ollama → Frontier → MCP), and two‑stage retrieval for memories.
 
 ## High‑Level Architecture
 
@@ -23,14 +23,14 @@ graph TD
   end
 
   subgraph Providers["Providers (Local-first)"]
-    MLX["MLX Provider<br/>(chat/text-gen)"]
+    OLL["Ollama Provider<br/>(chat/text-gen)"]
     FBC["Fallback Chain<br/>(circuit breaker + retries)"]
     MCP["MCP Provider<br/>(text-generation, tools)"]
   end
 
   subgraph ModelGateway["Model Gateway"]
-    EMB["/embeddings<br/>MLX → Ollama → MCP"]
-    RER["/rerank<br/>Qwen3-MLX → Ollama → MCP"]
+    EMB["/embeddings<br/>Ollama → Frontier → MCP"]
+    RER["/rerank<br/>Qwen3 Ollama → Frontier → MCP"]
   end
 
   subgraph Events["A2A / Outbox"]
@@ -45,12 +45,12 @@ graph TD
   OA --> DOC
   OA --> SEC
 
-  CA --> MLX
-  TG --> MLX
-  DOC --> MLX
-  SEC --> MLX
+  CA --> OLL
+  TG --> OLL
+  DOC --> OLL
+  SEC --> OLL
 
-  MLX --> FBC
+  OLL --> FBC
   FBC --> MCP
 
   CA -.optional RAG.-> EMB
@@ -79,11 +79,11 @@ sequenceDiagram
   ORCH->>BUS: workflow.started
   ORCH->>AG1: execute(input, timeout)
   AG1-->>BUS: agent.started
-  AG1->>AG1: call provider (MLX → Fallback)
+  AG1->>AG1: call provider (Ollama → Fallback)
   AG1-->>BUS: agent.completed
   ORCH->>AG2: execute(dependsOn: AG1)
   AG2-->>BUS: agent.started
-  AG2->>AG2: call provider (MLX → Fallback)
+  AG2->>AG2: call provider (Ollama → Fallback)
   AG2-->>BUS: agent.completed
   par optional
     ORCH->>AG3: execute(parallel)
@@ -100,7 +100,7 @@ sequenceDiagram
 sequenceDiagram
   participant ORCH as Orchestrator
   participant SEC as Security Agent
-  participant LG as MLX LlamaGuard
+  participant LG as LlamaGuard (Ollama)
   participant DEP as Dependabot Loader
   participant BUS as A2A Bus
 
@@ -128,7 +128,7 @@ flowchart TD
   EMB --> ANN
   Q --> ANN
   ANN --> R1
-  R1 -->|/rerank (Qwen3 MLX primary)| RER[/Model Gateway /rerank/]
+  R1 -->|/rerank (Qwen3 Ollama primary)| RER[/Model Gateway /rerank/]
   RER --> TOPK["TopK reranked"]
   TOPK --> OUT["Emit rerank.completed (JSONL Outbox / A2A)"]
 ```
@@ -138,22 +138,22 @@ flowchart TD
 ```mermaid
 flowchart LR
   subgraph TextGen["Text Generation (Agents)"]
-    A1["MLX (local)"]
+    A1["Ollama (local)"]
     A2["Fallback Chain"]
     A3["MCP Provider"]
   end
   A1 --> A2 --> A3
 
   subgraph Embeddings["/embeddings (Gateway)"]
-    E1["MLX primary"]
-    E2["Ollama fallback"]
+    E1["Ollama primary"]
+    E2["Frontier fallback"]
     E3["MCP fallback"]
   end
   E1 --> E2 --> E3
 
   subgraph Rerank["/rerank (Gateway)"]
-    R1["Qwen3 Reranker (MLX)"]
-    R2["Ollama fallback"]
+    R1["Qwen3 Reranker (Ollama)"]
+    R2["Frontier fallback"]
     R3["MCP fallback"]
   end
   R1 --> R2 --> R3
@@ -185,4 +185,4 @@ Events are CloudEvents 1.0 compatible and published to the A2A bus and/or JSONL 
 
 ---
 
-This architecture is local‑first (MLX), with graceful fallbacks to Ollama and MCP, and aligns with OWASP LLM‑10 and PRD governance (CloudEvents, provenance, deterministic tests).
+This architecture is local‑first (Ollama), with graceful fallbacks to Frontier and MCP, and aligns with OWASP LLM‑10 and PRD governance (CloudEvents, provenance, deterministic tests).

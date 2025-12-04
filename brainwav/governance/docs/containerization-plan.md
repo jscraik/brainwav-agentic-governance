@@ -2,8 +2,8 @@
 
 > **⚠️ HISTORICAL DOCUMENT**: This document references `apps/api` which has been removed from the codebase. Content preserved for historical reference and deployment context.
 
-**Task**: Update diagram and plan to match OrbStack + host-MLX, clarify containerization, assess VM.
-**Key constraint**: MLX on host (Metal). Vendor-neutral. MCP/A2A only.
+**Task**: Update diagram and plan to match OrbStack + host-native local models, clarify containerization, assess VM.
+**Key constraint**: Local models on host. Vendor-neutral. MCP/A2A only.
 **Deliverables**: Updated wireframe, container map, run plan, VM verdict.
 
 # Wireframe (container + host layout)
@@ -36,9 +36,9 @@ Cloudflare Workers/Queues/Tunnels (edge egress allowlist)
 └──────────────────────────────────────────────────────────────────────┘
 
 Host (macOS):
-  apps/cortex-py (MLX servers) → http://host.docker.internal:8081  [Metal]
+  Local model servers (Ollama) → http://host.docker.internal:11434
 Optional:
-  Ollama (host or container at :11434)
+  Additional inference servers (host or container)
 Frontier APIs:
   via Cloudflare edge allowlist
 ```
@@ -61,14 +61,14 @@ Frontier APIs:
 
 **Host-native (not in a container):**
 
-- `apps/cortex-py` (MLX) for Metal performance
+- Local inference servers (Ollama) for optimal GPU performance
 
 # Plan deltas
 
 1. **Compose defaults**
 
-   - Dev: `docker-compose.dev.yml` under OrbStack. Point `MODEL_GATEWAY` to `http://host.docker.internal:8081` for MLX.
-   - Prod: `docker-compose.prod.yml` or Helm on Linux. MLX remains out-of-band unless you target Linux GPU stacks.
+   - Dev: `docker-compose.dev.yml` under OrbStack. Point `MODEL_GATEWAY` to `http://host.docker.internal:11434` for local models.
+   - Prod: `docker-compose.prod.yml` or Helm on Linux. Local models via Ollama or containerized inference.
 
 2. **Service boundaries**
 
@@ -79,7 +79,7 @@ Frontier APIs:
 3. **Networking**
 
    - All containers talk A2A/HTTP inside the bridge network.
-   - MLX host reachable via `host.docker.internal`.
+   - Local inference host reachable via `host.docker.internal`.
 
 4. **Security**
 
@@ -110,20 +110,20 @@ No. Do not nest services. Each **service** gets its own image. **Packages** are 
 **Trade-offs:**
 
 - **Pros**: Kernel parity, isolation, snapshot/rollback.
-- **Cons**: More RAM/CPU overhead, more network hops, same MLX limitation on mac.
+- **Cons**: More RAM/CPU overhead, more network hops, same local-model considerations on mac.
 
 # What / Why / Where / How / Result
 
-- **What**: Service-per-container, host MLX, OrbStack dev.
+- **What**: Service-per-container, host-native local models, OrbStack dev.
 - **Why**: Best mac perf, clean boundaries, vendor-neutral routing.
 - **Where**: Compose/Helm manifests; Dockerfiles per service.
 - **How**: Images consume packages as libs; A2A/HTTP glue; Cloudflare egress.
-- **Result**: Fast dev, predictable prod, MLX-first without Docker GPU gaps.
+- **Result**: Fast dev, predictable prod, local-first without Docker GPU gaps.
 
 # Analysis Block
 
 - **Pros**: Clear isolation. Faster mac dev. Deterministic routing.
-- **Cons**: One hop to host MLX. More services to operate.
+- **Cons**: One hop to host local models. More services to operate.
 - **Improvements**: Collocate `cortex-os` and `model-gateway` to cut latency; enable sticky routing; cache embeddings.
 - **Missed**: Autoscale on p95; canary per provider.
-- **Moving forward**: Implement Compose now; add Helm; keep MLX host-native; revisit VM only for Linux-parity testing.
+- **Moving forward**: Implement Compose now; add Helm; keep local models host-native; revisit VM only for Linux-parity testing.

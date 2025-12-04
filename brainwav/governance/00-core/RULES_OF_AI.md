@@ -104,7 +104,7 @@ All agents follow the **7-phase** workflow. Full details: **`governance/10-flow/
 - `AGENTS_MD_SHA:<sha>`  
 - `PHASE_TRANSITION:<from>-><to>`  
 - `brAInwav-vibe-check`  
-- `MODELS:LIVE:OK engine=<mlx|ollama|frontier>`
+- `MODELS:LIVE:OK engine=<ollama|frontier>`
 
 **AGENTS.md acknowledgement & Vibe-check**
 
@@ -152,7 +152,6 @@ Deterministic output; attach logs as evidence.
 
 **Hard rule**: Embeddings, rerankers, generations must use **live** engines:
 
-- **MLX** (local on-device)
 - **Ollama** (local server)  
 - **Frontier APIs** (OpenAI/Anthropic/Google/etc.)
 
@@ -160,7 +159,7 @@ Deterministic output; attach logs as evidence.
 
 **Evidence before merge**: `pnpm models:health && pnpm models:smoke`; attach logs (engine, model IDs, vector norms/shape, latency).
 
-**Fallback chain**: MLX → Ollama → Frontier (if live). If unavailable, mark task **blocked**; escalate per Constitution.
+**Fallback chain**: Ollama → Frontier (if live). If unavailable, mark task **blocked**; escalate per Constitution.
 
 ---
 

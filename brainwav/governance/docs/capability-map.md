@@ -15,7 +15,7 @@ Application invariants, step context, and system gatekeeping interact inside the
 - **Vision:** One governed runtime.
 - **Mission:** Wire services, enforce contracts, route, prove.
 - **Must:** DI, contract registry, policy router, OTEL, provenance, structure-guard.
-- **Should:** Privacy pin to MLX; cost guardrails; policy hot-reload.
+- **Should:** Privacy pin to local/Ollama; cost guardrails; policy hot-reload.
 - **Nice:** Admin health/routing UI.
 - **Use cases:** start workflow; route capability; emit lifecycle events.
 
@@ -127,7 +127,7 @@ Note: Feature mounts under `apps/cortex-os/packages/` (evidence, ingest, planner
 - A2A Bus: Typed events, at-least-once, DLQ/outbox.
 - Service Interfaces: Narrow, DI-bound contracts in `mvp/contracts`.
 - MCP: External tools as capability-scoped servers/clients.
-- Model-gateway: Local MLX/Ollama behind OpenAI-style `/chat`, `/embeddings`, plus `/rerank`.
+- Model-gateway: Local Ollama behind OpenAI-style `/chat`, `/embeddings`, plus `/rerank`.
 - Memories: Encrypted stores with TTL and provenance.
 - RAG: Bundled retrieval with source citations.
 - Simlab: Scenario testing, failure injection.

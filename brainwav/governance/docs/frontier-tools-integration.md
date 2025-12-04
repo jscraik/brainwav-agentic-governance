@@ -43,7 +43,7 @@ What/Why/Where/How/Result
 
 - What: Unified orchestration of multiple tools as disciplined neurons.
 - Why: Solo dev productivity with team-grade governance and repeatability.
-- Where: Local MLX first; remote tools via MCP; storage in encrypted memory-core.
+- Where: Ollama first; remote tools via MCP; storage in encrypted memory-core.
 - How: Typed plans → deterministic steps → evidence → gated apply.
 - Result: Faster shipping, lower risk, auditable trail.
 

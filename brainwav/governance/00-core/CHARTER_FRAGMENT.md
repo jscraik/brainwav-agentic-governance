@@ -113,7 +113,7 @@ Swap to `NORTH_STAR:GREEN_AFTER` once the acceptance passes; never emit `MODELS:
 
 - Before any file writes, network calls, or long executions, agents MUST execute **preflight guards**:
   1. **Cortex Aegis Check (Oversight)** – `pnpm oversight:vibe-check` (Cortex Aegis MCP) or JSON-RPC to `${VIBE_CHECK_HTTP_URL}`; log saved to `logs/vibe-check/<task>.json`
-  2. **Hybrid Model Health** – `pnpm models:health && pnpm models:smoke` with live MLX/Ollama/Frontier engines (no stubs)
+  2. **Hybrid Model Health** – `pnpm models:health && pnpm models:smoke` with live Ollama/Frontier engines (no stubs)
   3. **Knowledge Connector Health** – Verify `${WIKIDATA_MCP_URL}/healthz` and `${ARXIV_MCP_URL}/healthz`; log to `research/connectors-health.log`
   4. **Trace Context Verification** – `pnpm tsx scripts/ci/verify-trace-context.ts <logfile>` ensures W3C `trace_id` and `traceparent` in all logs
   5. **Supply-Chain Evidence** – `pnpm sbom:generate` (CycloneDX **1.7**) → `pnpm attest:sign` (SLSA **v1.1**) → `pnpm verify:attest` (Cosign **v3 bundle**); store in `sbom/`

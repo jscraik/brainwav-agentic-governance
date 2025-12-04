@@ -109,10 +109,6 @@ All contributors and automation agents must follow these rules. CI enforces them
 
 - No `eval`/dynamic Function. No unpinned remote code. Validate/sanitize all external inputs.
 
-**MLX rule**
-
-- All MLX integrations must be real; no mocks/placeholders in production code.
-
 ---
 
 ## 3.1. TypeScript Project Configuration (brAInwav Standards)

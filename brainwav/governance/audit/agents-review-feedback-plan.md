@@ -34,7 +34,7 @@
 ## 11) Oversight Gate (formerly "Vibe Check MCP") [AGENTS-PRV-002]
 ## 12) Observability & Telemetry [AGENTS-OBS-006]
 ## 20) Anti-Patterns (will fail CI) [AGENTS-STY-007]
-## 25) Hybrid Model Solution — Live Only (MLX / Ollama / Frontier) [AGENTS-HMS-003]
+## 25) Hybrid Model Solution — Live Only (Ollama / Frontier) [AGENTS-HMS-003]
 ```
 
 ### 3. Section 6 - Add Quickstart

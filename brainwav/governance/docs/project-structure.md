@@ -93,7 +93,7 @@ Event and API contract definitions:
 
 - **Clean Architecture**: Restructured MCP package with functional patterns.
 - **Transport Bridges**: stdio ↔ HTTP/SSE for remote server support.
-- **AI-Enhanced Search**: MLX (Qwen3) primary, Ollama fallback.
+- **AI-Enhanced Search**: Ollama (Qwen3) primary, Frontier fallback.
 - **Security First**: Content validation, safety checks, supply chain security.
 - **No Direct Imports**: Services communicate via A2A events or contracts.
 - **Dependency Injection**: The ASBR runtime wires dependencies.

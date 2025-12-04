@@ -2,7 +2,7 @@
 
 > Create and use specialized **governance framework** subagents for task-specific workflows, better context management, and governed tool access.
 
-Subagents in governance framework are specialized assistants invoked by the **Cerebrum** and ASBR runtime. They carry their own system prompt, tool policy, and context window. They run under MCP/A2A rules, route through the Model Gateway (MLX → Ollama → Frontier), and attach proofs.
+Subagents in governance framework are specialized assistants invoked by the **Cerebrum** and ASBR runtime. They carry their own system prompt, tool policy, and context window. They run under MCP/A2A rules, route through the Model Gateway (Ollama → Frontier), and attach proofs.
 
 ---
 
@@ -84,13 +84,13 @@ name: code-reviewer
 description: Expert code review specialist. Use immediately after writing or modifying code.
 tools: git.diff, fs.read, grep, shell.run # Optional; inherit all if omitted
 policies:
-  privacy: true # true pins to MLX/local only
+  privacy: true # true pins to local/Ollama only
   cost_ceiling_usd: 0.50 # max allowed cloud spend per invocation
   target_latency_ms: 800
   evidence_required: true
 routing:
   capability: chat-completion # used by router/model-gateway
-  fallbacks: [ollama, frontier] # after mlx
+  fallbacks: [ollama, frontier] # local first
 context:
   window: project # project|session|isolated
   include_paths: ['src/**', 'tests/**']
@@ -119,7 +119,7 @@ Behavior:
 | `name`                       | ✔  | Lowercase kebab-case unique id                       |
 | `description`                | ✔  | When and why to invoke                               |
 | `tools`                      |  –  | Comma-sep MCP tool ids (omit to inherit all allowed) |
-| `policies.privacy`           |  –  | `true` forces **MLX/local** only                     |
+| `policies.privacy`           |  –  | `true` forces **local/Ollama** only                     |
 | `policies.cost_ceiling_usd`  |  –  | Max cloud spend per call                             |
 | `policies.target_latency_ms` |  –  | Hint for router                                      |
 | `policies.evidence_required` |  –  | Require proofs and citations                         |
@@ -168,7 +168,7 @@ All subagent files are validated against JSON Schemas in `governance/schemas/age
 ### Automatic delegation
 
 Cerebrum matches task intent to `description` and `routing.capability`, checks `policies`, then routes through **Model Gateway**:
-`mlx → ollama → frontier` with circuit breakers and sticky sessions.
+`ollama → frontier` with circuit breakers and sticky sessions.
 
 ### Explicit invocation
 
@@ -213,7 +213,7 @@ description: SQL and analytics expert. Use for data exploration and reporting.
 tools: shell.run, fs.read
 policies:
   { privacy: false, cost_ceiling_usd: 1.50, target_latency_ms: 3000, evidence_required: true }
-routing: { capability: chat-completion, fallbacks: [mlx, frontier] }
+routing: { capability: chat-completion, fallbacks: [ollama, frontier] }
 context: { window: project, include_paths: ['analytics/**'] }
 ---
 
@@ -275,7 +275,7 @@ ASBR-lite (contracts, A2A, provenance)
 Subagent (tools, prompt, context)
       │
       ▼
-Model Gateway (MLX → Ollama → Frontier) ──► Providers
+Model Gateway (Ollama → Frontier) ──► Providers
       │
       ▼
 CloudEvents + Evidence → Memories/RAG → Observability

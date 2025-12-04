@@ -178,7 +178,7 @@ docs:
       ### 8. Hybrid Model Solution — **Live Only**
 
 
-      Embeddings, rerankers, generations must use **live** engines (MLX, Ollama,
+      Embeddings, rerankers, generations must use **live** engines (Ollama,
       or approved Frontier). **No stubs, recorded outputs, or "dry_run" modes.**
       Pre-merge evidence requires `pnpm models:health && pnpm models:smoke` logs
       (engine, model IDs, vector dims/norms, latency).
@@ -685,9 +685,7 @@ docs:
       engines:
 
 
-      - **MLX** (local on-device)
-
-      - **Ollama** (local server)  
+      - **Ollama** (local server)
 
       - **Frontier APIs** (OpenAI/Anthropic/Google/etc.)
 
@@ -700,7 +698,7 @@ docs:
       attach logs (engine, model IDs, vector norms/shape, latency).
 
 
-      **Fallback chain**: MLX → Ollama → Frontier (if live). If unavailable,
+      **Fallback chain**: Ollama → Frontier (if live). If unavailable,
       mark task **blocked**; escalate per Constitution.
 
 
@@ -918,7 +916,7 @@ docs:
         1. **Cortex Vibe (Oversight)** – `pnpm oversight:vibe-check` or JSON-RPC to `${CORTEX_VIBE_HTTP_URL:-http://127.0.0.1:2001}`
            - Required headers: `Accept: application/json, text/event-stream`
            - Log saved to `logs/vibe-check/<task>.json`
-        2. **Hybrid Model Health** – `pnpm models:health && pnpm models:smoke` with live MLX/Ollama/Frontier engines (no stubs)
+        2. **Hybrid Model Health** – `pnpm models:health && pnpm models:smoke` with live Ollama/Frontier engines (no stubs)
         3. **Knowledge Connector Health** – Verify `${WIKIDATA_MCP_URL}/healthz` and `${ARXIV_MCP_URL}/healthz`; log to `research/connectors-health.log`
         4. **Trace Context Verification** – `pnpm tsx scripts/ci/verify-trace-context.ts <logfile>` ensures W3C `trace_id` in all logs
         5. **Supply-Chain Evidence** – `pnpm sbom:generate && pnpm attest:sign && pnpm verify:attest && pnpm sbom:scan`; store in `sbom/`
@@ -1575,7 +1573,7 @@ docs:
 
       - Before any file writes, network calls, or long executions, agents MUST execute **preflight guards**:
         1. **Cortex Aegis Check (Oversight)** – `pnpm oversight:vibe-check` (Cortex Aegis MCP) or JSON-RPC to `${VIBE_CHECK_HTTP_URL}`; log saved to `logs/vibe-check/<task>.json`
-        2. **Hybrid Model Health** – `pnpm models:health && pnpm models:smoke` with live MLX/Ollama/Frontier engines (no stubs)
+        2. **Hybrid Model Health** – `pnpm models:health && pnpm models:smoke` with live Ollama/Frontier engines (no stubs)
         3. **Knowledge Connector Health** – Verify `${WIKIDATA_MCP_URL}/healthz` and `${ARXIV_MCP_URL}/healthz`; log to `research/connectors-health.log`
         4. **Trace Context Verification** – `pnpm tsx scripts/ci/verify-trace-context.ts <logfile>` ensures W3C `trace_id` and `traceparent` in all logs
         5. **Supply-Chain Evidence** – `pnpm sbom:generate` (CycloneDX **1.7**) → `pnpm attest:sign` (SLSA **v1.1**) → `pnpm verify:attest` (Cosign **v3 bundle**); store in `sbom/`
@@ -1915,7 +1913,7 @@ docs:
 
       - `brAInwav-vibe-check`  
 
-      - `MODELS:LIVE:OK engine=<mlx|ollama|frontier>`
+      - `MODELS:LIVE:OK engine=<ollama|frontier>`
 
 
       **AGENTS.md acknowledgement & Vibe-check**
@@ -1996,9 +1994,7 @@ docs:
       engines:
 
 
-      - **MLX** (local on-device)
-
-      - **Ollama** (local server)  
+      - **Ollama** (local server)
 
       - **Frontier APIs** (OpenAI/Anthropic/Google/etc.)
 
@@ -2011,7 +2007,7 @@ docs:
       attach logs (engine, model IDs, vector norms/shape, latency).
 
 
-      **Fallback chain**: MLX → Ollama → Frontier (if live). If unavailable,
+      **Fallback chain**: Ollama → Frontier (if live). If unavailable,
       mark task **blocked**; escalate per Constitution.
 
 
@@ -2790,7 +2786,7 @@ docs:
       - Code to satisfy tests; refactor strictly to green
 
       - Live model probes: `pnpm models:health && pnpm models:smoke`
-      (Frontier/MLX/Ollama)
+      (Frontier/Ollama)
 
       - Security scanners (Semgrep, OSV) and secret scans (gitleaks)
 
@@ -2917,7 +2913,7 @@ docs:
       never persisted.
 
       7. **Hybrid models — live only.** No stubs/recordings/dry-runs for
-      embeddings/rerankers/generation. Frontier/MLX/Ollama health logs required.
+      embeddings/rerankers/generation. Frontier/Ollama health logs required.
 
       8. **A11y baseline.** WCAG 2.2 AA (ISO/IEC 40500:2025).
 
@@ -2936,7 +2932,7 @@ docs:
 
       - `TIME_FRESHNESS:OK tz=<tz> today=<yyyy-mm-dd>`  
 
-      - `MODELS:LIVE:OK engine=<mlx|ollama|frontier> model=<id> dims=<n>
+      - `MODELS:LIVE:OK engine=<ollama|frontier> model=<id> dims=<n>
       norm≈<v> latency_ms=<n>`  
 
       - `A11Y_REPORT:OK`  
@@ -5237,9 +5233,9 @@ docs:
 
       - No `eval`/dynamic Function. No unpinned remote code. Validate/sanitize all external inputs.
 
-      **MLX rule**
+      **Local model rule**
 
-      - All MLX integrations must be real; no mocks/placeholders in production code.
+      - All local model integrations must be real; no mocks/placeholders in production code.
 
       ---
 
@@ -6269,7 +6265,7 @@ docs:
       ## 1) Core Principles
 
 
-      - **Local-first, vendor-neutral.** MLX + Ollama preferred; frontier APIs
+      - **Local-first, vendor-neutral.** Ollama preferred; frontier APIs
       optional behind policy.
 
       - **Deterministic & evidence-backed.** Reproducible runs; artifacted logs,
@@ -6292,7 +6288,7 @@ docs:
       ISO-8601 surfaced to users.
 
       - **Hybrid Model — Live Only.** Embeddings/rerankers/generation must hit
-      **live** MLX/Ollama/frontier engines (no stubs/recordings/dry-runs).
+      **live** Ollama/frontier engines (no stubs/recordings/dry-runs).
 
       - **AGENTS.md + Vibe Check.** Load nearest `AGENTS.md` (persist SHA); call
       `vibe_check` before file writes/network calls/long runs.
@@ -6568,7 +6564,7 @@ docs:
 
       - **Governance Evidence:** PRs contain:
         - `AGENTS_MD_SHA:<sha>`, `brAInwav-vibe-check`, `PHASE_TRANSITION:*`  
-        - `MODELS:LIVE:OK engine=<mlx|ollama|frontier>` with model IDs and dims/norms  
+        - `MODELS:LIVE:OK engine=<ollama|frontier>` with model IDs and dims/norms  
         - Top-level Code Review Checklist link to `/.cortex/rules/code-review-checklist.md`
 
       ---

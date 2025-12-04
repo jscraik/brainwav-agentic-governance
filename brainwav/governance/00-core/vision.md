@@ -21,14 +21,14 @@ This governance framework enables a self-contained, local-first **Agentic Develo
 
 ## 1) Core Principles
 
-- **Local-first, vendor-neutral.** MLX + Ollama preferred; frontier APIs optional behind policy.
+- **Local-first, vendor-neutral.** Ollama preferred; frontier APIs optional behind policy.
 - **Deterministic & evidence-backed.** Reproducible runs; artifacted logs, traces, SBOM/provenance.
 - **Single integration hub.** Exactly one MCP server; Tools/Resources/Prompts are **registered** (not embedded).
 - **Tight domain boundaries.** No cross-domain imports; communicate via A2A topics or declared contracts/schemas.
 - **Security, A11y, Observability by default.** API-key/OAuth, WCAG 2.2 AA, structured logs + OTel; secrets retrieved on-demand via the 1Password CLI (`op`) with no long-lived copies.
 - **Small, shippable steps.** Quality gates: coverage/mutation, a11y, security, structure guard.
 - **Time Freshness Guard.** All dates anchored to harness "today"; ISO-8601 surfaced to users.
-- **Hybrid Model — Live Only.** Embeddings/rerankers/generation must hit **live** MLX/Ollama/frontier engines (no stubs/recordings/dry-runs).
+- **Hybrid Model — Live Only.** Embeddings/rerankers/generation must hit **live** Ollama/frontier engines (no stubs/recordings/dry-runs).
 - **AGENTS.md + Vibe Check.** Load nearest `AGENTS.md` (persist SHA); call `vibe_check` before file writes/network calls/long runs.
 
 ---
@@ -161,7 +161,7 @@ This governance framework enables a self-contained, local-first **Agentic Develo
 - **A11y/UX:** Full keyboard coverage; no color-only indicators; screen-reader labels pass axe/jest-axe.  
 - **Governance Evidence:** PRs contain:
   - `AGENTS_MD_SHA:<sha>`, `brAInwav-vibe-check`, `PHASE_TRANSITION:*`  
-  - `MODELS:LIVE:OK engine=<mlx|ollama|frontier>` with model IDs and dims/norms  
+  - `MODELS:LIVE:OK engine=<ollama|frontier>` with model IDs and dims/norms  
   - Top-level Code Review Checklist link to `governance/rules/code-review-checklist.md`
 
 ---
