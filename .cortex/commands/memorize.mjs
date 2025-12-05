@@ -1,6 +1,16 @@
 // .cortex/commands/memorize.mjs
-// Memory storage with basic recall integration
-// For comprehensive memory recall capabilities, see: /.cortex/commands/recall.md
+/**
+ * @fileoverview Memory storage script with basic recall integration.
+ * Allows storing, updating, and recalling memories via the Memory API.
+ * For comprehensive memory recall capabilities, see: /.cortex/commands/recall.md
+ *
+ * Environment Variables:
+ * - TASK_SLUG: The unique identifier for the task (or passed as argv[2]).
+ * - HOME/USERPROFILE: Used to locate the .Cortex-OS directory.
+ * - MEM_MODE: 'new' or 'update' (defaults based on existence of memory-ids.json).
+ * - LOCAL_MEMORY_BASE_URL: Base URL for the Memory API (default: http://localhost:3002/api/v1).
+ * - LOCAL_MEMORY_API_KEY: Optional API key for authentication.
+ */
 
 import crypto from 'node:crypto';
 import fs from 'node:fs';
@@ -33,11 +43,23 @@ const tag = `topic_context_${new Date().getUTCFullYear()}`;
 const MEMORY_API_BASE = process.env.LOCAL_MEMORY_BASE_URL || 'http://localhost:3002/api/v1';
 const MEMORY_API_KEY = process.env.LOCAL_MEMORY_API_KEY;
 
+/**
+ * Returns the current timestamp in ISO 8601 format, with milliseconds removed.
+ *
+ * @returns {string} The formatted timestamp string (e.g., "2023-10-27T10:00:00Z").
+ */
 function now() {
 	return new Date().toISOString().replace(/\.\d+Z$/, 'Z');
 }
 
-// Memory API integration
+/**
+ * Makes an HTTP request to the Memory API.
+ *
+ * @param {string} endpoint - The API endpoint suffix (e.g., 'memories').
+ * @param {object} [data] - The payload to send (for POST/PUT requests).
+ * @param {string} [method='POST'] - The HTTP method to use (GET, POST, PUT, etc.).
+ * @returns {Promise<object|null>} The JSON response from the API, or null if the request failed.
+ */
 async function callMemoryAPI(endpoint, data, method = 'POST') {
 	try {
 		const response = await fetch(`${MEMORY_API_BASE}/${endpoint}`, {
@@ -61,6 +83,14 @@ async function callMemoryAPI(endpoint, data, method = 'POST') {
 	}
 }
 
+/**
+ * Stores a new memory entry in the system.
+ *
+ * @param {string} content - The text content of the memory.
+ * @param {object} [metadata={}] - Additional metadata for the memory.
+ * @param {string[]} [metadata.tags] - Optional tags to append to standard tags.
+ * @returns {Promise<object|null>} The API response from the storage operation.
+ */
 async function storeMemory(content, metadata = {}) {
 	const payload = {
 		content,
@@ -73,6 +103,15 @@ async function storeMemory(content, metadata = {}) {
 	return await callMemoryAPI('memories', payload);
 }
 
+/**
+ * Updates an existing memory entry.
+ *
+ * @param {string} memoryId - The ID of the memory to update.
+ * @param {string} content - The new text content for the memory.
+ * @param {object} [metadata={}] - Additional metadata for the update.
+ * @param {string[]} [metadata.tags] - Optional tags to append to standard tags.
+ * @returns {Promise<object|null>} The API response from the update operation.
+ */
 async function updateMemory(memoryId, content, metadata = {}) {
 	const payload = {
 		content,
@@ -83,6 +122,13 @@ async function updateMemory(memoryId, content, metadata = {}) {
 	return await callMemoryAPI(`memories/${memoryId}`, payload, 'PUT');
 }
 
+/**
+ * Recalls memories relevant to a query.
+ *
+ * @param {string} query - The search query string.
+ * @param {number} [limit=5] - The maximum number of memories to retrieve.
+ * @returns {Promise<Array<object>>} An array of recalled memory objects.
+ */
 async function recallMemories(query, limit = 5) {
 	// Basic recall functionality for memorize command
 	// For comprehensive recall capabilities, use the /recall command (see /.cortex/commands/recall.md)
@@ -114,6 +160,13 @@ async function recallMemories(query, limit = 5) {
 	}
 }
 
+/**
+ * Main execution function.
+ * Orchestrates the flow of recalling context, determining mode (new/update),
+ * storing/updating memory, and writing the result to a Markdown file.
+ *
+ * @returns {Promise<void>}
+ */
 async function main() {
 	let retrieval;
 	const ids = hasId ? JSON.parse(fs.readFileSync(idsPath, 'utf8')) : {};

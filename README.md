@@ -182,6 +182,9 @@ cd cortex-os
 # Run automated setup (installs deps, auto-trusts mise, sets up hooks, lints, validates structure)
 ./scripts/dev-setup.sh
 
+# Bootstrap governance (Required for governance tools)
+pnpm cortex:governance-bootstrap
+
 # For a minimal setup with lightweight hooks:
 # ./scripts/dev-setup.sh --minimal
 
@@ -206,6 +209,7 @@ pnpm test:integration:langgraph   # LangGraph integration harness suite
 # Manually run a quick pre-commit equivalent if needed:
 pnpm biome:staged  # format + lint staged files
 pnpm test:safe     # safe, minimal tests
+```
 
 ### Workspace filter convention
 
@@ -216,7 +220,15 @@ pnpm --filter @apps/cortex-os dev
 pnpm --filter @apps/cortex-os test
 ```
 
+## Governance Tools
 
+### Memory Management
+- **Memorize Command**: `.cortex/commands/memorize.mjs`
+  - Stores task context and decisions into the local memory system.
+  - Usage: `node .cortex/commands/memorize.mjs [slug]`
+
+### Templates
+- **Adapter Template**: `.cortex/templates/adapter.template.ts` - For creating new integration adapters.
 
 
 ## Architecture Snapshot
