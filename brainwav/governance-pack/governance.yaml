@@ -173,8 +173,8 @@ workflow:
         - Mutation ≥ **90%** (where enabled)
         - Latest model-health log includes engine, model IDs, vector dims/norms,
           P95 latency
-        - SBOM + provenance artifacts generated at cyclonedx@1.7/1.1 (or
-          stricter project default) and attached to the task folder
+        - SBOM + provenance artifacts generated as CycloneDX 1.7 SBOM and SLSA 1.1
+          provenance (or stricter project default) and attached to the task folder
     - from: F
       to: REVIEW
       requirements:
