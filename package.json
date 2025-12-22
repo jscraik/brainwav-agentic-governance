@@ -38,6 +38,13 @@
     "oversight:vibe-check": "node scripts/oversight-vibe-check.mjs",
     "readiness:check": "node scripts/readiness-check.mjs",
     "governance:sync-hashes": "node scripts/sync-governance-hashes.mjs",
+    "governance:sync-hashes:check": "node scripts/sync-governance-hashes.mjs --check",
+    "governance:install": "node scripts/install-governance.mjs",
+    "task:scaffold": "node scripts/task-scaffold.mjs",
+    "task:validate": "node scripts/task-validate.mjs",
+    "governance:validate": "node scripts/validate-governance.mjs",
+    "governance:check-nx": "node scripts/check-nx.mjs",
+    "governance:bootstrap-consumer": "node scripts/bootstrap-consumer.mjs",
     "commands:daily-summary": "node brainwav/governance/commands/daily-summary.mjs",
     "commands:memorize": "node brainwav/governance/commands/memorize.mjs",
     "commands:recall": "node brainwav/governance/commands/recall.mjs"
