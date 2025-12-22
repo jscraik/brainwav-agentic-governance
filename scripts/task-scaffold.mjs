@@ -92,7 +92,7 @@ function main() {
 	console.log(`[brAInwav] Scaffolded task at ${path.relative(repoRoot, taskRoot)}`);
 }
 
-if (import.meta.url === `file://${process.argv[1]}` || process.argv[1]?.endsWith('task-scaffold.mjs')) {
+if (import.meta.url === `file://${process.argv[1]}`) {
 	main();
 }
 
