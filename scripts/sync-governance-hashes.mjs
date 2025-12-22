@@ -9,12 +9,12 @@
  * For documents with fragment markers, only the fragment content is hashed.
  *
  * @example
- * // Run via npm script
+ * // Update hashes in place
  * pnpm governance:sync-hashes
  *
  * @example
- * // Run directly
- * node scripts/sync-governance-hashes.mjs
+ * // Verify hashes without writing (fails on drift)
+ * pnpm governance:sync-hashes --check
  */
 import { createHash } from 'node:crypto';
 import fs from 'node:fs';
@@ -73,8 +73,10 @@ function resolvePath(docPath) {
  * @returns {void}
  */
 function main() {
+	const checkMode = process.argv.includes('--check');
 	const index = JSON.parse(fs.readFileSync(indexPath, 'utf8'));
 	let updated = 0;
+	const changes = [];
 
 	for (const [key, entry] of Object.entries(index.docs)) {
 		const filePath = resolvePath(entry.path);
@@ -95,15 +97,43 @@ function main() {
 		}
 
 		if (entry.sha256 !== hash) {
-			console.log(`[brAInwav] UPDATE ${key}: ${entry.sha256.slice(0, 8)}… → ${hash.slice(0, 8)}…`);
+			changes.push({
+				key,
+				from: entry.sha256,
+				to: hash,
+			});
 			entry.sha256 = hash;
 			updated++;
 		}
 	}
 
+	if (checkMode) {
+		if (updated > 0) {
+			console.error(
+				`[brAInwav] sync-governance-hashes --check failed: ${updated} entries drifted.\n` +
+					changes
+						.map((c) => ` - ${c.key}: ${c.from.slice(0, 8)}… -> ${c.to.slice(0, 8)}…`)
+						.join('\n')
+			);
+			process.exitCode = 1;
+			return;
+		}
+		console.log('[brAInwav] sync-governance-hashes --check passed (no drift).');
+		return;
+	}
+
 	index.updated = new Date().toISOString().split('T')[0];
 	fs.writeFileSync(indexPath, `${JSON.stringify(index, null, 4)}\n`);
-	console.log(`[brAInwav] sync-governance-hashes: ${updated} entries updated.`);
+	if (updated === 0) {
+		console.log('[brAInwav] sync-governance-hashes: no updates needed.');
+	} else {
+		changes.forEach((c) =>
+			console.log(
+				`[brAInwav] UPDATE ${c.key}: ${c.from.slice(0, 8)}… → ${c.to.slice(0, 8)}…`
+			)
+		);
+		console.log(`[brAInwav] sync-governance-hashes: ${updated} entries updated.`);
+	}
 }
 
 if (import.meta.url === `file://${process.argv[1]}` || process.argv[1]?.endsWith('sync-governance-hashes.mjs')) {
