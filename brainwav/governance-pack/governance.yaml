@@ -291,7 +291,7 @@ profiles:
   brownfield:
     overrides:
       description: >
-        Transitional profile for existing/legacy systems. Prioritises rigor on changed code while staging uplift for
+        Transitional profile for existing/legacy systems. Prioritizes rigor on changed code while staging uplift for
         untouched modules and enforcing compensating controls (feature flags, dark deploys, observability baselines).
       requiredGates:
         - G0
