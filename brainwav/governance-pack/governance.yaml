@@ -228,32 +228,32 @@ governance:
   requireHashVerification: true
 operationalPlaybooks:
   rollout:
-    summary: Profile rollout playbook (Q1).
+    summary: Profile rollout playbook.
     steps:
       - Map teams/services to a profile with an assigned DRI and record in the rollout brief.
       - Publish a one-page brief linking to this pack; acknowledge receipt from all teams.
       - Pilot one greenfield and one brownfield service; tag chosen profile in PR/task templates.
       - Add CI or template reminders for profile selection; schedule a retro after two sprints.
   metrics:
-    summary: Quality/flow metrics by profile (Q2).
+    summary: Quality/flow metrics by profile.
     steps:
       - Slice CI results by profile and gate; report coverage/mutation on changed lines and Evidence Triplet completeness.
       - Track waiver volume/reasons with expiry + mitigation; monitor lead time and post-merge defect rate.
       - For brownfield, publish weekly uplift deltas on touched code (coverage/mutation).
   mixedSurfaces:
-    summary: Mixed regulated/consumer surfaces (Q3).
+    summary: Mixed regulated/consumer surfaces.
     steps:
       - Apply the strictest profile when regulated/data-sensitive code is touched; require profile + data-class tags in PRs.
       - Document compensating controls with expiry in the risk register; use feature flags/shadow traffic where needed.
       - Ensure cross-surface regression tests and observability cover regulated vs. consumer paths.
   standards:
-    summary: Standards upkeep (Q4).
+    summary: Standards upkeep.
     steps:
       - Run a quarterly standards review (SLSA, CycloneDX, WCAG, NIST/ISO/OWASP) with assigned DRIs and a watchlist.
       - Version profiles with change logs and effective dates; communicate migrations and waivers.
       - Keep CI/template drift checks between templates and dist outputs; document exceptions.
   training:
-    summary: Onboarding and reinforcement (Q5).
+    summary: Onboarding and reinforcement.
     steps:
       - Publish a 10-minute onboarding guide + crib sheet in PR/task templates; record a short demo.
       - Include a profile rehearsal exercise for new joiners with reviewer sign-off.
