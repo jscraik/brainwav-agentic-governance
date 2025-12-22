@@ -163,8 +163,8 @@ workflow:
           commit
         - "`TIME_FRESHNESS:OK tz=<IANA> today=<YYYY-MM-DD>` token present"
         - Oversight log (`brAInwav-vibe-check`) stored in `logs/vibe-check/`
-        - Threat model + data classification updated against OWASP ASVS/LLM Top
-          10 and NIST SSDF controls
+        - Threat model + data classification updated against OWASP ASVS v4.0 L2
+          (L3 where required by profile), OWASP LLM Top 10, and NIST SSDF controls
     - from: G
       to: F
       requirements:
