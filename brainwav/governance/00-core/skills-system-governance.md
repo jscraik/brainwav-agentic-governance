@@ -13,11 +13,13 @@ standards_alignment:
   - Constitution v1.3.0
   - WCAG 2.2 AA (ISO/IEC 40500:2025)
   - W3C Trace Context + OpenTelemetry
-  - CycloneDX 1.7 • SLSA v1.1 • Cosign v3 bundle
+  - CycloneDX 1.7 • SLSA v1.2 • Cosign v3 bundle
   - OIDC/WIF for CI/cloud auth
 ---
 
 # Skills System Governance
+
+Skills governance is enforced across all skill lifecycle stages and CI gates.
 
 **Authority**: This document is part of the Governance Pack and is binding for all agent and human activities involving skills.
 
@@ -32,10 +34,10 @@ standards_alignment:
 - **Academic Research & Licensing (BLOCKER):** New/major‑updated skills must cite research and pass license validation; only SAFE/REVIEW content allowed.
 - **Security by Default (BLOCKER):** No secrets in examples, no unsafe patterns; scanners must be clean (Semgrep ERROR=block, gitleaks ANY=block, OSV clean).
 - **A11y Baseline:** Content examples meet WCAG 2.2 AA (ISO/IEC 40500:2025).
-- **Identity & Supply Chain:** CI uses OIDC/WIF; skills tooling/artifacts use CycloneDX 1.7 SBOM + SLSA v1.1 provenance; Cosign v3 bundle verify logs attached.
+- **Identity & Supply Chain:** CI uses OIDC/WIF; skills tooling/artifacts use CycloneDX 1.7 SBOM + SLSA v1.2 provenance; Cosign v3 bundle verify logs attached.
 
 **Evidence Tokens (CI‑scanned across PR/logs):**  
-`STRUCTURED_OUTPUTS:OK` · `TRACE_CONTEXT:OK` · `SUPPLY_CHAIN:OK sbom=cyclonedx@1.7 slsa=1.1 cosign=bundle` · `A11Y_REPORT:OK` · `brAInwav-vibe-check` · `AGENTS_MD_SHA:*`
+`STRUCTURED_OUTPUTS:OK` · `TRACE_CONTEXT:OK` · `SUPPLY_CHAIN:OK sbom=cyclonedx@1.7 slsa=1.2 cosign=bundle` · `A11Y_REPORT:OK` · `brAInwav-vibe-check` · `AGENTS_MD_SHA:*`
 
 ---
 
@@ -277,7 +279,7 @@ pnpm skills:validate           # schema/frontmatter/structured outputs
 pnpm skills:security-scan      # semgrep/gitleaks/osv on code blocks and repo
 pnpm skills:parse-all          # index build
 pnpm sbom:generate             # CycloneDX 1.7
-pnpm attest:sign && pnpm verify:attest  # SLSA v1.1 + Cosign v3 bundle
+pnpm attest:sign && pnpm verify:attest  # SLSA v1.2 + Cosign v3 bundle
 ```
 
 ### 6.2 Pre-commit Hooks

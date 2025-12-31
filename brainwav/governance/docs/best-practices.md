@@ -6,6 +6,7 @@
 - **Use the Phase Machine** – Follow R→G→F→REVIEW for all changes.
 - **Keep arcs small** – ≤7 steps per arc, ≤120 minutes per vertical slice.
 - **Run oversight before acting** – Vibe check, academic research, license validation.
+- **Use Creative vs Delivery modes** – Creative for ideation (no side effects), Delivery for merge/release (full gates).
 
 ## Evidence & Documentation
 

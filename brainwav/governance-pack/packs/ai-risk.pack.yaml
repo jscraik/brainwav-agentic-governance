@@ -1,0 +1,10 @@
+pack:
+  id: ai-risk
+  version: 1.0.0
+  default: false
+  summary: "AI governance and safety controls beyond core defaults."
+  standards:
+    - "NIST AI RMF 1.0 + GenAI Profile"
+    - "OWASP LLM Top 10 (2025 v1.1)"
+    - "ISO/IEC 42001:2023"
+  controlsRegistry: "brainwav/governance/90-infra/control-registry.core.yaml"

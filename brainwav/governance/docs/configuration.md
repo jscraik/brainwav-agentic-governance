@@ -30,6 +30,17 @@ Add MCP servers to your client configuration:
 | `LOCAL_MEMORY_BASE_URL` | `http://localhost:3002/api/v1` | Local Memory API endpoint |
 | `CORTEX_AEGIS_PORT` | `2091` | Cortex Aegis MCP port |
 
+## Pointer Mode Configuration
+
+Pointer mode is enabled by `.agentic-governance/pointer.json`. It redirects governance validation and hashing to the pinned package under `node_modules/brainwav-agentic-governance` and keeps local overrides small.
+
+Key fields:
+- `package`: npm package name (default `brainwav-agentic-governance`)
+- `packageRoot`: `node_modules/...` path
+- `governanceRoot`: canonical governance docs path
+- `governanceIndexPath`: canonical hash index path
+- `agentsPath`: canonical AGENTS.md path
+
 ## Governance Index
 
 The governance index at `brainwav/governance/90-infra/governance-index.json` pins SHA-256 hashes for all binding documents. Update hashes when governance documents change:

@@ -2,7 +2,7 @@
 
 **Status:** Authoritative reference for oversight mapping  
 **Scope:** Applies to all agents, reviewers, and CI guardrails when assessing LLM-centric risk.  
-**Standards Alignment:** OWASP Top 10 for LLM Apps (2025), NIST AI RMF 1.0, NIST Generative AI Profile, W3C Trace Context, CycloneDX 1.7, SLSA v1.1.
+**Standards Alignment:** OWASP Top 10 for LLM Apps (2025), NIST AI RMF 1.0, NIST Generative AI Profile, W3C Trace Context, CycloneDX 1.7, SLSA v1.2.
 
 ---
 
@@ -21,7 +21,7 @@
 | **LLM01** | Prompt Injection | Strict input validation (Zod), tool allow-list & scoped capabilities, **structured outputs / function calling**, sandboxed tool execution, **vibe_check** before side-effects. | Schema files; tool registry entries; vibe_check JSON; failing→passing injection tests; blocked-call log/screenshot. |
 | **LLM02** | Data Leakage | Data minimization; observability redaction; secrets via **1Password CLI (`op`)**; access reviews; encrypted storage; PII scanners. | Redaction config; scanner report; `op` usage evidence; access review notes; encryption config. |
 | **LLM03** | Model Theft | Authenticated API gateways; rate limits; watermarking (where applicable); signed inference manifests. | Gateway policy; rate-limit config; watermark test; signed manifest sample. |
-| **LLM04** | Supply Chain | **SBOM CycloneDX 1.7**, dependency review, reproducible builds, **SLSA v1.1** provenance, **Cosign v3 bundle** verification, OSV scan. | SBOM file; SLSA attestation; cosign bundle verify log; OSV report. |
+| **LLM04** | Supply Chain | **SBOM CycloneDX 1.7**, dependency review, reproducible builds, **SLSA v1.2** provenance, **Cosign v3 bundle** verification, OSV scan. | SBOM file; SLSA attestation; cosign bundle verify log; OSV report. |
 | **LLM05** | Insecure Plugins | Plugin registry attestation; contract testing; minimal scopes; orchestration kill-switch toggles. | Registry entry; contract tests; scope diff; toggle docs. |
 | **LLM06** | Excessive Agency | Phase policy (**HITL only at REVIEW**); action throttles; deterministic plans ≤7 steps; recap logging; guardian mode blocks. | Phase tokens (`PHASE_TRANSITION:*`); throttle config; plan evidence; guardian failure screenshot. |
 | **LLM07** | Sensitive Output Handling | Output classifiers; policy-based redaction; watermark detection; reviewer approval for regulated content. | Classifier config; redaction policies; reviewer checklist link; detection logs. |
@@ -34,6 +34,7 @@
 ## Extensions (beyond OWASP)
 
 - **LLM‑S0 — Structured Output Contract (BLOCKER)**  
+  Token reference: LLM-S0.  
   Machine‑consumed generations **must** conform to JSON‑Schema or tool/function calling. Free‑text is not a contract.  
   _Evidence:_ schema files, validator test logs, failing→passing contract tests.
 
@@ -103,5 +104,5 @@
 * OWASP Top 10 for Large Language Model Applications (2025)
 * NIST AI RMF 1.0; NIST Generative AI Profile
 * `governance/10-flow/assurance-system.md` • `governance/10-flow/agentic-coding-workflow.md` • `governance/00-core/AGENT_CHARTER.md` (fragment between `<!-- BEGIN/END CHARTER_FRAGMENT -->`)
-* Supply chain: CycloneDX 1.7 • SLSA v1.1 • Cosign v3 bundle
+* Supply chain: CycloneDX 1.7 • SLSA v1.2 • Cosign v3 bundle
 * Observability: W3C Trace Context • OpenTelemetry

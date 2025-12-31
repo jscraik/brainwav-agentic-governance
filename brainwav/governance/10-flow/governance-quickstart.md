@@ -1,5 +1,7 @@
 # AI-Native Agentic Governance Quickstart
 
+This governance quickstart is the entry point for workflow selection.
+
 > One-page front door for humans and agents. Start here before diving into the deeper governance docs.
 
 ---

@@ -85,7 +85,7 @@ Use affected-only **smart** targets (`pnpm *:smart`), respect Nx dependency grap
 
 - Semgrep (**block ERROR**), gitleaks (**block ANY**), OSV clean  
 - **SBOM (CycloneDX 1.7)**  
-- **Provenance (SLSA v1.1)**  
+- **Provenance (SLSA v1.2)**  
 - **Sign & verify with Cosign v3 bundle** artifacts  
 - Minimal/pinned containers (non‑root, read‑only FS, drop caps)  
 - **No secrets in code**. Use shared env loader (`scripts/utils/dotenv-loader.mjs` or `@governance/utils`) — **never call `dotenv.config()` directly**.  
@@ -163,7 +163,7 @@ Technical debt tracked via ADRs + Issues with payoff plan.
 ## V. Compliance & Governance
 
 **Licensing**: Apache‑2.0; `pnpm license:validate`; **SBOM via CycloneDX 1.7**.  
-**Provenance**: **SLSA v1.1** attestations; verify with **Cosign v3 bundle**.  
+**Provenance**: **SLSA v1.2** attestations; verify with **Cosign v3 bundle**.  
 **Privacy**: Local-first; GDPR erasure; privacy-preserving telemetry.
 
 **Review & Checklists (ENFORCED)**:

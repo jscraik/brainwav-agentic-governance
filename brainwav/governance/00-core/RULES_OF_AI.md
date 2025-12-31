@@ -205,7 +205,7 @@ Include brAInwav branding in a11y announcements where appropriate.
 - No hardcoded secrets; env/secret managers only; retrieve API keys, SSH keys, and tokens via the 1Password CLI (`op`) at runtime
 
 **Containers**: Minimal base, pinned digests, non-root user, read-only FS, dropped capabilities.
-**Provenance**: Target SLSA v1.1 (Approved 2025-04-21); evaluate Source track from SLSA v1.2 RC1 once promoted to GA.
+**Provenance**: Target SLSA v1.2 (GA); require provenance evidence at release gates.
 **Signing**: Cosign v3 bundle verification is the default; align release tooling and PolicyController policies accordingly.
 
 ---

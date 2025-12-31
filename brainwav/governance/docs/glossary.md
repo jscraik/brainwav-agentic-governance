@@ -24,7 +24,7 @@
 
 ## Security References
 
-- **OWASP Top 10** – Web application security risks (2025 RC1).
+- **OWASP Top 10** – Web application security risks (2025).
 - **OWASP ASVS** – Application Security Verification Standard (5.0.0).
 - **OWASP LLM Top 10** – Large Language Model security risks (2025).
 - **MITRE ATLAS** – Adversarial Threat Landscape for AI Systems.

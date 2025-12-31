@@ -1,5 +1,7 @@
 # Agentic AI Governance Research Summary — December 2025
 
+This research summary includes a mapping to repository targets for implementation.
+
 > Curated references for strengthening the project-neutral governance framework. Each paper includes actionable hooks into the repo.
 
 ## Top-Line Themes

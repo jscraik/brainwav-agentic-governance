@@ -3,9 +3,15 @@
 ## Prerequisites
 
 - Git for version control
-- Node.js 20+ (for governance commands)
+- Node.js 24.11.x + pnpm 10.19.x (aligned with CI defaults)
 - MCP-compatible client (VS Code, Claude Desktop, RepoPrompt)
 - Optional: Security tools (Semgrep, Gitleaks, Trivy)
+
+## Adoption paths (Dec 2025 best practice)
+
+1) **Fast path (no Docker):** minimal local checks, full CI gates.  
+2) **Containerized tooling:** single tools image for scanners/SBOM/provenance.  
+3) **Full local install:** all scanners + governance tools locally.
 
 ## Adopting the Framework
 
@@ -32,6 +38,15 @@ cp brainwav-agentic-governance/CODESTYLE.md /path/to/your-project/
 cp brainwav-agentic-governance/SECURITY.md /path/to/your-project/
 cp -R brainwav-agentic-governance/brainwav /path/to/your-project/
 ```
+
+### 2b. Pointer-mode install (recommended for low-drift)
+
+```bash
+pnpm governance:install --dest /path/to/your-project --mode pointer --profile core
+```
+
+- Adds `.agentic-governance/pointer.json` and pointer stubs for AGENTS/CODESTYLE/SECURITY.  
+- Requires `brainwav-agentic-governance` as a dev dependency, pinned in the lockfile (run scripts from `node_modules/brainwav-agentic-governance/scripts` or via `pnpm dlx`).
 
 ### 3. Configure MCP clients
 

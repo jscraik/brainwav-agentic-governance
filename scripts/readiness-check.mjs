@@ -20,6 +20,7 @@ import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 import ensureTools from './ensure-tools.mjs';
+import { formatPointerHint, resolveGovernancePaths } from './governance-paths.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(__dirname, '..');
@@ -31,8 +32,8 @@ const repoRoot = path.resolve(__dirname, '..');
  * @returns {string} Absolute path to the file.
  * @throws {Error} When the file does not exist.
  */
-function requireFile(relPath, label) {
-	const p = path.join(repoRoot, relPath);
+function requireFileAbsolute(filePath, label) {
+	const p = filePath;
 	if (!fs.existsSync(p)) {
 		throw new Error(`${label} missing at ${p}`);
 	}
@@ -46,13 +47,21 @@ function requireFile(relPath, label) {
  */
 function main() {
 	try {
-		requireFile('AGENTS.md', 'AGENTS.md');
-		requireFile('brainwav/governance/90-infra/governance-index.json', 'governance-index.json');
-		requireFile('brainwav/governance/00-core/AGENT_CHARTER.md', 'AGENT_CHARTER.md');
-		requireFile('brainwav/governance/10-flow/agentic-coding-workflow.md', 'agentic-coding-workflow.md');
-		requireFile('brainwav/governance/20-checklists/checklists.md', 'checklists.md');
+		const { govRoot, indexPath, agentsPath, pointerPath, packageRoot } =
+			resolveGovernancePaths(repoRoot);
+		const hint = formatPointerHint(pointerPath, packageRoot);
+
+		requireFileAbsolute(agentsPath, 'AGENTS.md (canonical)');
+		requireFileAbsolute(indexPath, 'governance-index.json');
+		requireFileAbsolute(path.join(govRoot, '00-core', 'AGENT_CHARTER.md'), 'AGENT_CHARTER.md');
+		requireFileAbsolute(
+			path.join(govRoot, '10-flow', 'agentic-coding-workflow.md'),
+			'agentic-coding-workflow.md'
+		);
+		requireFileAbsolute(path.join(govRoot, '20-checklists', 'checklists.md'), 'checklists.md');
 		ensureTools();
 		console.log('[brAInwav] readiness:check passed. Governance files present and tools verified.');
+		if (hint) console.log(`[brAInwav] ${hint}`);
 	} catch (error) {
 		console.error(`[brAInwav] readiness:check failed: ${error.message}`);
 		process.exitCode = 1;

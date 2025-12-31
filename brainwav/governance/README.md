@@ -1,7 +1,7 @@
 # Agentic Governance Framework
 
 **Status**: Canonical governance structure  
-**Last Updated**: 2025-12-03  
+**Last Updated**: 2025-12-31  
 **Maintainers**: brAInwav Development Team
 
 ---
@@ -10,6 +10,14 @@
 - Source anchors: keep `<!-- PACK:key=value -->` markers in governance docs so pack builds stay in sync.
 - Mapping: see `governance-pack.map.yaml` for anchor -> field mapping used by tooling.
 - Build: `scripts/governance/render-pack.mjs` merges core + overlays into `governance-pack/dist/` for CI/offline packs.
+
+## Core + Packs + Adapters
+
+- **Core**: mandatory policy (AGENTS, step budget, Evidence Triplet, hash index, AI risk controls).
+- **Packs**: opt-in capability bundles (`governance-pack/packs/*`).
+- **Adapters**: GitHub Actions templates and stack-specific command mappings.
+
+Controls-as-data live in `90-infra/control-registry.core.yaml` with schema validation.
 
 ## 📂 Directory Structure
 

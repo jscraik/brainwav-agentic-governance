@@ -1,0 +1,9 @@
+pack:
+  id: compliance-overlays
+  version: 1.0.0
+  default: false
+  summary: "Regulatory overlays (EU AI Act, ISO/IEC 42001) with evidence mappings."
+  standards:
+    - "EU AI Act (timeline obligations)"
+    - "ISO/IEC 42001:2023"
+  controlsRegistry: "brainwav/governance/90-infra/control-registry.core.yaml"

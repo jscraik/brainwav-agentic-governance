@@ -1,0 +1,9 @@
+pack:
+  id: security-appsec
+  version: 1.0.0
+  default: false
+  summary: "AppSec controls and verification gates for runtime systems."
+  standards:
+    - "OWASP Top 10:2025"
+    - "OWASP ASVS 5.0.0 (L2/L3 as required)"
+  controlsRegistry: "brainwav/governance/90-infra/control-registry.core.yaml"

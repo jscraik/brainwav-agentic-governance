@@ -1,0 +1,44 @@
+name: Governance Pack — Supply Chain
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  security-events: write
+
+env:
+  GOVERNANCE_PACK: supply-chain
+
+jobs:
+  supply-chain:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.19.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.11.0'
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile=false
+      - name: SBOM (CycloneDX)
+        uses: CycloneDX/gh-action@v3
+        with:
+          run-id: npm
+          output-format: json
+          path: .
+          version: latest
+      - name: Provenance (SLSA)
+        run: pnpm provenance:generate
+      - name: Signing (Cosign)
+        run: pnpm cosign:sign
+      - name: OpenSSF Scorecard
+        uses: ossf/scorecard-action@v2
+        with:
+          results_format: sarif
+          results_file: scorecard.sarif
+          publish_results: true

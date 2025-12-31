@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://governance.example.com/schemas/agentic.core.schema.json",
   "title": "Agentic Governance Pack",
-  "description": "Canonical schema for the generated governance pack consumed by projects and workers.",
+  "description": "Canonical schema for validation of the generated governance pack consumed by projects and workers.",
   "type": "object",
   "required": [
     "metadata",

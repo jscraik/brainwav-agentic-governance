@@ -95,7 +95,7 @@ workflow:
         - New acceptance/unit tests **fail first**, then **pass** on the next commit
         - "`TIME_FRESHNESS:OK tz=<IANA> today=<YYYY-MM-DD>` token present"
         - Oversight log present at ${vibeCheckLogPath}
-        - Threat model + data classification updated against OWASP ASVS/LLM Top 10 and NIST SSDF controls
+        - Threat model + data classification updated against OWASP ASVS 5.0.0, OWASP LLM Top 10 (2025 v1.1), and NIST SSDF controls
     - from: G
       to: F
       requirements:
@@ -178,7 +178,7 @@ profiles:
       requiredStandards:
         - "NIST SSDF v1.1 (secure-by-default development)"
         - "ISO/IEC 42001:2023 AI management and transparency"
-        - "OWASP ASVS 4.0 L2 + OWASP LLM Top 10 mitigations"
+        - "OWASP ASVS 5.0.0 L2 + OWASP LLM Top 10 (2025 v1.1) mitigations"
         - "WCAG ${a11yStandard} for all user-impacting changes"
       qualityGates:
         coverage:
@@ -210,7 +210,7 @@ profiles:
         - "NIST SSDF v1.1 + NIST AI RMF v1.0"
         - "ISO/IEC 27001:2022 controls mapped to delivery"
         - "ISO/IEC 42001:2023 governance + transparency statements"
-        - "OWASP ASVS 4.0 L2/L3 + OWASP LLM Top 10"
+        - "OWASP ASVS 5.0.0 L2/L3 + OWASP LLM Top 10 (2025 v1.1)"
         - "WCAG ${a11yStandard} with assistive tech validation"
       additionalEvidence:
         - "Data protection impact assessment (DPIA) and privacy review where personal data is processed."

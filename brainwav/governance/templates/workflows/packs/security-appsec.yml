@@ -1,0 +1,34 @@
+name: Governance Pack — Security AppSec
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  security-events: write
+
+env:
+  GOVERNANCE_PACK: security-appsec
+
+jobs:
+  appsec:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.11.0'
+      - name: Semgrep
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: p/ci
+      - name: Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        with:
+          args: "--no-git"
+      - name: OSV-Scanner
+        uses: google/osv-scanner-action@v1
+        with:
+          scan-args: "."

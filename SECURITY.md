@@ -35,7 +35,7 @@ Only the latest release on the `main` branch receives security fixes. Governance
 We align governance controls and verification with the following public standards/frameworks:
 
 ### OWASP Top 10 (Web/AppSec)
-- Primary reference: **OWASP Top 10:2025 (RC1)** (and **OWASP Top 10:2021** as the current “final” release while 2025 remains a release candidate).
+- Primary reference: **OWASP Top 10:2025** (final).
 - We use it as a *risk taxonomy* and to drive secure coding training and scanning coverage.
 
 References:
@@ -43,7 +43,7 @@ References:
 - https://owasp.org/Top10/2025/0x00_2025-Introduction/
 
 ### OWASP ASVS (Verification Standard)
-- Primary verification catalog: **OWASP ASVS 5.0.0** (May 2025).
+- Primary verification catalog: **OWASP ASVS 5.0.0**.
 - Applies to runtime systems *and* developer tooling that processes untrusted inputs or touches production credentials.
 
 References:
@@ -56,9 +56,43 @@ References:
 - “Critical systems (payments, privileged infra, agent orchestration with broad access)”: meet **ASVS L3** where applicable.
 
 ### OWASP Top 10 for LLMs / GenAI Apps (Agentic/LLM Security)
-- Primary reference: **OWASP Top 10 for LLMs 2025** (LLM01–LLM10).
+- Primary reference: **OWASP Top 10 for LLMs 2025 (v1.1)** (LLM01–LLM10).
 
 Reference: https://genai.owasp.org/llm-top-10/
+
+### NIST SSDF (Secure Software Development Framework)
+- Primary reference: **NIST SP 800-218 (SSDF) v1.1**.
+
+Reference: https://csrc.nist.gov/pubs/sp/800/218/final
+
+### NIST AI RMF + GenAI Profile
+- Primary reference: **NIST AI RMF 1.0** and the **Generative AI Profile**.
+
+References:
+- https://www.nist.gov/itl/ai-risk-management-framework
+- https://www.nist.gov/itl/ai-risk-management-framework/generative-ai-profile
+
+### Accessibility + AI Governance
+- **WCAG 2.2 / ISO/IEC 40500:2025** for accessibility conformance.
+- **ISO/IEC 42001:2023** for AI management system alignment where applicable.
+
+References:
+- https://www.w3.org/TR/WCAG22/
+- https://www.iso.org/standard/42001.html
+
+### Supply Chain Standards
+- **SLSA Provenance v1.2**
+- **CycloneDX 1.7**
+- **SPDX 3.0.1**
+- **OpenSSF Scorecard**
+- **Sigstore Cosign**
+
+References:
+- https://slsa.dev/spec/v1.2/provenance
+- https://cyclonedx.org/news/cyclonedx-v1-7-released
+- https://spdx.github.io/spdx-spec/v3.0.1/
+- https://github.com/ossf/scorecard-action
+- https://docs.sigstore.dev/cosign/signing/overview/
 
 ### MITRE ATLAS (AI Adversary TTPs)
 - Used for AI threat modeling and red-teaming scenarios.
@@ -91,7 +125,7 @@ brAInwav governance addresses threats across:
 | **LLM09:2025 Misinformation** | Grounding policies; citations/evidence requirements; eval harness regressions block merges | Eval reports |
 | **LLM10:2025 Unbounded Consumption** | Quotas, budgets, rate limits; timeouts; bounded tool loops; cost guards | `AGENT_CHARTER.md` |
 
-### Web/Application Risks (OWASP Top 10:2025 RC1)
+### Web/Application Risks (OWASP Top 10:2025)
 
 We use the OWASP Top 10:2025 list as a baseline taxonomy for all runtime systems:
 

@@ -7,7 +7,7 @@ The brAInwav Agentic Governance Framework provides a portable, project-neutral s
 - **Consistent Development Workflow** – ArcTDD gates (G0–G10) with Phase Machine (R→G→F→REVIEW).
 - **Evidence-Based Delivery** – Mandatory Evidence Triplet (milestone test, contract snapshot, reviewer disposition).
 - **Oversight & Compliance** – Cortex Aegis MCP for vibe checks, academic research, license validation.
-- **Security Standards** – OWASP Top 10 2025, ASVS 5.0.0, LLM Top 10, SBOM/attestation requirements.
+- **Security Standards** – OWASP Top 10:2025, ASVS 5.0.0, LLM Top 10 (2025 v1.1), SBOM/attestation requirements.
 
 ## What This Framework Is
 

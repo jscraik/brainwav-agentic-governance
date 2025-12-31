@@ -153,7 +153,7 @@ docs:
 
       - **SBOM (CycloneDX 1.7)**  
 
-      - **Provenance (SLSA v1.1)**  
+      - **Provenance (SLSA v1.2)**  
 
       - **Sign & verify with Cosign v3 bundle** artifacts  
 
@@ -314,7 +314,7 @@ docs:
       **Licensing**: Apache‑2.0; `pnpm license:validate`; **SBOM via CycloneDX
       1.7**.  
 
-      **Provenance**: **SLSA v1.1** attestations; verify with **Cosign v3
+      **Provenance**: **SLSA v1.2** attestations; verify with **Cosign v3
       bundle**.  
 
       **Privacy**: Local-first; GDPR erasure; privacy-preserving telemetry.
@@ -2068,8 +2068,8 @@ docs:
       **Containers**: Minimal base, pinned digests, non-root user, read-only FS,
       dropped capabilities.
 
-      **Provenance**: Target SLSA v1.1 (Approved 2025-04-21); evaluate Source
-      track from SLSA v1.2 RC1 once promoted to GA.
+      **Provenance**: Target SLSA v1.2 (GA); require provenance evidence at
+      release gates.
 
       **Signing**: Cosign v3 bundle verification is the default; align release
       tooling and PolicyController policies accordingly.
@@ -2601,7 +2601,7 @@ docs:
 
       - **Objective** – Provide hard evidence for change correctness, safety, and compliance.  
       - **Required artefacts** – `evidence/tests.md`, `evidence/test-results/*`, `verification/coverage-results.json`, `verification/mutation-results.json`, `evidence/aegis-report.json` (if rerun), `implementation-plan.md#reuse-ledger`.  
-      - **Checks** – Coverage ≥ 90% global / 95% changed; mutation ≥ 90%; Semgrep/gitleaks/OSV clean; structure + Axe/jest-axe for UI/CLI; SBOM (CycloneDX 1.7) + SLSA v1.1 provenance + Cosign v3 bundle; model health logs; Evidence Triplet complete.  
+      - **Checks** – Coverage ≥ 90% global / 95% changed; mutation ≥ 90%; Semgrep/gitleaks/OSV clean; structure + Axe/jest-axe for UI/CLI; SBOM (CycloneDX 1.7) + SLSA v1.2 provenance + Cosign v3 bundle; model health logs; Evidence Triplet complete.  
       - **Exit criteria** – All gates satisfied; `run-manifest.json.reuseEvidence` populated (`plan`, `failingTest`, `passingTest`, `reviewComment`).
 
       #### G6 – Review
@@ -3614,7 +3614,7 @@ docs:
       tags include security/privacy.
 
       - [ ] Semgrep, gitleaks, OSV, `pnpm security:scan`, SBOM (CycloneDX 1.7),
-      and SLSA v1.1 attestations referenced.
+      and SLSA v1.2 attestations referenced.
 
 
       ### 4.5 Performance & Reliability
@@ -3761,7 +3761,7 @@ docs:
       - [ ] Security (`pnpm security:scan`, Semgrep, gitleaks, OSV), a11y (`pnpm
       test:a11y`), performance (bench/perf reports) executed.
 
-      - [ ] SBOM (CycloneDX 1.7) + SLSA v1.1 provenance + Cosign v3 bundle
+      - [ ] SBOM (CycloneDX 1.7) + SLSA v1.2 provenance + Cosign v3 bundle
       produced; Evidence Triplet complete;
       `run-manifest.json.reuseEvidence.passingTest` populated.
 
@@ -5780,7 +5780,7 @@ docs:
       | **LLM09: Overreliance**                     | ✅ Compliant | Human oversight, confidence scoring   |
       | **LLM10: Model Theft**                      | ✅ Compliant | Access controls, model protection     |
 
-      ### OWASP ASVS 4.0.3 Alignment
+      ### OWASP ASVS 5.0.0 Alignment
 
       | Verification Requirement                      | L1 | L2 | L3 | Implementation Highlights |
       | --------------------------------------------- | -- | -- | -- | ------------------------- |
@@ -6782,7 +6782,7 @@ docs:
 
       **Status:** Authoritative reference for oversight mapping  
       **Scope:** Applies to all Cortex-OS agents, reviewers, and CI guardrails when assessing LLM-centric risk.  
-      **Standards Alignment:** OWASP Top 10 for LLM Apps (2025), NIST AI RMF 1.0, NIST Generative AI Profile, W3C Trace Context, CycloneDX 1.7, SLSA v1.1.
+      **Standards Alignment:** OWASP Top 10 for LLM Apps (2025), NIST AI RMF 1.0, NIST Generative AI Profile, W3C Trace Context, CycloneDX 1.7, SLSA v1.2.
 
       ---
 
@@ -6801,7 +6801,7 @@ docs:
       | **LLM01** | Prompt Injection | Strict input validation (Zod), tool allow-list & scoped capabilities, **structured outputs / function calling**, sandboxed tool execution, **vibe_check** before side-effects. | Schema files; tool registry entries; vibe_check JSON; failing→passing injection tests; blocked-call log/screenshot. |
       | **LLM02** | Data Leakage | Data minimization; observability redaction; secrets via **1Password CLI (`op`)**; access reviews; encrypted storage; PII scanners. | Redaction config; scanner report; `op` usage evidence; access review notes; encryption config. |
       | **LLM03** | Model Theft | Authenticated API gateways; rate limits; watermarking (where applicable); signed inference manifests. | Gateway policy; rate-limit config; watermark test; signed manifest sample. |
-      | **LLM04** | Supply Chain | **SBOM CycloneDX 1.7**, dependency review, reproducible builds, **SLSA v1.1** provenance, **Cosign v3 bundle** verification, OSV scan. | SBOM file; SLSA attestation; cosign bundle verify log; OSV report. |
+      | **LLM04** | Supply Chain | **SBOM CycloneDX 1.7**, dependency review, reproducible builds, **SLSA v1.2** provenance, **Cosign v3 bundle** verification, OSV scan. | SBOM file; SLSA attestation; cosign bundle verify log; OSV report. |
       | **LLM05** | Insecure Plugins | Plugin registry attestation; contract testing; minimal scopes; orchestration kill-switch toggles. | Registry entry; contract tests; scope diff; toggle docs. |
       | **LLM06** | Excessive Agency | Phase policy (**HITL only at REVIEW**); action throttles; deterministic plans ≤7 steps; recap logging; guardian mode blocks. | Phase tokens (`PHASE_TRANSITION:*`); throttle config; plan evidence; guardian failure screenshot. |
       | **LLM07** | Sensitive Output Handling | Output classifiers; policy-based redaction; watermark detection; reviewer approval for regulated content. | Classifier config; redaction policies; reviewer checklist link; detection logs. |
@@ -6844,7 +6844,7 @@ docs:
       * OWASP Top 10 for Large Language Model Applications (2025)
       * NIST AI RMF 1.0; NIST Generative AI Profile
       * `/.cortex/rules/vibe-check.md` • `/.cortex/rules/agentic-coding-workflow.md` • `/.cortex/rules/AGENT_CHARTER.md`
-      * Supply chain: CycloneDX 1.7 • SLSA v1.1 • Cosign v3 bundle
+      * Supply chain: CycloneDX 1.7 • SLSA v1.2 • Cosign v3 bundle
       * Observability: W3C Trace Context • OpenTelemetry
   - id: skills_system_governance
     file: .cortex/rules/00-core/skills-system-governance.md
@@ -6866,7 +6866,7 @@ docs:
         - Constitution v1.3.0
         - WCAG 2.2 AA (ISO/IEC 40500:2025)
         - W3C Trace Context + OpenTelemetry
-        - CycloneDX 1.7 • SLSA v1.1 • Cosign v3 bundle
+        - CycloneDX 1.7 • SLSA v1.2 • Cosign v3 bundle
         - OIDC/WIF for CI/cloud auth
       ---
 
@@ -7130,7 +7130,7 @@ docs:
       pnpm skills:security-scan      # semgrep/gitleaks/osv on code blocks and repo
       pnpm skills:parse-all          # index build
       pnpm sbom:generate             # CycloneDX 1.7
-      pnpm attest:sign && pnpm verify:attest  # SLSA v1.1 + Cosign v3 bundle
+      pnpm attest:sign && pnpm verify:attest  # SLSA v1.2 + Cosign v3 bundle
       ```
 
       ### 6.2 Pre-commit Hooks

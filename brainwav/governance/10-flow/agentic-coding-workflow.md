@@ -12,6 +12,7 @@
 
 - [0. Document Metadata](#0-document-metadata)
 - [1. Purpose & Scope](#1-purpose--scope)
+  - [1.1 Execution Modes (Creative vs Delivery)](#11-execution-modes-creative-vs-delivery)
 - [2. Task Types & Canonical Flows](#2-task-types--canonical-flows)
 - [3. Standard Task Folder Layout](#3-standard-task-folder-layout)
 - [4. ArcTDD Gate Policy (G0–G10)](#4-arctdd-gate-policy-g0g10)
@@ -66,6 +67,14 @@
   - `10-flow/emergency-stop-protocol.md` (kill switches, safety triggers)
   - `20-checklists/checklists.md`
   - `docs/documentation-governance.md` (documentation quality + mandatory JSDoc policy)
+
+---
+
+### 1.1 Execution Modes (Creative vs Delivery)
+
+**Creative mode (default for ideation/spikes):** no side-effecting actions, no deploys, no secrets; produce a short artifact (ADR/spike note/PoC) and explicit next steps.  
+**Delivery mode (required for merge/release):** full ArcTDD gates, Evidence Triplet, oversight, and security/a11y/supply-chain checks apply.  
+**CI rule:** Delivery mode is enforced regardless of local mode; Creative mode never overrides merge gates.
 
 ---
 
@@ -173,6 +182,7 @@ tasks/<task-slug>/
 ### 3.4 Gate-by-Gate Artefact Creation
 
 > This section maps artefact creation to the ArcTDD gates (G0–G10). Agents and humans MUST create the specified files at each gate; automation validates presence.
+> Gate token: G0 Initialize.
 
 | Gate | Artefacts Created |
 |------|-------------------|
@@ -662,7 +672,7 @@ just mcp-session-manifest <slug> <server> <transport> <endpoint> <session_log> <
   7. Address critic findings AND confession admissions before proceeding
 - **Confession Principle**: The confession channel is judged ONLY for honesty, not for the quality of the main work. Admitting failures in the confession does NOT penalize the main work — it surfaces issues for human review.
 - **Required artefacts** – `evidence/tests.md`, `evidence/test-results/*`, `evidence/critic-review.json`, `evidence/confession-report.json`, `verification/coverage-results.json`, `verification/mutation-results.json`, `evidence/aegis-report.json` (if rerun), `implementation-plan.md#reuse-ledger`.  
-- **Checks** – Coverage ≥ 90% global / 95% changed; mutation ≥ 90%; Semgrep/gitleaks/OSV clean; structure + Axe/jest-axe for UI/CLI; SBOM (CycloneDX 1.7) + SLSA v1.1 provenance + Cosign v3 bundle; model health logs; Evidence Triplet complete.  
+- **Checks** – Coverage ≥ 90% global / 95% changed; mutation ≥ 90%; Semgrep/gitleaks/OSV clean; structure + Axe/jest-axe for UI/CLI; SBOM (CycloneDX 1.7) + SLSA v1.2 provenance + Cosign v3 bundle; model health logs; Evidence Triplet complete.  
 - **Exit criteria** – All gates satisfied; `run-manifest.json.reuseEvidence` populated (`plan`, `failingTest`, `passingTest`, `reviewComment`).
 
 #### G6 – Review
@@ -765,7 +775,7 @@ The phase machine maps onto ArcTDD gates as follows:
 
 - Non-behavioral refactors; documentation
 - A11y audits (axe/jest-axe/Playwright)
-- SBOM & provenance: **CycloneDX 1.7** + **SLSA v1.1**; **Cosign v3 bundle** verify
+- SBOM & provenance: **CycloneDX 1.7** + **SLSA v1.2**; **Cosign v3 bundle** verify
 - Structure/contract guard, Observability checks
 
 **Forbidden**
@@ -791,7 +801,7 @@ The phase machine maps onto ArcTDD gates as follows:
 
 - Evidence Triplet (milestone red→green proof, contract snapshot, reviewer JSON pointer)
 - Trace Context proof (every governed log has `traceparent` + 32-hex `trace_id`)
-- SBOM (CycloneDX 1.7), SLSA v1.1 provenance, Cosign v3 **bundle** verify logs
+- SBOM (CycloneDX 1.7), SLSA v1.2 provenance, Cosign v3 **bundle** verify logs
 - A11y/security artifacts
 - Reuse Ledger pointer
 
@@ -867,7 +877,7 @@ The phase machine maps onto ArcTDD gates as follows:
 2. **No HITL before REVIEW.** Any other `human_input` pre-REVIEW is a violation unless a time-boxed waiver exists.
 3. **Structured outputs required.** Any model output that drives tools/files/network **must** be function/tool-calling or conform to a JSON-Schema, with validation on receipt.
 4. **Observability.** All charter-governed logs carry `[brAInwav]`, `brand:"brAInwav"`, ISO-8601 timestamp, `trace_id` (32 lower-hex), and **HTTP `traceparent`** for correlation. Missing fields fail gates.
-5. **Supply-chain.** Generate **CycloneDX 1.7** SBOM; produce **SLSA v1.1** provenance; sign/verify with **Cosign v3 bundle**.
+5. **Supply-chain.** Generate **CycloneDX 1.7** SBOM; produce **SLSA v1.2** provenance; sign/verify with **Cosign v3 bundle**.
 6. **Identity & secrets.** CI authenticates to cloud via **OIDC/WIF** only. Secrets are fetched at runtime using the **1Password CLI** (`op`); never persisted.
 7. **Hybrid models — live only.** No stubs/recordings/dry-runs for embeddings/rerankers/generation. Frontier/Ollama health logs required.
 8. **A11y baseline.** WCAG 2.2 AA (ISO/IEC 40500:2025).

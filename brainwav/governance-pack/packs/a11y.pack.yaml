@@ -1,0 +1,8 @@
+pack:
+  id: a11y
+  version: 1.0.0
+  default: false
+  summary: "Accessibility gates and reporting requirements."
+  standards:
+    - "WCAG 2.2 (ISO/IEC 40500:2025)"
+  controlsRegistry: "brainwav/governance/90-infra/control-registry.core.yaml"

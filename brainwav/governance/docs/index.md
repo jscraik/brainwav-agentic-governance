@@ -12,7 +12,7 @@ Central entry point for the brAInwav Agentic Governance Framework documentation.
 | Evidence Triplet | Mandatory milestone test, contract snapshot, reviewer disposition |
 | Cortex Aegis Oversight | MCP server for vibe checks, license validation, connector health |
 | Governance Commands | Executable commands for memory, recall, daily summaries |
-| Security Standards | OWASP Top 10 2025, ASVS 5.0.0, LLM Top 10 alignment |
+| Security Standards | OWASP Top 10:2025, ASVS 5.0.0, LLM Top 10 (2025 v1.1) alignment |
 | Compliance Mapping | EU AI Act, ISO/IEC 42001 advisory alignment |
 
 ## Documentation

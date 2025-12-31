@@ -158,7 +158,7 @@
 
 - [ ] No secrets or keys committed; 1Password CLI usage documented.
 - [ ] New inputs validated; outputs encoded; threat model touched if risk tags include security/privacy.
-- [ ] Semgrep, gitleaks, OSV, `pnpm security:scan`, SBOM (CycloneDX 1.7), and SLSA v1.1 attestations referenced.
+- [ ] Semgrep, gitleaks, OSV, `pnpm security:scan`, SBOM (CycloneDX 1.7), and SLSA v1.2 attestations referenced.
 
 ### 4.5 Performance & Reliability
 
@@ -232,7 +232,7 @@ CI jobs must fail closed; waivers recorded in `governance/waivers/` with expiry 
 
 - [ ] Test suites + `pnpm test:coverage`/`pnpm exec tsx scripts/ci/summarize-coverage.mjs` run; coverage/mutation thresholds met.
 - [ ] Security (`pnpm security:scan`, Semgrep, gitleaks, OSV), a11y (`pnpm test:a11y`), performance (bench/perf reports) executed.
-- [ ] SBOM (CycloneDX 1.7) + SLSA v1.1 provenance + Cosign v3 bundle produced; Evidence Triplet complete; `run-manifest.json.reuseEvidence.passingTest` populated.
+- [ ] SBOM (CycloneDX 1.7) + SLSA v1.2 provenance + Cosign v3 bundle produced; Evidence Triplet complete; `run-manifest.json.reuseEvidence.passingTest` populated.
 
 ### G6 – Review
 

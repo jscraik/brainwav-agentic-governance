@@ -1,0 +1,16 @@
+pack:
+  id: core
+  version: 1.0.0
+  default: true
+  summary: "Mandatory baseline: governance integrity, evidence triplets, step budget, and AI risk controls."
+  modes:
+    creative:
+      summary: "Ideation/spikes only; no side-effecting actions."
+    delivery:
+      summary: "Merge/release mode; full gates enforced in CI."
+  standards:
+    - "NIST SSDF v1.1"
+    - "NIST AI RMF 1.0 + GenAI Profile"
+    - "OWASP LLM Top 10 (2025 v1.1)"
+    - "OWASP ASVS 5.0.0 (baseline L2)"
+  controlsRegistry: "brainwav/governance/90-infra/control-registry.core.yaml"

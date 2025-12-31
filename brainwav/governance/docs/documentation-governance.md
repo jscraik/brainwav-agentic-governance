@@ -1,5 +1,7 @@
 # Documentation Governance
 
+This documentation governance policy is mandatory for all docs in this repo.
+
 This policy enforces documentation quality using the OpenAI Cookbook guidance ("What makes documentation good") and mandates JSDoc coverage across all JavaScript/TypeScript code.
 
 ## Table of Contents

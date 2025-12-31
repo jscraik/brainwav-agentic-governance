@@ -1,6 +1,6 @@
 # Architecture
 
-The brAInwav Agentic Governance Framework is a document-based governance system with optional MCP tooling.
+The brAInwav Agentic Governance Framework is a modular control framework with a fast local loop and strict merge/release gates. It is document-driven with optional MCP tooling and GitHub Actions adapters.
 
 ## Governance Hierarchy
 
@@ -25,6 +25,27 @@ brainwav/governance/
 └── templates/        # Feature, research, TDD plan templates
 ```
 
+## Core + Packs + Adapters
+
+**Core (mandatory everywhere)**  
+- AGENTS.md + step budget + evidence triplet + hash index  
+- Creative vs Delivery modes (local speed vs merge-time rigor)  
+- AI risk controls enabled by default  
+- Control registry schema and core control set
+
+**Capability packs (opt-in, versioned)**  
+- `security-appsec` (OWASP Top 10:2025, ASVS 5.0.0 mappings)  
+- `supply-chain` (SLSA provenance, SBOM, signing, Scorecard)  
+- `a11y` (WCAG 2.2 + test gates)  
+- `ai-risk` (OWASP LLM Top 10 + NIST AI RMF/GenAI Profile)  
+- `compliance-overlays` (EU AI Act / ISO 42001 mappings)
+
+**Adapters (how it runs)**  
+- GitHub Actions templates (default, including pack-specific workflows)  
+- Stack adapters (Node/Python/Go/iOS) that only change *commands*, not policy text
+
+Pack manifests live under `brainwav/governance-pack/packs/` and are merged into rendered outputs for CI.
+
 ## Task Folder Structure
 
 Each governed task produces evidence in a structured folder:
@@ -48,3 +69,7 @@ Optional MCP servers extend governance automation:
 - **Local Memory** (port 3002) – Persistent context store
 - **Context7** – Library documentation retrieval
 - **RepoPrompt** – Context building and planning
+
+## Control Registry (Controls-as-Data)
+
+Controls are defined as data in `brainwav/governance/90-infra/control-registry.core.yaml` and validated by `control-registry.schema.json`. Each control specifies intent, risk, owners, automation points, evidence paths, and mappings to public standards. This makes governance auditable outside the org and reduces policy drift.

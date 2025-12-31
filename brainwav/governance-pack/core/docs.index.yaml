@@ -95,3 +95,13 @@ docs:
     sha: ${doc:skills_system_governance:sha}
     url: ${doc:skills_system_governance:url}
     full_text: ${doc:skills_system_governance:full_text}
+  - id: control_registry
+    file: ${doc:control_registry:file}
+    sha: ${doc:control_registry:sha}
+    url: ${doc:control_registry:url}
+    full_text: ${doc:control_registry:full_text}
+  - id: control_registry_schema
+    file: ${doc:control_registry_schema:file}
+    sha: ${doc:control_registry_schema:sha}
+    url: ${doc:control_registry_schema:url}
+    full_text: ${doc:control_registry_schema:full_text}

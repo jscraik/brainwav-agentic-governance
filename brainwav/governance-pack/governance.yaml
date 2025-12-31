@@ -163,8 +163,8 @@ workflow:
           commit
         - "`TIME_FRESHNESS:OK tz=<IANA> today=<YYYY-MM-DD>` token present"
         - Oversight log (`brAInwav-vibe-check`) stored in `logs/vibe-check/`
-        - Threat model + data classification updated against OWASP ASVS v4.0 L2
-          (L3 where required by profile), OWASP LLM Top 10, and NIST SSDF controls
+        - Threat model + data classification updated against OWASP ASVS 5.0.0 L2
+          (L3 where required by profile), OWASP LLM Top 10 (2025 v1.1), and NIST SSDF controls
     - from: G
       to: F
       requirements:
@@ -173,7 +173,7 @@ workflow:
         - Mutation ≥ **90%** (where enabled)
         - Latest model-health log includes engine, model IDs, vector dims/norms,
           P95 latency
-        - SBOM + provenance artifacts generated as CycloneDX 1.7 SBOM and SLSA 1.1
+        - SBOM + provenance artifacts generated as CycloneDX 1.7 SBOM and SLSA 1.2
           provenance (or stricter project default) and attached to the task folder
     - from: F
       to: REVIEW
@@ -209,7 +209,7 @@ qualityGates:
     - osv
   supplyChain:
     sbom: cyclonedx@1.7
-    slsa: "1.1"
+    slsa: "1.2"
     signing: cosign-v3-bundle
 governance:
   precedence:
@@ -276,7 +276,7 @@ profiles:
       requiredStandards:
         - "NIST SSDF v1.1 (secure-by-default development)"
         - "ISO/IEC 42001:2023 AI management and transparency"
-        - "OWASP ASVS 4.0 L2 + OWASP LLM Top 10 mitigations"
+        - "OWASP ASVS 5.0.0 L2 + OWASP LLM Top 10 (2025 v1.1) mitigations"
         - "WCAG 2.2 AA for all user-impacting changes"
       qualityGates:
         coverage:
@@ -286,7 +286,7 @@ profiles:
           global: 90
       supplyChain:
         sbom: cyclonedx@1.7
-        slsa: "1.1"
+        slsa: "1.2"
         signing: cosign-v3-bundle
   brownfield:
     overrides:
@@ -326,9 +326,9 @@ profiles:
         - "NIST SSDF v1.1 + NIST AI RMF v1.0"
         - "ISO/IEC 27001:2022 controls mapped to delivery"
         - "ISO/IEC 42001:2023 governance + transparency statements"
-        - "OWASP ASVS 4.0 L2/L3 + OWASP LLM Top 10"
+        - "OWASP ASVS 5.0.0 L2/L3 + OWASP LLM Top 10 (2025 v1.1)"
         - "WCAG 2.2 AA with assistive tech validation"
       additionalEvidence:
         - "Data protection impact assessment (DPIA) and privacy review where personal data is processed."
-        - "Signed SBOM (cyclonedx@1.7) + provenance (1.1) for every release artifact."
+        - "Signed SBOM (cyclonedx@1.7) + provenance (1.2) for every release artifact."
         - "Model-health, bias, and safety evaluations recorded alongside the Evidence Triplet."

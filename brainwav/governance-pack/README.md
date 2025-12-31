@@ -1,10 +1,11 @@
 # Governance Pack Layering
 
-This pack now supports a **core + overlay** model so it can be reused across orgs and projects.
+This pack supports a **core + packs + adapters** model so it can be reused across orgs and projects without forcing every repo to install every tool.
 
 ## Layout
 
 - `core/` — org-neutral templates with `${var}` placeholders.
+- `packs/` — capability packs (security-appsec, supply-chain, a11y, ai-risk, compliance-overlays).
 - `overlays/<org>/` — organization defaults (Cortex provided).
 - `overlays/<project>/` — optional tighter project layer.
 - `core/docs.index.yaml` — ordered doc pointers (path/sha/url, optional `full_text` placeholder).
@@ -15,16 +16,18 @@ This pack now supports a **core + overlay** model so it can be reused across org
 ## Merge Order
 
 1. `core/*`
-2. `overlays/<org>/*`
-3. `overlays/<project>/*` (optional)
+2. `packs/<pack>/*` (opt-in, versioned)
+3. `overlays/<org>/*`
+4. `overlays/<project>/*` (optional)
 
 Overlay values **win** on conflicts. Deep-merge semantics are expected (overlay replaces scalar/lists, merges objects). Docs index follows the same order; full-text entries, if present, should come from the highest-priority overlay.
 
 ## Layering contract
-- Core (`core/*`): project-neutral templates; never edited by overlays.
-- Org overlays (`overlays/<org>/*`): org defaults that may override/extend core values.
-- Project overlays (`overlays/<org>/<project>/*`, optional): tighten for a project without mutating org/core; use when a project needs stricter gates/links than the org baseline.
-- Merge precedence: core → org overlay → project overlay; later layers override keys but must not edit files in `core/`.
+- Core (`core/*`): project-neutral templates; never edited by packs or overlays.
+- Packs (`packs/*`): opt-in control bundles that add or tighten gates without editing core.
+- Org overlays (`overlays/<org>/*`): org defaults that may override/extend core + packs.
+- Project overlays (`overlays/<org>/<project>/*`, optional): tighten for a project without mutating org/core/packs.
+- Merge precedence: core → packs → org overlay → project overlay; later layers override keys but must not edit files in `core/`.
 
 ## Adoption profiles (project-neutral)
 
@@ -35,6 +38,10 @@ Pick a profile and merge/override if needed:
 - **Regulated/Safety-Critical** — Adds privacy + safety evidence (DPIA where applicable), signed SBOM/provenance per release, model health/bias evaluations, and mandatory human sign-off for rollout/rollback.
 
 Profiles live in `governance.core.yaml` (templates), `governance.yaml` (defaults), and `dist/governance.yaml` (rendered) so downstream projects can consume them without Cortex-specific assumptions.
+
+## Pointer mode distribution
+
+For low-drift adoption, repos can use pointer mode (`pnpm governance:install --mode pointer`) and pin `brainwav-agentic-governance` via their lockfile. Pointer mode keeps local files minimal while validation resolves canonical docs from `node_modules/brainwav-agentic-governance`.
 
 ## Operational action sets (Q1–Q5)
 

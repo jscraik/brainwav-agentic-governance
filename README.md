@@ -13,9 +13,10 @@ The brAInwav framework packages policies, workflows, templates, and automation f
 - **ArcTDD + Phase Machine** – Standardized G0–G10 workflow (R→G→F→REVIEW) with ≤7-step plans, failing-first tests, and evidence capture at every gate.
 - **Evidence Triplet & Run Manifests** – Mandatory pointers to (1) milestone test red→green proof, (2) contract snapshot, (3) reviewer disposition JSON.
 - **Cortex-Aegis Oversight** – Live MCP/CLI gate that enforces academic research, license validation, and vibe checks before any side-effecting work.
-- **Security & Compliance** – OWASP Top 10 2025 RC1 + OWASP ASVS 5.0.0 alignment, Semgrep/Gitleaks/OSV/Trivy/SBOM/Cosign requirements (see `SECURITY.md`).
+- **Security & Compliance** – OWASP Top 10:2025, OWASP ASVS 5.0.0, OWASP LLM Top 10 (2025), NIST SSDF 1.1, NIST AI RMF + GenAI Profile, WCAG 2.2, SLSA v1.2, CycloneDX 1.7, SPDX 3.0.1, Sigstore Cosign, and OpenSSF Scorecard alignment (see `SECURITY.md`).
 - **Governance Integrity** – `brainwav/governance/90-infra/governance-index.json` pins SHA-256 hashes for every normative doc; CI blocks mismatches.
 - **MCP-First Tooling** – RepoPrompt, Context7, Local Memory, and Cortex-Aegis MCP servers with run-manifest logging, plus Local Memory parity rules.
+- **Modular Control Framework** – Core + capability packs + GitHub Actions adapters, with controls-as-data for auditability and external defensibility.
 
 ---
 
@@ -53,8 +54,9 @@ pnpm readiness:check
 
 1. From this repo: `pnpm install` (Node 24.11.x, pnpm 10.19.x).  
 2. Install governance into the target repo:  
-   `pnpm governance:install --dest /path/to/consumer-repo`  
-   This copies AGENTS, CODESTYLE, SECURITY, `brainwav/governance/**`, issue/PR templates, and the GitHub Actions workflow.
+   `pnpm governance:install --dest /path/to/consumer-repo [--mode full|pointer] [--profile core|creative|full]`  
+   - `full` copies AGENTS, CODESTYLE, SECURITY, `brainwav/governance/**`, issue/PR templates, and the GitHub Actions workflow.  
+   - `pointer` writes pointer stubs + `.agentic-governance/pointer.json` and expects a lockfile-pinned `brainwav-agentic-governance` dependency (invoke scripts from `node_modules/brainwav-agentic-governance/scripts` or via `pnpm dlx`).
 3. In the consumer repo, run:  
    `pnpm governance:validate` (checks required tokens + Step Budget ≤7)  
    `pnpm governance:sync-hashes:check` (ensures hashes match the index)
@@ -106,6 +108,29 @@ tasks/<slug>/                 # Per-task folders with run manifests + evidence t
 ```
 
 ---
+
+## Architecture: Core + Packs + Adapters
+
+**Core (mandatory):** AGENTS.md, step budget, evidence triplet, hash-pinned governance index, creative/delivery modes, and AI risk controls by default.  
+**Capability packs (opt-in):** security-appsec, supply-chain, a11y, ai-risk, compliance-overlays.  
+**Adapters:** GitHub Actions templates and stack-specific command mappings (policy text stays identical).
+
+Controls are stored as data in `brainwav/governance/90-infra/control-registry.core.yaml` and mapped to public standards for auditability.
+
+---
+
+## Creative vs Delivery Modes
+
+**Creative mode (default for ideation/spikes):** No side-effecting actions, no deploys, no secrets; output is a short artifact + next steps.  
+**Delivery mode (required for merge/release):** All ArcTDD gates, evidence triplets, oversight, and security/a11y/supply-chain checks apply. CI enforces Delivery regardless of local mode.
+
+---
+
+## Adoption Paths (Dec 2025 best practice)
+
+1) **Fast path (no Docker):** minimal local checks, full CI gates.  
+2) **Containerized tooling:** single tools image for scanners and SBOM/provenance.  
+3) **Full local install:** all scanners and governance tools installed locally.
 
 ## Governance Commands
 
@@ -177,7 +202,7 @@ tasks/<slug>/
 
 ### Security & Compliance
 
-- Follow `SECURITY.md` for OWASP Top 10 2025 RC1, OWASP ASVS 5.0.0 targeting, OWASP LLM Top 10 2025, and MITRE ATLAS tagging.
+- Follow `SECURITY.md` for OWASP Top 10:2025, OWASP ASVS 5.0.0 targeting, OWASP LLM Top 10 (2025 v1.1), and MITRE ATLAS tagging.
 - CI gates: Semgrep (block on policy rules), Gitleaks (`ANY=block`), OSV/pnpm audit (block on high/critical runtime deps), Trivy (vuln/misconfig/secret/license), CycloneDX SBOM, Sigstore Cosign v3 attestation.
 - Evidence of each scanner runs during G5, and waivers must be recorded + time-boxed per `AGENTS.md` §27.
 

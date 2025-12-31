@@ -136,6 +136,10 @@ pnpm governance:sync-hashes
 
 **Note:** The fragment now lives inside `AGENT_CHARTER.md` between the marker comments, and that region still carries a historical self-referencing hash. This marker line is **informational only** and is NOT auto-updated to avoid circular dependencies. The authoritative hash is in `governance-index.json`.
 
+### Note: governance-index.json self-hash
+
+The sync script computes the hash of `governance-index.json` with its own `sha256` field blanked first. This avoids circular drift while still detecting tampering of the index contents.
+
 ### CI failure: `agents-governance` job
 
 **Cause:** Committed governance docs without syncing hashes.

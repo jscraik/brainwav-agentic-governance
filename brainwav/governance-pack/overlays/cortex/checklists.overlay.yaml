@@ -294,7 +294,7 @@ checklists:
           - REVIEW
     - id: semgrep-gitleaks-osv-pnpm-security-scan-sbom-cyclonedx-1-7-and-slsa-v1-1-attesta
       description: Semgrep, gitleaks, OSV, `pnpm security:scan`, SBOM (CycloneDX 1.7),
-        and SLSA v1.1 attestations referenced.
+        and SLSA v1.2 attestations referenced.
       severity: MAJOR
       appliesTo:
         phases:
@@ -488,7 +488,7 @@ checklists:
         gates:
           - G5
     - id: sbom-cyclonedx-1-7-slsa-v1-1-provenance-cosign-v3-bundle-produced-evidence-tripl
-      description: SBOM (CycloneDX 1.7) + SLSA v1.1 provenance + Cosign v3 bundle
+      description: SBOM (CycloneDX 1.7) + SLSA v1.2 provenance + Cosign v3 bundle
         produced; Evidence Triplet complete;
         `run-manifest.json.reuseEvidence.passingTest` populated.
       severity: MAJOR

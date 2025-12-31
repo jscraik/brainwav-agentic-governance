@@ -206,7 +206,7 @@ qualityGates:
     - osv
   supplyChain:
     sbom: cyclonedx@1.7
-    slsa: "1.1"
+    slsa: "1.2"
     signing: cosign-v3-bundle
 governance:
   precedence:

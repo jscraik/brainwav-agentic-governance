@@ -1,0 +1,29 @@
+name: Governance Pack — AI Risk
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+env:
+  GOVERNANCE_PACK: ai-risk
+
+jobs:
+  ai-risk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.19.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.11.0'
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile=false
+      - run: pnpm models:health
+      - run: pnpm models:smoke
+      - run: pnpm oversight:vibe-check --goal "ai-risk-pack" --plan "1) model health 2) threat controls" --session "ci"

@@ -62,10 +62,12 @@ docUrls:
   vision: ${docBaseUrl}00-core/vision.md
   llm_threat_controls: ${docBaseUrl}00-core/llm-threat-controls.md
   skills_system_governance: ${docBaseUrl}00-core/skills-system-governance.md
+  control_registry: ${docBaseUrl}90-infra/control-registry.core.yaml
+  control_registry_schema: ${docBaseUrl}90-infra/control-registry.schema.json
 
 # Optional supply-chain and evidence parameters
 sbomSpec: cyclonedx@1.7
-slsaLevel: "1.1"
+slsaLevel: "1.2"
 signingSpec: cosign-v3-bundle
 evidenceTokens:
   - Step Budget ≤ ${stepBudget}

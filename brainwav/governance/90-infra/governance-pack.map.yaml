@@ -1,6 +1,7 @@
 # Anchors should use HTML comments: <!-- PACK:key=value -->; regex only runs as fallback when anchors are missing.
 # Update this map when adding governance docs so render/build scripts stay aligned.
 # Mapping file used by scripts/governance/build-pack.mjs to extract pack values without brittle parsing.
+# overlay handling: keep anchors consistent across core + overlay layers.
 # Preferred approach: place HTML-style anchors in source docs, e.g. <!-- PACK:limits.stepBudget=7 -->.
 # When anchors are absent, fall back to the regex below; keep them tight to avoid false matches.
 ---

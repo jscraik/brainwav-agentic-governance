@@ -20,11 +20,11 @@ import { createHash } from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { formatPointerHint, resolveGovernancePaths } from './governance-paths.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(__dirname, '..');
-const govRoot = path.join(repoRoot, 'brainwav', 'governance');
-const indexPath = path.join(govRoot, '90-infra', 'governance-index.json');
+const { govRoot, indexPath, pointerPath, packageRoot, mode } = resolveGovernancePaths(repoRoot);
 
 /**
  * Compute SHA-256 hash of a file.
@@ -34,6 +34,15 @@ const indexPath = path.join(govRoot, '90-infra', 'governance-index.json');
 function sha256(filePath) {
 	const data = fs.readFileSync(filePath);
 	return createHash('sha256').update(data).digest('hex');
+}
+
+/**
+ * Compute SHA-256 hash of a string.
+ * @param {string} value - Content to hash.
+ * @returns {string} Hexadecimal SHA-256 digest.
+ */
+function sha256String(value) {
+	return createHash('sha256').update(value).digest('hex');
 }
 
 /**
@@ -74,11 +83,25 @@ function resolvePath(docPath) {
  */
 function main() {
 	const checkMode = process.argv.includes('--check');
+	if (mode === 'pointer' && !checkMode) {
+		const hint = formatPointerHint(pointerPath, packageRoot);
+		console.error(
+			`[brAInwav] sync-governance-hashes is read-only in pointer mode. ${hint} Run --check in consumers or update hashes in the source repo.`
+		);
+		process.exitCode = 1;
+		return;
+	}
 	const index = JSON.parse(fs.readFileSync(indexPath, 'utf8'));
 	let updated = 0;
 	const changes = [];
+	const indexKey = Object.entries(index.docs || {}).find(
+		([, entry]) => entry.path === '90-infra/governance-index.json'
+	)?.[0];
 
 	for (const [key, entry] of Object.entries(index.docs)) {
+		if (key === indexKey) {
+			continue;
+		}
 		const filePath = resolvePath(entry.path);
 		if (!filePath) {
 			console.warn(`[brAInwav] SKIP ${key}: file not found at ${entry.path}`);
@@ -107,6 +130,23 @@ function main() {
 		}
 	}
 
+	if (indexKey) {
+		const indexClone = JSON.parse(JSON.stringify(index));
+		if (indexClone.docs?.[indexKey]) {
+			indexClone.docs[indexKey].sha256 = '';
+		}
+		const indexHash = sha256String(`${JSON.stringify(indexClone, null, 4)}\n`);
+		if (index.docs[indexKey].sha256 !== indexHash) {
+			changes.push({
+				key: indexKey,
+				from: index.docs[indexKey].sha256,
+				to: indexHash
+			});
+			index.docs[indexKey].sha256 = indexHash;
+			updated++;
+		}
+	}
+
 	if (checkMode) {
 		if (updated > 0) {
 			console.error(
@@ -119,6 +159,8 @@ function main() {
 			return;
 		}
 		console.log('[brAInwav] sync-governance-hashes --check passed (no drift).');
+		const hint = formatPointerHint(pointerPath, packageRoot);
+		if (hint) console.log(`[brAInwav] ${hint}`);
 		return;
 	}
 
@@ -134,6 +176,8 @@ function main() {
 		);
 		console.log(`[brAInwav] sync-governance-hashes: ${updated} entries updated.`);
 	}
+	const hint = formatPointerHint(pointerPath, packageRoot);
+	if (hint) console.log(`[brAInwav] ${hint}`);
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {

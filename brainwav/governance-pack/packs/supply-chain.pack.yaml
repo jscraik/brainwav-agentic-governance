@@ -1,0 +1,12 @@
+pack:
+  id: supply-chain
+  version: 1.0.0
+  default: false
+  summary: "SBOM, provenance, signing, and supply-chain posture gates."
+  standards:
+    - "SLSA Provenance v1.2"
+    - "CycloneDX 1.7"
+    - "SPDX 3.0.1"
+    - "OpenSSF Scorecard"
+    - "Sigstore Cosign"
+  controlsRegistry: "brainwav/governance/90-infra/control-registry.core.yaml"

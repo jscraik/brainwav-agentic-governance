@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "brAInwav Control Registry",
+  "type": "object",
+  "required": ["version", "controls"],
+  "properties": {
+    "version": { "type": "string" },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "generatedAt": { "type": "string" },
+        "owner": { "type": "string" },
+        "profile": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "controls": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "intent", "risk", "owner", "pack", "modes", "automation", "evidence"],
+        "properties": {
+          "id": { "type": "string" },
+          "intent": { "type": "string" },
+          "risk": { "type": "string" },
+          "owner": { "type": "string" },
+          "pack": { "type": "string" },
+          "modes": {
+            "type": "array",
+            "items": { "type": "string", "enum": ["creative", "delivery"] }
+          },
+          "automation": {
+            "type": "object",
+            "properties": {
+              "local": { "type": "array", "items": { "type": "string" } },
+              "ci": { "type": "array", "items": { "type": "string" } }
+            },
+            "additionalProperties": false
+          },
+          "evidence": {
+            "type": "object",
+            "properties": {
+              "type": { "type": "string" },
+              "paths": { "type": "array", "items": { "type": "string" } }
+            },
+            "additionalProperties": false
+          },
+          "mappings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["standard"],
+              "properties": {
+                "standard": { "type": "string" },
+                "ref": { "type": "string" }
+              },
+              "additionalProperties": false
+            }
+          },
+          "status": { "type": "string", "enum": ["active", "deprecated"] }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

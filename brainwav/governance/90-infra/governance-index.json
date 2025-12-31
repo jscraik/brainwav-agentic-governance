@@ -1,7 +1,7 @@
 {
     "description": "Governance document index with precedence order and SHA verification",
     "version": "2025.12.2",
-    "updated": "2025-12-22",
+    "updated": "2025-12-31",
     "precedence": [
         "00-core/constitution.md",
         "00-core/AGENT_CHARTER.md",
@@ -20,6 +20,8 @@
         "00-core/llm-threat-controls.md",
         "00-core/skills-system-governance.md",
         "90-infra/egress-governance.md",
+        "90-infra/control-registry.core.yaml",
+        "90-infra/control-registry.schema.json",
         "CODESTYLE.md",
         "docs/documentation-governance.md",
         "SECURITY.md"
@@ -27,7 +29,7 @@
     "docs": {
         "constitution.md": {
             "path": "00-core/constitution.md",
-            "sha256": "79a8d3202e09bfd926d1e9d057f831434c80070a068b09669aca35987a3533ae",
+            "sha256": "60e1296fdf4de9c792a4b635b0ef21e37f933afe49d9324a22face5a2f1045ad",
             "required_tokens": [
                 "Constitution",
                 "Core Principles"
@@ -74,7 +76,7 @@
         },
         "llm-threat-controls.md": {
             "path": "00-core/llm-threat-controls.md",
-            "sha256": "f6505450473d01f17db557848199d0b644f58a88c5a74a43a25f9f47ab5d614a",
+            "sha256": "15f02176c91c83060a4e66dcecdb6e7cf68894ece31f2183f1d8e0307ded81be",
             "required_tokens": [
                 "LLM01",
                 "LLM06",
@@ -83,7 +85,7 @@
         },
         "skills-system-governance.md": {
             "path": "00-core/skills-system-governance.md",
-            "sha256": "b3704e24e00256f223fafa8ace90f512297ab646b8a88149ef29b9d3df06ff8a",
+            "sha256": "d8f98b68f1d4a489c30e9df961ccae7738eeb4aab3ba29384d9f0e8cfdac2a17",
             "required_tokens": [
                 "Skills governance",
                 "Structured outputs"
@@ -91,7 +93,7 @@
         },
         "governance-quickstart.md": {
             "path": "10-flow/governance-quickstart.md",
-            "sha256": "84ef7de943b01543d164e2fd1882e49622d598587fb45580cc24e4106e553509",
+            "sha256": "0f4037c02a7b984177e4e5c9fbb82fd75c9814dad3a7ca41cbff27f2f431136d",
             "required_tokens": [
                 "governance quickstart",
                 "workflow selection"
@@ -99,7 +101,7 @@
         },
         "agentic-coding-workflow.md": {
             "path": "10-flow/agentic-coding-workflow.md",
-            "sha256": "7da47d73e87f99b33980b14066e452f429242269c62658185cf664921c9d511d",
+            "sha256": "071e7d4da7e3119ae9dbfcb0b455750e0c0a104861ac3c8dbd846a257e33a2c1",
             "required_tokens": [
                 "G0 Initialize",
                 "Evidence Triplet",
@@ -125,7 +127,7 @@
         },
         "checklists.md": {
             "path": "20-checklists/checklists.md",
-            "sha256": "5f839a91cbc39af28db37637e8cdbcaede64111e914e5eef1a746ae342a970d2",
+            "sha256": "365670b14830e9be62e4ab6b105bb608df504a7e7bd961ea6d30378cd1c6f53c",
             "required_tokens": [
                 "checklist",
                 "quality gates"
@@ -141,7 +143,8 @@
         },
         "governance-index.json": {
             "path": "90-infra/governance-index.json",
-            "sha256": "451b52f233fcf9dbbaddde79ac8d878b5a161840665ef95fe2a499ea379198ff",
+            "sha256": "a82c9adfa7614e11c9e425fab1bc520ccec452d24c04e0f0ea84b2e8a45a6411",
+            "hash_mode": "exclude_self",
             "required_tokens": [
                 "precedence",
                 "sha256"
@@ -149,7 +152,7 @@
         },
         "agentic.core.schema.json": {
             "path": "90-infra/agentic.core.schema.json",
-            "sha256": "9b1c602925bdd1988d5bf11dc96192182a90809c439b9b0814549e1cbda5e954",
+            "sha256": "06e4e22d8020bb36af43199af5cde2e28567b30b0f355be5abe6d8016f975fd7",
             "required_tokens": [
                 "schema",
                 "validation"
@@ -157,7 +160,7 @@
         },
         "governance-pack.map.yaml": {
             "path": "90-infra/governance-pack.map.yaml",
-            "sha256": "a0d27f5e2b9f8e28ea3a1cc856672ee865f6c5890d2c12cf1185e413a21b92bc",
+            "sha256": "6437dd13c49ab48b3d18fc3db4e035e797dad5654cc65fcfd3c4edfb2729e681",
             "required_tokens": [
                 "pack",
                 "overlay"
@@ -165,7 +168,7 @@
         },
         "README.md": {
             "path": "README.md",
-            "sha256": "193fd63ddca7400664da5005dfcbd65bac55df5b2cde7f5bf9a0a346550d1f94",
+            "sha256": "89f25cfd7920c79c2d5e760c82cccabd364efbef67f1907791797dc0ef01828f",
             "required_tokens": [
                 "governance",
                 "structure"
@@ -225,9 +228,25 @@
                 "rate limit"
             ]
         },
+        "control-registry.core.yaml": {
+            "path": "90-infra/control-registry.core.yaml",
+            "sha256": "13c63d19be9dbb252570d293123fc3690faf515c7ca382683c27fc36b81c8a80",
+            "required_tokens": [
+                "CORE-GOV-001",
+                "controls"
+            ]
+        },
+        "control-registry.schema.json": {
+            "path": "90-infra/control-registry.schema.json",
+            "sha256": "fc7537d1c85e850cc11f6b9496b292afba2d7946ec5fdace5549419393badd52",
+            "required_tokens": [
+                "Control Registry",
+                "controls"
+            ]
+        },
         "documentation-governance.md": {
             "path": "docs/documentation-governance.md",
-            "sha256": "a863b4390023fb13bee5642abe9664752dd104ddcc6d15e509bc63da2e952902",
+            "sha256": "f6aaa258d1bd206b65188ed20b48d49115500b3686de87470c44e3653e6ab967",
             "required_tokens": [
                 "documentation governance",
                 "JSDoc",
@@ -236,7 +255,7 @@
         },
         "arxiv-agentic-governance-summary.md": {
             "path": "docs/research/arxiv-agentic-governance-summary.md",
-            "sha256": "a63878e310e24ea6d5586ef6b05dc93a80ad5eaf59fc0618dc9645a87ff56323",
+            "sha256": "eeab40a4310ced6d8df589129541e9dd2d66498969754b447e39543ab1000b77",
             "required_tokens": [
                 "arXiv",
                 "mapping",

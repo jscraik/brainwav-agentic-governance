@@ -9,11 +9,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
+import { formatPointerHint, resolveGovernancePaths } from './governance-paths.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(__dirname, '..');
-const govRoot = path.join(repoRoot, 'brainwav', 'governance');
-const indexPath = path.join(govRoot, '90-infra', 'governance-index.json');
+const { govRoot, indexPath, pointerPath, packageRoot } = resolveGovernancePaths(repoRoot);
 
 function read(file) {
 	return fs.readFileSync(file, 'utf8');
@@ -73,6 +73,8 @@ function main() {
 		return;
 	}
 	console.log('[brAInwav] validate-governance OK');
+	const hint = formatPointerHint(pointerPath, packageRoot);
+	if (hint) console.log(`[brAInwav] ${hint}`);
 }
 
 if (import.meta.url === `file://${process.argv[1]}` || process.argv[1]?.endsWith('validate-governance.mjs')) {

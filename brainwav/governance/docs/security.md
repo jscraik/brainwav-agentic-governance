@@ -6,9 +6,15 @@ The governance framework aligns with current security standards and requires spe
 
 | Standard | Version | Purpose |
 |----------|---------|---------|
-| OWASP Top 10 | 2025 RC1 | Web application security risks |
-| OWASP ASVS | 5.0.0 (May 2025) | Application security verification |
-| OWASP LLM Top 10 | 2025 | Large Language Model security risks |
+| OWASP Top 10 | 2025 | Web application security risks |
+| OWASP ASVS | 5.0.0 | Application security verification |
+| OWASP LLM Top 10 | 2025 (v1.1) | Large Language Model security risks |
+| NIST SSDF | 1.1 | Secure software development framework |
+| NIST AI RMF | 1.0 + GenAI Profile | AI risk management |
+| WCAG | 2.2 (ISO/IEC 40500:2025) | Accessibility standard |
+| SLSA | Provenance v1.2 | Supply-chain provenance |
+| CycloneDX | 1.7 | SBOM format |
+| SPDX | 3.0.1 | SBOM standard |
 | MITRE ATLAS | Current | AI/ML adversarial threat taxonomy |
 
 ## Required Security Tools
@@ -19,14 +25,16 @@ The governance framework aligns with current security standards and requires spe
 | Gitleaks | Secrets detection | BLOCKER on any finding |
 | OSV/pnpm audit | Dependency vulnerabilities | BLOCKER on high/critical |
 | Trivy | Container/IaC/license scanning | WARNING |
-| CycloneDX | SBOM generation | Required for releases |
+| CycloneDX 1.7 | SBOM generation | Required for releases |
+| SPDX 3.0.1 | SBOM interchange | Required for releases |
 | Sigstore Cosign | Attestation signing | Required for releases |
+| OpenSSF Scorecard | Supply-chain posture | Required on release branches |
 
 ## Security Requirements
 
 - **Secrets:** Fetch on-demand via 1Password CLI `op`; no hard-coded secrets.
 - **Containers:** Minimal base, pinned digests, non-root, read-only FS, drop caps.
 - **Identity:** CI/services authenticate via OIDC/WIF (no static cloud keys).
-- **SBOM:** CycloneDX 1.6+ with in-toto/SLSA provenance, Sigstore signed.
+- **SBOM:** CycloneDX 1.7 or SPDX 3.0.1 with SLSA provenance and Sigstore signing.
 
 See [SECURITY.md](../../../SECURITY.md) for the full security policy.
