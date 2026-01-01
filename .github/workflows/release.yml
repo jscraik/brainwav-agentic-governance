@@ -110,10 +110,12 @@ jobs:
       - name: Canary validation
         env:
           RELEASE_VERSION: ${{ github.ref_name }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           version="${RELEASE_VERSION#v}"
           git clone https://github.com/jscraik/brainwav-governance-canary.git /tmp/brainwav-governance-canary
           cd /tmp/brainwav-governance-canary
+          npm config set //registry.npmjs.org/:_authToken "${NODE_AUTH_TOKEN}"
           pnpm add -D "@brainwav/brainwav-agentic-governance@${version}"
           pnpm exec brainwav-governance install --root . --mode pointer --profile core --yes
           pnpm exec brainwav-governance validate --root . --strict
