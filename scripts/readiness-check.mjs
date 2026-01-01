@@ -115,11 +115,17 @@ function parseProfileArg() {
 	return null;
 }
 
+function normalizeProfile(profile) {
+	if (profile === 'core') return 'delivery';
+	if (profile === 'full') return 'release';
+	return profile;
+}
+
 function main() {
 	try {
 		const profileArg = parseProfileArg();
 		const profileEnv = process.env.GOVERNANCE_PROFILE || process.env.BRAINWAV_PROFILE;
-		const profile = profileArg || profileEnv || 'release';
+		const profile = normalizeProfile(profileArg || profileEnv || 'release');
 		const result = runReadinessCheck(repoRoot, profile);
 		if (!result.ok) {
 			throw new Error(result.failures.join('; '));
