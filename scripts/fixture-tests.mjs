@@ -104,6 +104,29 @@ function writePackOptions(repoRootPath, packOptions) {
 }
 
 /**
+ * Update config.json with overlays and write overlay files.
+ * @param {string} repoRootPath - Repo root.
+ * @param {Array<{name: string, paths: string[]}>} overlays - Overlay definitions.
+ * @returns {void} No return value.
+ */
+function writeOverlays(repoRootPath, overlays) {
+	if (!Array.isArray(overlays) || overlays.length === 0) return;
+	const configPath = path.join(repoRootPath, '.agentic-governance', 'config.json');
+	const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+	config.overlays = overlays;
+	fs.writeFileSync(configPath, `${JSON.stringify(config, null, 2)}\n`);
+	overlays.forEach((overlay) => {
+		(overlay.paths ?? []).forEach((overlayPath) => {
+			const targetPath = path.join(repoRootPath, overlayPath);
+			fs.mkdirSync(path.dirname(targetPath), { recursive: true });
+			if (!fs.existsSync(targetPath)) {
+				fs.writeFileSync(targetPath, `# ${overlay.name ?? 'overlay'}\n`);
+			}
+		});
+	});
+}
+
+/**
  * Ensure config exists with pack options before install.
  * @param {string} repoRootPath - Repo root.
  * @param {string[]} packs - Pack identifiers.
@@ -163,6 +186,9 @@ function runFixtureLifecycle(fixture) {
 
 		if (fixture.packOptions) {
 			writePackOptions(tempRoot, fixture.packOptions);
+		}
+		if (fixture.overlays) {
+			writeOverlays(tempRoot, fixture.overlays);
 		}
 
 		syncRootDocs(tempRoot);
@@ -275,7 +301,13 @@ function main() {
 						requiredKeys: ['NSCameraUsageDescription']
 					}
 				}
-			}
+			},
+			overlays: [
+				{
+					name: 'swift-local',
+					paths: ['.agentic-governance/overlays/swift.local.md']
+				}
+			]
 		},
 		{
 			name: 'pnpm-monorepo',

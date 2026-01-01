@@ -121,9 +121,10 @@ function readConfig(configPath) {
  * Validate the governance config.
  * @param {string|null} configPath - Config path.
  * @param {string} govRoot - Governance root.
+ * @param {string} targetRoot - Repository root.
  * @returns {string[]} Failure messages.
  */
-function checkConfig(configPath, govRoot) {
+function checkConfig(configPath, govRoot, targetRoot) {
 	const failures = [];
 	const config = readConfig(configPath);
 	if (!config) return failures;
@@ -135,9 +136,11 @@ function checkConfig(configPath, govRoot) {
 		failures.push(`config profile must be one of ${Array.from(ALLOWED_PROFILES).join(', ')}`);
 	}
 	if (config.profile && LEGACY_PROFILES.has(config.profile)) {
-		console.warn(
-			`[brAInwav] config profile "${config.profile}" is legacy; use "delivery" or "release" going forward.`
-		);
+		if (!process.env.BRAINWAV_JSON) {
+			console.warn(
+				`[brAInwav] config profile "${config.profile}" is legacy; use "delivery" or "release" going forward.`
+			);
+		}
 	}
 	if ('overlays' in config && !Array.isArray(config.overlays)) {
 		failures.push('config overlays must be an array when provided');
@@ -164,13 +167,16 @@ function checkConfig(configPath, govRoot) {
 				return;
 			}
 			const normalized = overlayPath.replace(/^\/*/, '');
-			const target = path.join(repoRoot, normalized);
+			const target = path.resolve(targetRoot, normalized);
+			const relativeTarget = path.relative(targetRoot, target).replace(/\\/g, '/');
+			if (relativeTarget.startsWith('..')) {
+				failures.push(`overlay[${index}] path must not traverse directories: ${overlayPath}`);
+				return;
+			}
 			if (!fs.existsSync(target)) {
 				failures.push(`overlay[${index}] path not found: ${overlayPath}`);
 				return;
 			}
-			const relativeTarget = path.relative(repoRoot, target).replace(/\\/g, '/');
-			const normalizedTarget = relativeTarget.startsWith('.') ? relativeTarget : `./${relativeTarget}`;
 			const governanceRoot = govRoot;
 			if (target.startsWith(governanceRoot)) {
 				failures.push(`overlay[${index}] must not target governance pack files: ${overlayPath}`);
@@ -184,9 +190,6 @@ function checkConfig(configPath, govRoot) {
 			if (!fs.statSync(target).isFile()) {
 				failures.push(`overlay[${index}] path must be a file: ${overlayPath}`);
 				return;
-			}
-			if (normalizedTarget.includes('..')) {
-				failures.push(`overlay[${index}] path must not traverse directories: ${overlayPath}`);
 			}
 		});
 	});
@@ -211,7 +214,7 @@ export function runGovernanceValidation(targetRoot = repoRoot, configOverride = 
 	const failures = [
 		...checkTokens(indexPath, govRoot, targetRoot),
 		...checkTasks(targetRoot),
-		...checkConfig(resolvedConfigPath, govRoot)
+		...checkConfig(resolvedConfigPath, govRoot, targetRoot)
 	];
 	return { ok: failures.length === 0, failures, hint };
 }

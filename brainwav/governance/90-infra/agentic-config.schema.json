@@ -6,21 +6,37 @@
   "type": "object",
   "additionalProperties": true,
   "properties": {
-    "$schema": { "type": "string" },
-    "version": { "type": "string", "default": "1.0" },
+    "$schema": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string",
+      "default": "1.0"
+    },
     "profile": {
       "type": "string",
-      "enum": ["creative", "delivery", "release", "core", "full"],
+      "enum": [
+        "creative",
+        "delivery",
+        "release",
+        "core",
+        "full"
+      ],
       "default": "release"
     },
     "mode": {
       "type": "string",
-      "enum": ["pointer", "full"],
+      "enum": [
+        "pointer",
+        "full"
+      ],
       "default": "pointer"
     },
     "packs": {
       "type": "array",
-      "items": { "type": "string" }
+      "items": {
+        "type": "string"
+      }
     },
     "packOptions": {
       "type": "object",
@@ -30,30 +46,47 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "serviceName": { "type": "string" },
-        "brand": { "type": "string" },
-        "logPrefix": { "type": "string" }
+        "serviceName": {
+          "type": "string"
+        },
+        "brand": {
+          "type": "string"
+        },
+        "logPrefix": {
+          "type": "string"
+        }
       }
     },
     "overlays": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["name", "paths"],
+        "required": [
+          "name",
+          "paths"
+        ],
         "additionalProperties": false,
         "properties": {
-          "name": { "type": "string" },
-          "description": { "type": "string" },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
           "paths": {
             "type": "array",
             "minItems": 1,
-            "items": { "type": "string" }
+            "items": {
+              "type": "string"
+            }
           },
-          "allowWeaken": { "type": "boolean", "default": false }
+          "allowWeaken": {
+            "type": "boolean",
+            "default": false
+          }
         }
       }
-    }
-    ,
+    },
     "mergeStrategy": {
       "type": "object",
       "additionalProperties": true

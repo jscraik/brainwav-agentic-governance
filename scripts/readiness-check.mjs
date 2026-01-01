@@ -43,9 +43,10 @@ function requireFileAbsolute(filePath, label) {
 /**
  * Run readiness checks against a target root.
  * @param {string} targetRoot - Repository root.
+ * @param {string} profile - Profile name.
  * @returns {{ok: boolean, checks: Array<object>, failures: string[], hint: string}} Result summary.
  */
-export function runReadinessCheck(targetRoot = repoRoot) {
+export function runReadinessCheck(targetRoot = repoRoot, profile = 'release') {
 	const checks = [];
 	const failures = [];
 	const { govRoot, indexPath, agentsPath, pointerPath, packageRoot } =
@@ -94,7 +95,7 @@ export function runReadinessCheck(targetRoot = repoRoot) {
 		}
 	});
 
-	const tooling = runToolingChecks();
+	const tooling = runToolingChecks({ profile, targetRoot });
 	checks.push(...tooling.checks);
 	if (!tooling.ok) {
 		failures.push('toolchain checks failed');

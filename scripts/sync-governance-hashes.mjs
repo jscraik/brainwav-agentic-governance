@@ -52,6 +52,7 @@ function sha256String(value) {
  * @returns {string|null} Hexadecimal SHA-256 digest, or null if markers not found.
  */
 function fragmentSha256(filePath, startMarker, endMarker) {
+	if (!startMarker?.trim() || !endMarker?.trim()) return null;
 	const content = fs.readFileSync(filePath, 'utf8');
 	const startIdx = content.indexOf(startMarker);
 	const endIdx = content.indexOf(endMarker);
@@ -103,6 +104,7 @@ export function runGovernanceHashSync(targetRoot = repoRoot, { checkOnly = false
 	const index = JSON.parse(fs.readFileSync(indexPath, 'utf8'));
 	let updated = 0;
 	const changes = [];
+	const errors = [];
 	const indexKey = Object.entries(index.docs || {}).find(
 		([, entry]) => entry.path === '90-infra/governance-index.json'
 	)?.[0];
@@ -123,9 +125,7 @@ export function runGovernanceHashSync(targetRoot = repoRoot, { checkOnly = false
 		if (entry.fragment_markers) {
 			hash = fragmentSha256(filePath, entry.fragment_markers[0], entry.fragment_markers[1]);
 			if (!hash) {
-				if (!silent) {
-					console.warn(`[brAInwav] SKIP ${key}: fragment markers not found`);
-				}
+				errors.push(`[brAInwav] invalid fragment markers for ${key}`);
 				continue;
 			}
 		} else {
@@ -148,7 +148,7 @@ export function runGovernanceHashSync(targetRoot = repoRoot, { checkOnly = false
 		if (indexClone.docs?.[indexKey]) {
 			indexClone.docs[indexKey].sha256 = '';
 		}
-		const indexHash = sha256String(`${JSON.stringify(indexClone, null, 4)}\n`);
+		const indexHash = sha256String(`${JSON.stringify(indexClone, null, 2)}\n`);
 		if (index.docs[indexKey].sha256 !== indexHash) {
 			changes.push({
 				key: indexKey,
@@ -160,13 +160,18 @@ export function runGovernanceHashSync(targetRoot = repoRoot, { checkOnly = false
 		}
 	}
 
+	if (errors.length > 0) {
+		const hint = formatPointerHint(pointerPath, packageRoot);
+		return { ok: false, changes, hint, updated, message: errors.join('; ') };
+	}
+
 	if (checkOnly) {
 		const hint = formatPointerHint(pointerPath, packageRoot);
 		return { ok: updated === 0, changes, hint, updated };
 	}
 
 	index.updated = new Date().toISOString().split('T')[0];
-	fs.writeFileSync(indexPath, `${JSON.stringify(index, null, 4)}\n`);
+	fs.writeFileSync(indexPath, `${JSON.stringify(index, null, 2)}\n`);
 	const hint = formatPointerHint(pointerPath, packageRoot);
 	return { ok: true, changes, hint, updated };
 }

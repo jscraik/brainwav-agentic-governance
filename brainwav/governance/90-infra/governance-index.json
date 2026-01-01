@@ -1,434 +1,434 @@
 {
-    "description": "Governance document index with precedence order and SHA verification",
-    "version": "2025.12.2",
-    "updated": "2026-01-01",
-    "precedence": [
-        "00-core/constitution.md",
-        "00-core/AGENT_CHARTER.md",
-        "00-core/agent-verification-policy.md",
-        "10-flow/governance-quickstart.md",
-        "10-flow/agentic-coding-workflow.md",
-        "10-flow/assurance-system.md",
-        "10-flow/emergency-stop-protocol.md",
-        "10-flow/session-continuity.md",
-        "10-flow/memory-governance.md",
-        "10-flow/runtime-governance-service.md",
-        "20-checklists/checklists.md",
-        "30-compliance/eu-ai-act.md",
-        "00-core/vision.md",
-        "00-core/llm-threat-controls.md",
-        "00-core/skills-system-governance.md",
-        "90-infra/egress-governance.md",
+  "description": "Governance document index with precedence order and SHA verification",
+  "version": "2025.12.2",
+  "updated": "2026-01-01",
+  "precedence": [
+    "00-core/constitution.md",
+    "00-core/AGENT_CHARTER.md",
+    "00-core/agent-verification-policy.md",
+    "10-flow/governance-quickstart.md",
+    "10-flow/agentic-coding-workflow.md",
+    "10-flow/assurance-system.md",
+    "10-flow/emergency-stop-protocol.md",
+    "10-flow/session-continuity.md",
+    "10-flow/memory-governance.md",
+    "10-flow/runtime-governance-service.md",
+    "20-checklists/checklists.md",
+    "30-compliance/eu-ai-act.md",
+    "00-core/vision.md",
+    "00-core/llm-threat-controls.md",
+    "00-core/skills-system-governance.md",
+    "90-infra/egress-governance.md",
+    "CODESTYLE.md",
+    "docs/documentation-governance.md",
+    "SECURITY.md"
+  ],
+  "infra": [
+    "90-infra/compat.json",
+    "90-infra/standards.versions.json",
+    "90-infra/change-classes.json",
+    "90-infra/control-registry.core.yaml",
+    "90-infra/control-registry.schema.json",
+    "90-infra/agentic-config.schema.json",
+    "90-infra/agentic.core.schema.json",
+    "90-infra/governance-pack.map.yaml",
+    "90-infra/governance-maintainers.md",
+    "90-infra/governance-index.json"
+  ],
+  "reference": [
+    "docs/research/arxiv-agentic-governance-summary.md",
+    "README.md"
+  ],
+  "docs": {
+    "constitution.md": {
+      "path": "00-core/constitution.md",
+      "sha256": "630ea0d21dbc821652828e86e2aa683718234dbedbd2170ae02ece8306aedc13",
+      "required_tokens": [
+        "Constitution",
+        "Core Principles"
+      ],
+      "class": "normative",
+      "owner": "brAInwav Development Team",
+      "change_class": "docs"
+    },
+    "AGENT_CHARTER.md": {
+      "path": "00-core/AGENT_CHARTER.md",
+      "sha256": "1d9d8b85efe619eec37486af7e57e54421f1b795d33bac972f42c44b3dc98b89",
+      "required_tokens": [
+        "Service Identity Logs",
+        "MODELS:LIVE:OK",
+        "NORTH_STAR:RED_FIRST"
+      ],
+      "class": "normative",
+      "owner": "brAInwav Development Team",
+      "change_class": "docs"
+    },
+    "agent-verification-policy.md": {
+      "path": "00-core/agent-verification-policy.md",
+      "sha256": "1a0ddb41b599fb886d7c30b5e1e8534795a548db2ee82544538f773eb8af9839",
+      "required_tokens": [
+        "AgentFacts",
+        "trust score",
+        "KYA"
+      ],
+      "class": "normative",
+      "owner": "brAInwav Development Team",
+      "change_class": "docs"
+    },
+    "CHARTER_FRAGMENT.md": {
+      "path": "00-core/AGENT_CHARTER.md",
+      "fragment_markers": [
+        "<!-- BEGIN CHARTER_FRAGMENT -->",
+        "<!-- END CHARTER_FRAGMENT -->"
+      ],
+      "sha256": "faf6254926f327ac182261de41f0f100b4c4ac24f2ca4700949c091a66cda13a",
+      "required_tokens": [
+        "Step Budget <= 7",
+        "Ask-First <= 3",
+        "Evidence Triplet"
+      ],
+      "class": "normative",
+      "owner": "brAInwav Development Team",
+      "change_class": "docs",
+      "derived": {
+        "type": "fragment",
+        "markers": [
+          "<!-- BEGIN CHARTER_FRAGMENT -->",
+          "<!-- END CHARTER_FRAGMENT -->"
+        ]
+      }
+    },
+    "vision.md": {
+      "path": "00-core/vision.md",
+      "sha256": "0c70ed2cffe1d6afbbcd1a4db014feb91959e9f08fcdce5d01b5d837682780d6",
+      "required_tokens": [
+        "Vision",
+        "North Star"
+      ],
+      "class": "normative",
+      "owner": "brAInwav Development Team",
+      "change_class": "docs"
+    },
+    "llm-threat-controls.md": {
+      "path": "00-core/llm-threat-controls.md",
+      "sha256": "15f02176c91c83060a4e66dcecdb6e7cf68894ece31f2183f1d8e0307ded81be",
+      "required_tokens": [
+        "LLM01",
+        "LLM06",
+        "LLM-S0"
+      ],
+      "class": "normative",
+      "owner": "brAInwav Development Team",
+      "change_class": "docs"
+    },
+    "skills-system-governance.md": {
+      "path": "00-core/skills-system-governance.md",
+      "sha256": "00d3b5ce00f0f99b4356afe98681e4aec40d4a9715034fee6fe754f5479dcca7",
+      "required_tokens": [
+        "Skills governance",
+        "Structured outputs"
+      ],
+      "class": "normative",
+      "owner": "brAInwav Development Team",
+      "change_class": "docs"
+    },
+    "governance-quickstart.md": {
+      "path": "10-flow/governance-quickstart.md",
+      "sha256": "0f4037c02a7b984177e4e5c9fbb82fd75c9814dad3a7ca41cbff27f2f431136d",
+      "required_tokens": [
+        "governance quickstart",
+        "workflow selection"
+      ],
+      "class": "normative",
+      "owner": "brAInwav Development Team",
+      "change_class": "docs"
+    },
+    "agentic-coding-workflow.md": {
+      "path": "10-flow/agentic-coding-workflow.md",
+      "sha256": "069efc9c86046280caa3df0e351c716a10b3347a875197095ecb3a207e09b1a1",
+      "required_tokens": [
+        "G0 Initialize",
+        "Evidence Triplet",
+        "PHASE_TRANSITION",
+        "No HITL before REVIEW",
+        "MCP Tool Integration Matrix",
+        "Context Pruning",
+        "Critic Subagent",
+        "Just-in-Time Docs",
+        "Session Retrospective",
+        "Subagent Governance",
+        "Confession Protocol"
+      ],
+      "note": "Consolidates Phase Machine (§4.4), Task Folder Layout (§3), Hard Rules (§6.1), Context Pruning (§6.2), Evidence Tokens (§6.3), Subagent Governance (§6.4), Confession Protocol (§6.5), MCP Integration Matrix (§4.1)",
+      "class": "normative",
+      "owner": "brAInwav Development Team",
+      "change_class": "docs"
+    },
+    "assurance-system.md": {
+      "path": "10-flow/assurance-system.md",
+      "sha256": "7c192d91de9ed774f2cc7fc38a1f2724d22890811259642c2f3a98db80a1e5f9",
+      "required_tokens": [
+        "Assurance System",
+        "Time Freshness"
+      ],
+      "class": "normative",
+      "owner": "brAInwav Development Team",
+      "change_class": "docs"
+    },
+    "checklists.md": {
+      "path": "20-checklists/checklists.md",
+      "sha256": "9a7fe5fefa2d955411c938cf64928d160e7f5b1691ac8dcee0864d7fbb87e739",
+      "required_tokens": [
+        "checklist",
+        "quality gates"
+      ],
+      "class": "normative",
+      "owner": "brAInwav Development Team",
+      "change_class": "docs"
+    },
+    "governance-maintainers.md": {
+      "path": "90-infra/governance-maintainers.md",
+      "sha256": "1147b940fc441cb10a992df7c43c8a068d1ba94ab834a7e86fd5a188f54549b8",
+      "required_tokens": [
+        "hash sync",
+        "maintainer"
+      ],
+      "class": "infra",
+      "owner": "brAInwav Development Team",
+      "change_class": "docs"
+    },
+    "governance-index.json": {
+      "path": "90-infra/governance-index.json",
+      "sha256": "4e731fa59078686b78c172659b571a3085c37b7d82cc6263c3e90fe71d66278f",
+      "hash_mode": "exclude_self",
+      "required_tokens": [
+        "precedence",
+        "sha256"
+      ],
+      "class": "infra",
+      "owner": "brAInwav Development Team",
+      "change_class": "docs"
+    },
+    "agentic.core.schema.json": {
+      "path": "90-infra/agentic.core.schema.json",
+      "sha256": "44aaea6a1565bc3e882d84aff69d222bd5c8e2a0bf8083c60536dda94270ee7b",
+      "required_tokens": [
+        "schema",
+        "validation"
+      ],
+      "class": "infra",
+      "owner": "brAInwav Development Team",
+      "change_class": "docs"
+    },
+    "agentic-config.schema.json": {
+      "path": "90-infra/agentic-config.schema.json",
+      "sha256": "df119bacf76ee47854c4f304f628db978cb1bcf0bf2cbc3b2ac703adb66cc8a7",
+      "required_tokens": [
+        "Governance Config",
+        "profile",
+        "overlays"
+      ],
+      "class": "infra",
+      "owner": "brAInwav Development Team",
+      "change_class": "docs"
+    },
+    "governance-pack.map.yaml": {
+      "path": "90-infra/governance-pack.map.yaml",
+      "sha256": "a95e22426b109bc09d8ad7df7b7894744e9fcbd72e0dc18623fec3cbbbde3b30",
+      "required_tokens": [
+        "pack",
+        "overlay"
+      ],
+      "class": "infra",
+      "owner": "brAInwav Development Team",
+      "change_class": "docs"
+    },
+    "SECURITY.md": {
+      "path": "SECURITY.md",
+      "sha256": "8372aa7db3bcfafd5573c92461f0ef6f8e765199bd208c7dcf476024aee64503",
+      "required_tokens": [
+        "Security Policy",
+        "Standards & References",
+        "Reporting a Vulnerability"
+      ],
+      "class": "normative",
+      "owner": "brAInwav Development Team",
+      "change_class": "docs"
+    },
+    "standards.versions.json": {
+      "path": "90-infra/standards.versions.json",
+      "sha256": "7c76bb548f26b8a1b1fde59fe698ca01c46a00fcd693c7dbfd6955702a291998",
+      "required_tokens": [
+        "standards",
+        "owasp_top10",
+        "cyclonedx"
+      ],
+      "class": "infra",
+      "owner": "brAInwav Development Team",
+      "change_class": "docs"
+    },
+    "change-classes.json": {
+      "path": "90-infra/change-classes.json",
+      "sha256": "006ca241de6077b41d80f43580ae80cfe36403b8f8f0edf3d7fd475669029cf4",
+      "required_tokens": [
+        "classes",
+        "required_evidence"
+      ],
+      "class": "infra",
+      "owner": "brAInwav Development Team",
+      "change_class": "docs"
+    },
+    "README.md": {
+      "path": "README.md",
+      "sha256": "236dccd4ae656eac69681aeac857315332f92b092b8b97fd7f6d8aa0ba0bd8c1",
+      "required_tokens": [
+        "governance",
+        "structure"
+      ],
+      "class": "reference",
+      "owner": "brAInwav Development Team",
+      "change_class": "docs"
+    },
+    "emergency-stop-protocol.md": {
+      "path": "10-flow/emergency-stop-protocol.md",
+      "sha256": "ade56b1bf82b6e7987781baff58f2919b420bf475b3b2a297fbd12c9e9422528",
+      "required_tokens": [
+        "emergency",
+        "termination",
+        "kill switch"
+      ],
+      "class": "normative",
+      "owner": "brAInwav Development Team",
+      "change_class": "docs"
+    },
+    "session-continuity.md": {
+      "path": "10-flow/session-continuity.md",
+      "sha256": "84f5f6d0d7e5da020b51d44f114a99ed587f88e1ac6f6de0200d18df064e0f8f",
+      "required_tokens": [
+        "session",
+        "checkpoint",
+        "resume"
+      ],
+      "class": "normative",
+      "owner": "brAInwav Development Team",
+      "change_class": "docs"
+    },
+    "memory-governance.md": {
+      "path": "10-flow/memory-governance.md",
+      "sha256": "4af3b61d638e4bf6d89bf7d373ea941aca52770e2c6c4fc5ed4159b3ba05331b",
+      "required_tokens": [
+        "memory",
+        "retention",
+        "access control"
+      ],
+      "class": "normative",
+      "owner": "brAInwav Development Team",
+      "change_class": "docs"
+    },
+    "runtime-governance-service.md": {
+      "path": "10-flow/runtime-governance-service.md",
+      "sha256": "2d8fd2c5e3a3beaebae8f3263274bfcca357cc09d1349890b10841a6fe8e2e35",
+      "required_tokens": [
+        "sentinel",
+        "trust factor",
+        "policy gate"
+      ],
+      "class": "normative",
+      "owner": "brAInwav Development Team",
+      "change_class": "docs"
+    },
+    "eu-ai-act.md": {
+      "path": "30-compliance/eu-ai-act.md",
+      "sha256": "a1b7290965c27651f2862f2a81ebff0e90c41f44fa58960317f909467cfbcfe8",
+      "required_tokens": [
+        "EU AI Act",
+        "risk classification",
+        "compliance"
+      ],
+      "class": "normative",
+      "owner": "brAInwav Development Team",
+      "change_class": "docs"
+    },
+    "egress-governance.md": {
+      "path": "90-infra/egress-governance.md",
+      "sha256": "896358acd33cff20e48093f7c1f5322c62d95c2d0997bb9f1d5ff5c7dc475874",
+      "required_tokens": [
+        "egress",
+        "allowlist",
+        "rate limit"
+      ],
+      "class": "normative",
+      "owner": "brAInwav Development Team",
+      "change_class": "docs"
+    },
+    "compat.json": {
+      "path": "90-infra/compat.json",
+      "sha256": "22a209c26895a6c1f88ba417d71b62b5fecd5025f27e5df8d2ccae96ffe4bccb",
+      "required_tokens": [
+        "compatibility_policy",
+        "support_matrix",
+        "gold_standard"
+      ],
+      "class": "infra",
+      "owner": "brAInwav Development Team",
+      "change_class": "docs"
+    },
+    "control-registry.core.yaml": {
+      "path": "90-infra/control-registry.core.yaml",
+      "sha256": "588f5db0123f3a1d4ca3352da61c2edd4fabe1dd8aeab0d9fa0da07e77b69cc2",
+      "required_tokens": [
+        "BW-GOV-001",
+        "controls"
+      ],
+      "class": "infra",
+      "owner": "brAInwav Development Team",
+      "change_class": "docs"
+    },
+    "control-registry.schema.json": {
+      "path": "90-infra/control-registry.schema.json",
+      "sha256": "b724e47e9c00b82dbb50aa86a546f3a1697b8306f4dd16ba0e6e84f21228c4f1",
+      "required_tokens": [
+        "Control Catalog",
+        "controls"
+      ],
+      "class": "infra",
+      "owner": "brAInwav Development Team",
+      "change_class": "docs"
+    },
+    "documentation-governance.md": {
+      "path": "docs/documentation-governance.md",
+      "sha256": "4f0c816c386124fbc2f0a37743b07b992a5857cf96d1a038522a19a590bd9009",
+      "required_tokens": [
+        "documentation governance",
+        "JSDoc",
+        "OpenAI Cookbook"
+      ],
+      "class": "normative",
+      "owner": "brAInwav Development Team",
+      "change_class": "docs"
+    },
+    "arxiv-agentic-governance-summary.md": {
+      "path": "docs/research/arxiv-agentic-governance-summary.md",
+      "sha256": "70496bac848cb893de3582546941637e6cac8d4920e489b37de9dcdb2198f772",
+      "required_tokens": [
+        "arXiv",
+        "mapping",
+        "research summary"
+      ],
+      "class": "reference",
+      "owner": "brAInwav Development Team",
+      "change_class": "docs"
+    },
+    "CODESTYLE.md": {
+      "path": "CODESTYLE.md",
+      "sha256": "ad79bd4da8eb69408b1ef3e4a7998a7ced8bdd5b49e695ad4b46a1a61b67ade5",
+      "required_tokens": [
         "CODESTYLE.md",
-        "docs/documentation-governance.md",
-        "SECURITY.md"
-    ],
-    "infra": [
-        "90-infra/compat.json",
-        "90-infra/standards.versions.json",
-        "90-infra/change-classes.json",
-        "90-infra/control-registry.core.yaml",
-        "90-infra/control-registry.schema.json",
-        "90-infra/agentic-config.schema.json",
-        "90-infra/agentic.core.schema.json",
-        "90-infra/governance-pack.map.yaml",
-        "90-infra/governance-maintainers.md",
-        "90-infra/governance-index.json"
-    ],
-    "reference": [
-        "docs/research/arxiv-agentic-governance-summary.md",
-        "README.md"
-    ],
-    "docs": {
-        "constitution.md": {
-            "path": "00-core/constitution.md",
-            "sha256": "630ea0d21dbc821652828e86e2aa683718234dbedbd2170ae02ece8306aedc13",
-            "required_tokens": [
-                "Constitution",
-                "Core Principles"
-            ],
-            "class": "normative",
-            "owner": "brAInwav Development Team",
-            "change_class": "docs"
-        },
-        "AGENT_CHARTER.md": {
-            "path": "00-core/AGENT_CHARTER.md",
-            "sha256": "1d9d8b85efe619eec37486af7e57e54421f1b795d33bac972f42c44b3dc98b89",
-            "required_tokens": [
-                "Service Identity Logs",
-                "MODELS:LIVE:OK",
-                "NORTH_STAR:RED_FIRST"
-            ],
-            "class": "normative",
-            "owner": "brAInwav Development Team",
-            "change_class": "docs"
-        },
-        "agent-verification-policy.md": {
-            "path": "00-core/agent-verification-policy.md",
-            "sha256": "1a0ddb41b599fb886d7c30b5e1e8534795a548db2ee82544538f773eb8af9839",
-            "required_tokens": [
-                "AgentFacts",
-                "trust score",
-                "KYA"
-            ],
-            "class": "normative",
-            "owner": "brAInwav Development Team",
-            "change_class": "docs"
-        },
-        "CHARTER_FRAGMENT.md": {
-            "path": "00-core/AGENT_CHARTER.md",
-            "fragment_markers": [
-                "<!-- BEGIN CHARTER_FRAGMENT -->",
-                "<!-- END CHARTER_FRAGMENT -->"
-            ],
-            "sha256": "faf6254926f327ac182261de41f0f100b4c4ac24f2ca4700949c091a66cda13a",
-            "required_tokens": [
-                "Step Budget <= 7",
-                "Ask-First <= 3",
-                "Evidence Triplet"
-            ],
-            "class": "normative",
-            "owner": "brAInwav Development Team",
-            "change_class": "docs",
-            "derived": {
-                "type": "fragment",
-                "markers": [
-                    "<!-- BEGIN CHARTER_FRAGMENT -->",
-                    "<!-- END CHARTER_FRAGMENT -->"
-                ]
-            }
-        },
-        "vision.md": {
-            "path": "00-core/vision.md",
-            "sha256": "0c70ed2cffe1d6afbbcd1a4db014feb91959e9f08fcdce5d01b5d837682780d6",
-            "required_tokens": [
-                "Vision",
-                "North Star"
-            ],
-            "class": "normative",
-            "owner": "brAInwav Development Team",
-            "change_class": "docs"
-        },
-        "llm-threat-controls.md": {
-            "path": "00-core/llm-threat-controls.md",
-            "sha256": "15f02176c91c83060a4e66dcecdb6e7cf68894ece31f2183f1d8e0307ded81be",
-            "required_tokens": [
-                "LLM01",
-                "LLM06",
-                "LLM-S0"
-            ],
-            "class": "normative",
-            "owner": "brAInwav Development Team",
-            "change_class": "docs"
-        },
-        "skills-system-governance.md": {
-            "path": "00-core/skills-system-governance.md",
-            "sha256": "00d3b5ce00f0f99b4356afe98681e4aec40d4a9715034fee6fe754f5479dcca7",
-            "required_tokens": [
-                "Skills governance",
-                "Structured outputs"
-            ],
-            "class": "normative",
-            "owner": "brAInwav Development Team",
-            "change_class": "docs"
-        },
-        "governance-quickstart.md": {
-            "path": "10-flow/governance-quickstart.md",
-            "sha256": "0f4037c02a7b984177e4e5c9fbb82fd75c9814dad3a7ca41cbff27f2f431136d",
-            "required_tokens": [
-                "governance quickstart",
-                "workflow selection"
-            ],
-            "class": "normative",
-            "owner": "brAInwav Development Team",
-            "change_class": "docs"
-        },
-        "agentic-coding-workflow.md": {
-            "path": "10-flow/agentic-coding-workflow.md",
-            "sha256": "069efc9c86046280caa3df0e351c716a10b3347a875197095ecb3a207e09b1a1",
-            "required_tokens": [
-                "G0 Initialize",
-                "Evidence Triplet",
-                "PHASE_TRANSITION",
-                "No HITL before REVIEW",
-                "MCP Tool Integration Matrix",
-                "Context Pruning",
-                "Critic Subagent",
-                "Just-in-Time Docs",
-                "Session Retrospective",
-                "Subagent Governance",
-                "Confession Protocol"
-            ],
-            "note": "Consolidates Phase Machine (§4.4), Task Folder Layout (§3), Hard Rules (§6.1), Context Pruning (§6.2), Evidence Tokens (§6.3), Subagent Governance (§6.4), Confession Protocol (§6.5), MCP Integration Matrix (§4.1)",
-            "class": "normative",
-            "owner": "brAInwav Development Team",
-            "change_class": "docs"
-        },
-        "assurance-system.md": {
-            "path": "10-flow/assurance-system.md",
-            "sha256": "7c192d91de9ed774f2cc7fc38a1f2724d22890811259642c2f3a98db80a1e5f9",
-            "required_tokens": [
-                "Assurance System",
-                "Time Freshness"
-            ],
-            "class": "normative",
-            "owner": "brAInwav Development Team",
-            "change_class": "docs"
-        },
-        "checklists.md": {
-            "path": "20-checklists/checklists.md",
-            "sha256": "9a7fe5fefa2d955411c938cf64928d160e7f5b1691ac8dcee0864d7fbb87e739",
-            "required_tokens": [
-                "checklist",
-                "quality gates"
-            ],
-            "class": "normative",
-            "owner": "brAInwav Development Team",
-            "change_class": "docs"
-        },
-        "governance-maintainers.md": {
-            "path": "90-infra/governance-maintainers.md",
-            "sha256": "1147b940fc441cb10a992df7c43c8a068d1ba94ab834a7e86fd5a188f54549b8",
-            "required_tokens": [
-                "hash sync",
-                "maintainer"
-            ],
-            "class": "infra",
-            "owner": "brAInwav Development Team",
-            "change_class": "docs"
-        },
-        "governance-index.json": {
-            "path": "90-infra/governance-index.json",
-            "sha256": "79d435779dd6ad7b0e02701466e61136ef34f11de0d2db1e22297697c62aab03",
-            "hash_mode": "exclude_self",
-            "required_tokens": [
-                "precedence",
-                "sha256"
-            ],
-            "class": "infra",
-            "owner": "brAInwav Development Team",
-            "change_class": "docs"
-        },
-        "agentic.core.schema.json": {
-            "path": "90-infra/agentic.core.schema.json",
-            "sha256": "55f31c9fbcfcc97c989c03ee04163601b63902f954e6f2dc2f5b86fff5b4ea37",
-            "required_tokens": [
-                "schema",
-                "validation"
-            ],
-            "class": "infra",
-            "owner": "brAInwav Development Team",
-            "change_class": "docs"
-        },
-        "agentic-config.schema.json": {
-            "path": "90-infra/agentic-config.schema.json",
-            "sha256": "dd2b2fb7a4e7d6aeb79ad3bf6bb4598a4db3866775769ebef28a946a9386858c",
-            "required_tokens": [
-                "Governance Config",
-                "profile",
-                "overlays"
-            ],
-            "class": "infra",
-            "owner": "brAInwav Development Team",
-            "change_class": "docs"
-        },
-        "governance-pack.map.yaml": {
-            "path": "90-infra/governance-pack.map.yaml",
-            "sha256": "a95e22426b109bc09d8ad7df7b7894744e9fcbd72e0dc18623fec3cbbbde3b30",
-            "required_tokens": [
-                "pack",
-                "overlay"
-            ],
-            "class": "infra",
-            "owner": "brAInwav Development Team",
-            "change_class": "docs"
-        },
-        "SECURITY.md": {
-            "path": "SECURITY.md",
-            "sha256": "8372aa7db3bcfafd5573c92461f0ef6f8e765199bd208c7dcf476024aee64503",
-            "required_tokens": [
-                "Security Policy",
-                "Standards & References",
-                "Reporting a Vulnerability"
-            ],
-            "class": "normative",
-            "owner": "brAInwav Development Team",
-            "change_class": "docs"
-        },
-        "standards.versions.json": {
-            "path": "90-infra/standards.versions.json",
-            "sha256": "7c76bb548f26b8a1b1fde59fe698ca01c46a00fcd693c7dbfd6955702a291998",
-            "required_tokens": [
-                "standards",
-                "owasp_top10",
-                "cyclonedx"
-            ],
-            "class": "infra",
-            "owner": "brAInwav Development Team",
-            "change_class": "docs"
-        },
-        "change-classes.json": {
-            "path": "90-infra/change-classes.json",
-            "sha256": "006ca241de6077b41d80f43580ae80cfe36403b8f8f0edf3d7fd475669029cf4",
-            "required_tokens": [
-                "classes",
-                "required_evidence"
-            ],
-            "class": "infra",
-            "owner": "brAInwav Development Team",
-            "change_class": "docs"
-        },
-        "README.md": {
-            "path": "README.md",
-            "sha256": "236dccd4ae656eac69681aeac857315332f92b092b8b97fd7f6d8aa0ba0bd8c1",
-            "required_tokens": [
-                "governance",
-                "structure"
-            ],
-            "class": "reference",
-            "owner": "brAInwav Development Team",
-            "change_class": "docs"
-        },
-        "emergency-stop-protocol.md": {
-            "path": "10-flow/emergency-stop-protocol.md",
-            "sha256": "ade56b1bf82b6e7987781baff58f2919b420bf475b3b2a297fbd12c9e9422528",
-            "required_tokens": [
-                "emergency",
-                "termination",
-                "kill switch"
-            ],
-            "class": "normative",
-            "owner": "brAInwav Development Team",
-            "change_class": "docs"
-        },
-        "session-continuity.md": {
-            "path": "10-flow/session-continuity.md",
-            "sha256": "84f5f6d0d7e5da020b51d44f114a99ed587f88e1ac6f6de0200d18df064e0f8f",
-            "required_tokens": [
-                "session",
-                "checkpoint",
-                "resume"
-            ],
-            "class": "normative",
-            "owner": "brAInwav Development Team",
-            "change_class": "docs"
-        },
-        "memory-governance.md": {
-            "path": "10-flow/memory-governance.md",
-            "sha256": "4af3b61d638e4bf6d89bf7d373ea941aca52770e2c6c4fc5ed4159b3ba05331b",
-            "required_tokens": [
-                "memory",
-                "retention",
-                "access control"
-            ],
-            "class": "normative",
-            "owner": "brAInwav Development Team",
-            "change_class": "docs"
-        },
-        "runtime-governance-service.md": {
-            "path": "10-flow/runtime-governance-service.md",
-            "sha256": "2d8fd2c5e3a3beaebae8f3263274bfcca357cc09d1349890b10841a6fe8e2e35",
-            "required_tokens": [
-                "sentinel",
-                "trust factor",
-                "policy gate"
-            ],
-            "class": "normative",
-            "owner": "brAInwav Development Team",
-            "change_class": "docs"
-        },
-        "eu-ai-act.md": {
-            "path": "30-compliance/eu-ai-act.md",
-            "sha256": "a1b7290965c27651f2862f2a81ebff0e90c41f44fa58960317f909467cfbcfe8",
-            "required_tokens": [
-                "EU AI Act",
-                "risk classification",
-                "compliance"
-            ],
-            "class": "normative",
-            "owner": "brAInwav Development Team",
-            "change_class": "docs"
-        },
-        "egress-governance.md": {
-            "path": "90-infra/egress-governance.md",
-            "sha256": "896358acd33cff20e48093f7c1f5322c62d95c2d0997bb9f1d5ff5c7dc475874",
-            "required_tokens": [
-                "egress",
-                "allowlist",
-                "rate limit"
-            ],
-            "class": "normative",
-            "owner": "brAInwav Development Team",
-            "change_class": "docs"
-        },
-        "compat.json": {
-            "path": "90-infra/compat.json",
-            "sha256": "22a209c26895a6c1f88ba417d71b62b5fecd5025f27e5df8d2ccae96ffe4bccb",
-            "required_tokens": [
-                "compatibility_policy",
-                "support_matrix",
-                "gold_standard"
-            ],
-            "class": "infra",
-            "owner": "brAInwav Development Team",
-            "change_class": "docs"
-        },
-        "control-registry.core.yaml": {
-            "path": "90-infra/control-registry.core.yaml",
-            "sha256": "588f5db0123f3a1d4ca3352da61c2edd4fabe1dd8aeab0d9fa0da07e77b69cc2",
-            "required_tokens": [
-                "BW-GOV-001",
-                "controls"
-            ],
-            "class": "infra",
-            "owner": "brAInwav Development Team",
-            "change_class": "docs"
-        },
-        "control-registry.schema.json": {
-            "path": "90-infra/control-registry.schema.json",
-            "sha256": "c06f5f6c0bfa201b0207fa69194501f5b708248494bc71c6a32619af3b674082",
-            "required_tokens": [
-                "Control Catalog",
-                "controls"
-            ],
-            "class": "infra",
-            "owner": "brAInwav Development Team",
-            "change_class": "docs"
-        },
-        "documentation-governance.md": {
-            "path": "docs/documentation-governance.md",
-            "sha256": "4f0c816c386124fbc2f0a37743b07b992a5857cf96d1a038522a19a590bd9009",
-            "required_tokens": [
-                "documentation governance",
-                "JSDoc",
-                "OpenAI Cookbook"
-            ],
-            "class": "normative",
-            "owner": "brAInwav Development Team",
-            "change_class": "docs"
-        },
-        "arxiv-agentic-governance-summary.md": {
-            "path": "docs/research/arxiv-agentic-governance-summary.md",
-            "sha256": "70496bac848cb893de3582546941637e6cac8d4920e489b37de9dcdb2198f772",
-            "required_tokens": [
-                "arXiv",
-                "mapping",
-                "research summary"
-            ],
-            "class": "reference",
-            "owner": "brAInwav Development Team",
-            "change_class": "docs"
-        },
-        "CODESTYLE.md": {
-            "path": "CODESTYLE.md",
-            "sha256": "ad79bd4da8eb69408b1ef3e4a7998a7ced8bdd5b49e695ad4b46a1a61b67ade5",
-            "required_tokens": [
-                "CODESTYLE.md",
-                "mandatory coding standards"
-            ],
-            "class": "normative",
-            "owner": "brAInwav Development Team",
-            "change_class": "docs"
-        }
+        "mandatory coding standards"
+      ],
+      "class": "normative",
+      "owner": "brAInwav Development Team",
+      "change_class": "docs"
     }
+  }
 }

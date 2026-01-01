@@ -2,17 +2,36 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "brAInwav Control Catalog",
   "type": "object",
-  "required": ["version", "metadata", "controls"],
+  "required": [
+    "version",
+    "metadata",
+    "controls"
+  ],
   "properties": {
-    "version": { "type": "string" },
+    "version": {
+      "type": "string"
+    },
     "metadata": {
       "type": "object",
-      "required": ["generatedAt", "owner", "catalog", "schemaVersion"],
+      "required": [
+        "generatedAt",
+        "owner",
+        "catalog",
+        "schemaVersion"
+      ],
       "properties": {
-        "generatedAt": { "type": "string" },
-        "owner": { "type": "string" },
-        "catalog": { "type": "string" },
-        "schemaVersion": { "type": "string" }
+        "generatedAt": {
+          "type": "string"
+        },
+        "owner": {
+          "type": "string"
+        },
+        "catalog": {
+          "type": "string"
+        },
+        "schemaVersion": {
+          "type": "string"
+        }
       },
       "additionalProperties": true
     },
@@ -36,29 +55,62 @@
           "status"
         ],
         "properties": {
-          "control_id": { "type": "string" },
-          "title": { "type": "string" },
-          "intent": { "type": "string" },
-          "rationale": { "type": "string" },
-          "enforcement": { "type": "string", "enum": ["hard", "soft"] },
+          "control_id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "intent": {
+            "type": "string"
+          },
+          "rationale": {
+            "type": "string"
+          },
+          "enforcement": {
+            "type": "string",
+            "enum": [
+              "hard",
+              "soft"
+            ]
+          },
           "scope": {
             "type": "array",
-            "items": { "type": "string", "enum": ["creative", "delivery", "ops"] }
+            "items": {
+              "type": "string",
+              "enum": [
+                "creative",
+                "delivery",
+                "ops"
+              ]
+            }
           },
           "gates": {
             "type": "array",
-            "items": { "type": "string" }
+            "items": {
+              "type": "string"
+            }
           },
           "evidence_required": {
             "type": "array",
-            "items": { "type": "string" }
+            "items": {
+              "type": "string"
+            }
           },
           "exceptions": {
             "type": "object",
-            "required": ["waiver_format", "max_ttl_days"],
+            "required": [
+              "waiver_format",
+              "max_ttl_days"
+            ],
             "properties": {
-              "waiver_format": { "type": "string" },
-              "max_ttl_days": { "type": "integer", "minimum": 1 }
+              "waiver_format": {
+                "type": "string"
+              },
+              "max_ttl_days": {
+                "type": "integer",
+                "minimum": 1
+              }
             },
             "additionalProperties": false
           },
@@ -66,17 +118,33 @@
             "type": "array",
             "items": {
               "type": "object",
-              "required": ["standard"],
+              "required": [
+                "standard"
+              ],
               "properties": {
-                "standard": { "type": "string" },
-                "ref": { "type": "string" }
+                "standard": {
+                  "type": "string"
+                },
+                "ref": {
+                  "type": "string"
+                }
               },
               "additionalProperties": false
             }
           },
-          "owner": { "type": "string" },
-          "pack": { "type": "string" },
-          "status": { "type": "string", "enum": ["active", "deprecated"] }
+          "owner": {
+            "type": "string"
+          },
+          "pack": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "deprecated"
+            ]
+          }
         },
         "additionalProperties": false
       }

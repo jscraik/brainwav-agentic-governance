@@ -14,6 +14,7 @@ import { runGovernanceValidation } from './validate-governance.mjs';
 import { runReadinessCheck } from './readiness-check.mjs';
 import { runTaskEvidenceValidation } from './validate-task-evidence.mjs';
 import { runGovernanceUpgrade } from './upgrade-governance.mjs';
+import { resolveGovernancePaths } from './governance-paths.mjs';
 import { resolvePacks, loadPackManifestFromRoot, PRESETS } from './pack-utils.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -46,6 +47,7 @@ const CHECK_REGISTRY = new Set([
 	'policy.required_tokens',
 	'policy.step_budget',
 	'policy.config',
+	'governance.json.pretty',
 	'hash.drift',
 	'evidence.task',
 	'file.agents',
@@ -277,6 +279,54 @@ function parseArgs(argv) {
 function resolvePathForRoot(rootPath, value) {
 	if (!value) return null;
 	return path.isAbsolute(value) ? value : path.resolve(rootPath, value);
+}
+
+const ROOT_DOCS = new Set(['README.md', 'CODESTYLE.md', 'SECURITY.md']);
+
+function resolveGovernanceDocPath(rootPath, govRoot, docPath) {
+	const rootDocPath = path.join(rootPath, docPath);
+	if (ROOT_DOCS.has(docPath) && fs.existsSync(rootDocPath)) return rootDocPath;
+	const govPath = path.join(govRoot, docPath);
+	if (fs.existsSync(govPath)) return govPath;
+	if (fs.existsSync(rootDocPath)) return rootDocPath;
+	return null;
+}
+
+function checkPrettyJson(indexPath, govRoot, rootPath) {
+	const issues = [];
+	if (!fs.existsSync(indexPath)) return { ok: true, issues };
+	const index = JSON.parse(fs.readFileSync(indexPath, 'utf8'));
+	Object.values(index.docs || {}).forEach((entry) => {
+		if (!entry?.path || !entry.path.endsWith('.json')) return;
+		const target = resolveGovernanceDocPath(rootPath, govRoot, entry.path);
+		if (!target || !fs.existsSync(target)) return;
+		const raw = fs.readFileSync(target, 'utf8');
+		try {
+			const parsed = JSON.parse(raw);
+			const formatted = `${JSON.stringify(parsed, null, 2)}\n`;
+			if (raw !== formatted) {
+				issues.push(entry.path);
+			}
+		} catch {
+			issues.push(`${entry.path} (parse error)`);
+		}
+	});
+	return { ok: issues.length === 0, issues };
+}
+
+/**
+ * Resolve packs and handle unknown pack errors as usage issues.
+ * @param {string[]} packs - Selected pack identifiers.
+ * @returns {string[]|null} Resolved pack IDs or null when invalid.
+ */
+function resolvePacksSafe(packs) {
+	try {
+		return resolvePacks(packs);
+	} catch (error) {
+		console.error(`[brAInwav] ${error.message}`);
+		exitWithCode(2);
+		return null;
+	}
 }
 
 /**
@@ -1202,6 +1252,9 @@ async function main() {
 	}
 
 	const { command, global, flags, unknown, positionalOutput } = parsed;
+	if (global.json) {
+		process.env.BRAINWAV_JSON = '1';
+	}
 	const validationError = validateInputs(command, flags);
 	if (validationError) {
 		console.error(`[brAInwav] ${validationError}`);
@@ -1219,10 +1272,15 @@ async function main() {
 	const reportPath = buildReportPath(global.report, command, flags.dryRun);
 	const outputPath = buildReportPath(global.output ?? positionalOutput, command, flags.dryRun);
 	const configProfile = flags.profileProvided ? null : readConfigProfile(configPath);
-	const requestedProfile = flags.profileProvided ? flags.profile : (configProfile ?? flags.profile);
+	let requestedProfile = flags.profileProvided ? flags.profile : (configProfile ?? flags.profile);
+	if (command === 'doctor' && !flags.profileProvided && !configProfile) {
+		requestedProfile = 'core';
+	}
 	const normalized = normalizeProfile(requestedProfile);
 	if (normalized.warned) {
-		console.warn(`[brAInwav] profile "${requestedProfile}" is legacy; using "${normalized.profile}".`);
+		if (!global.json && !global.quiet) {
+			console.warn(`[brAInwav] profile "${requestedProfile}" is legacy; using "${normalized.profile}".`);
+		}
 	}
 	const normalizedProfile = normalized.profile;
 
@@ -1272,12 +1330,16 @@ async function main() {
 		if (global.output) {
 			writeReport(outputPath, report);
 		}
+		if (global.report) {
+			writeReport(reportPath, report);
+		}
 		exitWithCode(0);
 		return;
 	}
 
 	if (command === 'install' || command === 'init') {
-		const selectedPacks = resolvePacks(flags.packs);
+		const selectedPacks = resolvePacksSafe(flags.packs);
+		if (!selectedPacks) return;
 		const packOptions = getPackOptions(configPath, {});
 		const { manifests, missing } = loadPackManifestsForRoot(rootPath, selectedPacks);
 		if (missing.length > 0) {
@@ -1349,7 +1411,8 @@ async function main() {
 	}
 
 	if (command === 'upgrade') {
-		const selectedPacks = resolvePacks(flags.packs);
+		const selectedPacks = resolvePacksSafe(flags.packs);
+		if (!selectedPacks) return;
 		const packOptions = getPackOptions(configPath, {});
 		const { manifests, missing } = loadPackManifestsForRoot(rootPath, selectedPacks);
 		if (missing.length > 0 && selectedPacks.length > 0) {
@@ -1422,7 +1485,8 @@ async function main() {
 	}
 
 	if (command === 'doctor') {
-		const selectedPacks = resolvePacks(flags.packs);
+		const selectedPacks = resolvePacksSafe(flags.packs);
+		if (!selectedPacks) return;
 			const inputs = {
 				root: rootPath,
 				mode: flags.mode,
@@ -1440,9 +1504,14 @@ async function main() {
 			},
 			errors: []
 		};
-		const result = runReadinessCheck(rootPath);
+		const result = runReadinessCheck(rootPath, normalizedProfile);
 		report.data.checks = normalizeChecks(result.checks);
 		const { manifests, missing } = loadPackManifestsForRoot(rootPath, selectedPacks);
+		if (flags.packs.length > 0 && missing.length > 0) {
+			console.error(`[brAInwav] Unknown packs: ${missing.join(', ')}`);
+			exitWithCode(2);
+			return;
+		}
 		if (missing.length > 0) {
 			missing.forEach((packId) => {
 				report.data.checks.push(buildCheck('pack.missing', 'fail', 'medium', 'pack', `pack missing: ${packId}`));
@@ -1484,15 +1553,32 @@ async function main() {
 		const warned = report.data.checks.filter((c) => c.status === 'warn').length;
 		report.status = failed > 0 || report.errors.length > 0 ? 'error' : warned > 0 ? 'warn' : 'success';
 		report.summary = formatSummary(report.data.checks, report.status);
+		const profileSummaries = {};
+		['core', 'delivery', 'release'].forEach((profile) => {
+			const summaryResult = runReadinessCheck(rootPath, profile);
+			if (summaryResult.ok) {
+				profileSummaries[profile] = 'pass';
+				return;
+			}
+			profileSummaries[profile] = profile === 'release' ? 'fail' : 'warn';
+		});
+		report.data.profiles = profileSummaries;
 		outputReport(report, global);
 		writeReport(reportPath, report);
 		writeReport(outputPath, report);
+		if (global.plain && !global.json) {
+			console.log('Profile readiness:');
+			Object.entries(profileSummaries).forEach(([profile, status]) => {
+				console.log(`  ${profile.padEnd(8)}: ${status.toUpperCase()}`);
+			});
+		}
 		enforceExitCode(report.status, warned, flags.strict, 1, 4);
 		return;
 	}
 
 	if (command === 'validate') {
-		const selectedPacks = resolvePacks(flags.packs);
+		const selectedPacks = resolvePacksSafe(flags.packs);
+		if (!selectedPacks) return;
 			const inputs = {
 				root: rootPath,
 				mode: flags.mode,
@@ -1523,6 +1609,11 @@ async function main() {
 		const installedPacks = readInstalledPacks(rootPath, configPath);
 		const expectedPacks = selectedPacks.length > 0 ? selectedPacks : installedPacks.packs;
 		const { manifests, missing } = loadPackManifestsForRoot(rootPath, expectedPacks);
+		if (flags.packs.length > 0 && missing.length > 0) {
+			console.error(`[brAInwav] Unknown packs: ${missing.join(', ')}`);
+			exitWithCode(2);
+			return;
+		}
 		const packValidateChecks = [];
 		manifests.forEach((manifest) => {
 			const entries = normalizePackChecks(manifest.checks?.validate || []);
@@ -1556,6 +1647,23 @@ async function main() {
 			);
 		} else {
 			checks.push(buildCheck('hash.drift', 'pass', 'info', 'hash', 'no drift'));
+		}
+
+		const { govRoot, indexPath } = resolveGovernancePaths(rootPath);
+		const jsonPretty = checkPrettyJson(indexPath, govRoot, rootPath);
+		if (!jsonPretty.ok) {
+			const status = normalizedProfile === 'release' ? 'fail' : 'warn';
+			checks.push(
+				buildCheck(
+					'governance.json.pretty',
+					status,
+					'medium',
+					'policy',
+					`JSON formatting not pretty: ${jsonPretty.issues.join(', ')}`
+				)
+			);
+		} else {
+			checks.push(buildCheck('governance.json.pretty', 'pass', 'info', 'policy', 'governance JSON formatting ok'));
 		}
 
 		if (!evidenceCheck.ok) {

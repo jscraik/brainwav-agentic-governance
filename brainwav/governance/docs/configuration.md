@@ -11,7 +11,7 @@ The governance framework uses environment variables and configuration files for 
 
 ## Governance Config (Profiles + Overlays)
 
-Use `.agentic-governance/config.json` to select local profiles, set identity hints, and declare policy overlays. This file is validated by `scripts/validate-governance.mjs` and MUST NOT weaken base governance.
+Use `.agentic-governance/config.json` to select local profiles, set identity hints, and declare policy overlays. This file is validated by `brainwav-governance validate` and MUST NOT weaken base governance.
 
 ```json
 {

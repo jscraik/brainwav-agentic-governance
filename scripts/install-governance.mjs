@@ -211,11 +211,11 @@ function renderWorkflow({ permissions, includeMacos }) {
 		.map(([key, value]) => `  ${key}: ${value}`)
 		.join('\n');
 	const env = `\n\nenv:\n  GOVERNANCE_MODE: delivery\n  GOVERNANCE_PROFILE: release\n\n`;
-	const baseJobs = `jobs:\n  governance-ubuntu:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: pnpm/action-setup@v4\n        with:\n          version: 10.26.0\n      - uses: actions/setup-node@v4\n        with:\n          node-version: '24.11.0'\n          cache: 'pnpm'\n      - run: pnpm install --frozen-lockfile=false\n      - run: brainwav-governance validate --strict --config .agentic-governance/config.ci.ubuntu.json --report .agentic-governance/reports\n\n`;
+	const baseJobs = `jobs:\n  governance-ubuntu:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1\n      - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0\n        with:\n          version: 10.26.0\n      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0\n        with:\n          node-version: '24.11.0'\n          cache: 'pnpm'\n      - run: pnpm install --frozen-lockfile\n      - run: brainwav-governance validate --strict --config .agentic-governance/config.ci.ubuntu.json --report .agentic-governance/reports\n\n`;
 	if (!includeMacos) {
 		return `${header}${permLines}${env}${baseJobs}`;
 	}
-	const macosJob = `  governance-macos:\n    runs-on: macos-latest\n    needs: [governance-ubuntu]\n    steps:\n      - uses: actions/checkout@v4\n      - uses: pnpm/action-setup@v4\n        with:\n          version: 10.26.0\n      - uses: actions/setup-node@v4\n        with:\n          node-version: '24.11.0'\n          cache: 'pnpm'\n      - run: pnpm install --frozen-lockfile=false\n      - run: brainwav-governance validate --strict --config .agentic-governance/config.ci.macos.json --report .agentic-governance/reports\n`;
+	const macosJob = `  governance-macos:\n    runs-on: macos-latest\n    needs: [governance-ubuntu]\n    steps:\n      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1\n      - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0\n        with:\n          version: 10.26.0\n      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0\n        with:\n          node-version: '24.11.0'\n          cache: 'pnpm'\n      - run: pnpm install --frozen-lockfile\n      - run: brainwav-governance validate --strict --config .agentic-governance/config.ci.macos.json --report .agentic-governance/reports\n`;
 	return `${header}${permLines}${env}${baseJobs}${macosJob}`;
 }
 
@@ -373,41 +373,6 @@ function readFileIfExists(filePath) {
 }
 
 /**
- * Extract the preserved project-specific block.
- * @param {string|null} content - File contents.
- * @returns {string|null} Preserved block or null.
- */
-function extractPreservedBlock(content) {
-	if (!content) return null;
-	const startTag = '<!-- PROJECT-SPECIFIC: START -->';
-	const endTag = '<!-- PROJECT-SPECIFIC: END -->';
-	const start = content.indexOf(startTag);
-	const end = content.indexOf(endTag);
-	if (start === -1 || end === -1 || end < start) return null;
-	return content.slice(start, end + endTag.length);
-}
-
-/**
- * Split content around the preserved block.
- * @param {string} content - File contents.
- * @returns {{before: string, preserved: string|null, after: string}} Split content.
- */
-function splitOnPreservedBlock(content) {
-	const startTag = '<!-- PROJECT-SPECIFIC: START -->';
-	const endTag = '<!-- PROJECT-SPECIFIC: END -->';
-	const start = content.indexOf(startTag);
-	const end = content.indexOf(endTag);
-	if (start === -1 || end === -1 || end < start) {
-		return { before: content, preserved: null, after: '' };
-	}
-	return {
-		before: content.slice(0, start).trimEnd(),
-		preserved: content.slice(start, end + endTag.length),
-		after: content.slice(end + endTag.length).trimStart()
-	};
-}
-
-/**
  * Resolve the pack directory for a pack ID.
  * @param {string} packId - Pack identifier.
  * @returns {string|null} Pack directory or null.
@@ -481,31 +446,17 @@ function renderDocsWithPacks({ destRoot, packs, force, dryRun, actions }) {
 	const coreCodeStyle = readFileIfExists(path.join(repoRoot, 'CODESTYLE.md'));
 	if (!coreAgents || !coreCodeStyle) return;
 
-	const existingAgents = readFileIfExists(path.join(destRoot, 'AGENTS.md'));
-	const existingCodeStyle = readFileIfExists(path.join(destRoot, 'CODESTYLE.md'));
-	const existingAgentsBlock = extractPreservedBlock(existingAgents);
-	const existingCodeStyleBlock = extractPreservedBlock(existingCodeStyle);
-
 	const packSections = packs.map((packId) => buildPackSection(packId));
 	const agentSections = packSections.map((section) => section.agents).filter(Boolean);
 	const codeStyleSections = packSections.map((section) => section.codeStyle).filter(Boolean);
 
-	const agentsSplit = splitOnPreservedBlock(coreAgents);
-	const codeStyleSplit = splitOnPreservedBlock(coreCodeStyle);
-	const agentsPreserved = existingAgentsBlock ?? agentsSplit.preserved;
-	const codeStylePreserved = existingCodeStyleBlock ?? codeStyleSplit.preserved;
-
 	const renderedAgents = [
-		agentsSplit.before,
-		agentSections.length > 0 ? '\n\n' + agentSections.join('\n\n') : '',
-		agentsPreserved ? '\n\n' + agentsPreserved : '',
-		agentsSplit.after ? '\n\n' + agentsSplit.after : ''
+		coreAgents.trimEnd(),
+		agentSections.length > 0 ? '\n\n' + agentSections.join('\n\n') : ''
 	].join('');
 	const renderedCodeStyle = [
-		codeStyleSplit.before,
-		codeStyleSections.length > 0 ? '\n\n' + codeStyleSections.join('\n\n') : '',
-		codeStylePreserved ? '\n\n' + codeStylePreserved : '',
-		codeStyleSplit.after ? '\n\n' + codeStyleSplit.after : ''
+		coreCodeStyle.trimEnd(),
+		codeStyleSections.length > 0 ? '\n\n' + codeStyleSections.join('\n\n') : ''
 	].join('');
 
 	const agentsTarget = path.join(destRoot, 'AGENTS.md');

@@ -4,7 +4,15 @@
   "modules": [
     {
       "file": "packages/utils/src/index.ts",
-      "exports": ["LogContext", "__private__", "error", "info", "log", "warn", "withContext"]
+      "exports": [
+        "LogContext",
+        "__private__",
+        "error",
+        "info",
+        "log",
+        "warn",
+        "withContext"
+      ]
     }
   ]
 }

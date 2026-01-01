@@ -19,7 +19,14 @@
  * node scripts/ensure-tools.mjs
  */
 import { spawnSync } from 'node:child_process';
+import fs from 'node:fs';
+import path from 'node:path';
 import process from 'node:process';
+import { fileURLToPath } from 'node:url';
+import { resolveGovernancePaths } from './governance-paths.mjs';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const repoRoot = path.resolve(__dirname, '..');
 
 /**
  * Required tools with their purpose and installation instructions.
@@ -36,6 +43,22 @@ const tools = [
 	{ id: 'tool.osv-scanner', name: 'osv-scanner', reason: 'supply chain audit', install: 'brew install osv-scanner' },
 	{ id: 'tool.markdownlint-cli2', name: 'markdownlint-cli2', reason: 'docs lint', install: 'npm i -g markdownlint-cli2' }
 ];
+
+const TOOL_MAP = new Map(tools.map((tool) => [tool.name, tool]));
+
+function loadToolchainProfile(targetRoot, profile) {
+	const { govRoot } = resolveGovernancePaths(targetRoot);
+	const compatPath = path.join(govRoot, '90-infra', 'compat.json');
+	if (!fs.existsSync(compatPath)) return null;
+	try {
+		const compat = JSON.parse(fs.readFileSync(compatPath, 'utf8'));
+		const profiles = compat?.gold_standard?.toolchain_profiles;
+		if (!profiles || typeof profiles !== 'object') return null;
+		return Array.isArray(profiles[profile]) ? profiles[profile] : null;
+	} catch {
+		return null;
+	}
+}
 
 /**
  * Check if a command exists in the system PATH.
@@ -82,9 +105,12 @@ function compareVersions(actual, required) {
 /**
  * Main entry point. Validates all tools and engine versions.
  * Sets process.exitCode = 1 if any check fails.
+ * @param {{profile?: string, targetRoot?: string}} options - Tooling check options.
+ * @param {string} [options.profile='release'] - Profile to enforce.
+ * @param {string} [options.targetRoot=repoRoot] - Repository root for governance config.
  * @returns {void}
  */
-export function runToolingChecks() {
+export function runToolingChecks({ profile = 'release', targetRoot = repoRoot } = {}) {
 	const checks = [];
 	let ok = true;
 
@@ -112,7 +138,10 @@ export function runToolingChecks() {
 	});
 	if (!pnpmCheck.ok) ok = false;
 
-	tools.forEach((tool) => {
+	const profileTools = loadToolchainProfile(targetRoot, profile) ?? tools.map((tool) => tool.name);
+	profileTools.forEach((toolName) => {
+		const tool = TOOL_MAP.get(toolName);
+		if (!tool) return;
 		const present = check(tool.name);
 		checks.push({
 			id: tool.id,
