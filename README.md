@@ -19,6 +19,7 @@ The brAInwav framework packages policies, workflows, templates, and automation f
 - [Compatibility Policy (Gold Standard)](#compatibility-policy-gold-standard)
 - [Adoption Paths (Jan 2026 best practice)](#adoption-paths-jan-2026-best-practice)
 - [Governance Commands](#governance-commands)
+- [Release Process (Maintainers)](#release-process-maintainers)
 
 ---
 
@@ -216,6 +217,15 @@ INCIDENT_ID=INC-742 node brainwav/governance/commands/incident-review.mjs
 | `/reframe` | `reframe.md` | — | LLM prompt for plan validation |
 | `/truth` | `truth.md` | — | LLM prompt for factual audits |
 | `/sprint-goals` | `sprint-goals.md` | — | LLM prompt for sprint planning |
+
+---
+
+## Release Process (Maintainers)
+
+- Releases are automated on tag push matching `v0.x.y`.
+- npm is the canonical distribution source (public package `brainwav-agentic-governance`).
+- GitHub Releases attach the packed tarball, SBOM, provenance, and signatures generated in CI.
+- Keep `0.x` versions until fixture-based CLI tests cover all target stacks.
 
 ---
 

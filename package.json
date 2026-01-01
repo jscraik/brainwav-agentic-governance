@@ -5,9 +5,10 @@
   "type": "module",
   "description": "Governance automation scripts and MCP helpers",
   "engines": {
-    "node": ">=24.11.0",
-    "pnpm": ">=10.26.0"
+    "node": ">=24.11.0 <25",
+    "pnpm": ">=10.26.0 <11"
   },
+  "packageManager": "pnpm@10.26.0",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
@@ -59,7 +60,8 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "lint:ci": "eslint . --max-warnings 0",
-    "test:cli": "node scripts/cli-tests.mjs"
+    "test:cli": "node scripts/cli-tests.mjs",
+    "test:fixtures": "node scripts/fixture-tests.mjs"
   },
   "dependencies": {
     "yaml": "^2.8.2"

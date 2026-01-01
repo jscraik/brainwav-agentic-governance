@@ -4,12 +4,11 @@ on:
   workflow_dispatch:
   push:
     tags:
-      - "v*.*.*"
+      - "v0.*.*"
 
 permissions:
   contents: write
   id-token: write
-  packages: write
 
 env:
   NODE_VERSION: "24.11.0"
@@ -66,13 +65,6 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npm publish --access public --provenance --registry https://registry.npmjs.org/
-      - name: Publish to GitHub Packages
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          node -e "const fs=require('fs');const p=JSON.parse(fs.readFileSync('package.json','utf8'));p.name='@jscraik/brainwav-agentic-governance';fs.writeFileSync('package.json',JSON.stringify(p,null,2)+'\\n');"
-          npm publish --access public --registry https://npm.pkg.github.com
-          git checkout -- package.json
       - name: GitHub Release
         uses: softprops/action-gh-release@v2
         with:
