@@ -94,8 +94,7 @@ jobs:
           for artifact in dist/*.tgz dist/*.json; do
             if [ -f "$artifact" ]; then
               cosign sign-blob --yes \
-                --output-signature "${artifact}.sig" \
-                --output-certificate "${artifact}.crt" \
+                --bundle "${artifact}.sigstore.json" \
                 "$artifact"
             fi
           done
