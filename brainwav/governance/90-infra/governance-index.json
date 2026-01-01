@@ -199,7 +199,7 @@
         },
         "governance-index.json": {
             "path": "90-infra/governance-index.json",
-            "sha256": "c0f0ea585418bbbe46c8527989ca70272adb2d3f85e965376b896418fc65aa17",
+            "sha256": "79d435779dd6ad7b0e02701466e61136ef34f11de0d2db1e22297697c62aab03",
             "hash_mode": "exclude_self",
             "required_tokens": [
                 "precedence",
@@ -257,7 +257,7 @@
         },
         "standards.versions.json": {
             "path": "90-infra/standards.versions.json",
-            "sha256": "3dd121c2e5eb3c1888e1190262e79ae433634d2e3a93ab4133829daeef0ae554",
+            "sha256": "7c76bb548f26b8a1b1fde59fe698ca01c46a00fcd693c7dbfd6955702a291998",
             "required_tokens": [
                 "standards",
                 "owasp_top10",
