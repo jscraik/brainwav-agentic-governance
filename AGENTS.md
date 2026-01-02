@@ -14,7 +14,7 @@ audit:
 
 # AGENTS — Governance Pack (authoritative stub)
 
-This file is intentionally small to avoid Codex instruction truncation. Canonical governance lives under `brainwav/governance/` and is **binding**.
+This file is intentionally small to avoid instruction truncation. Canonical governance lives under `brainwav/governance/` and is **binding**.
 
 ## Read first (canonical)
 
@@ -27,7 +27,7 @@ This file is intentionally small to avoid Codex instruction truncation. Canonica
 ## Bootstrap (required per session)
 
 ```bash
-pnpm cortex:governance-bootstrap
+pnpm exec cortex-governance-bootstrap
 ```
 
 This writes `.agentic-governance/agent-context.json` with governance index pointers and hashes.
@@ -35,10 +35,10 @@ This writes `.agentic-governance/agent-context.json` with governance index point
 ## Spec-driven start (when SDD pack enabled)
 
 ```bash
-pnpm exec brainwav-governance spec init --slug <feature-slug>
+pnpm exec brainwav-governance spec init --slug 001-appkit-toolbar-refresh
 ```
 
-Creates `specs/<feature-slug>/{spec.md,plan.md,tasks.md}` and should precede task folder work.
+Creates `specs/001-appkit-toolbar-refresh/{spec.md,plan.md,tasks.md}` and should precede task folder work.
 
 ```bash
 pnpm exec brainwav-governance spec validate --spec-root specs --report .agentic-governance/reports/spec-validate.json
@@ -57,10 +57,10 @@ Clarify/analyze/checklist catch missing requirements and cross-artifact drift.
 ## Validate (required before shipping)
 
 ```bash
+pnpm exec brainwav-governance validate --strict --config .agentic-governance/config.ci.ubuntu.json --report .agentic-governance/reports/
+pnpm governance:validate-agents
 pnpm governance:sync-hashes:check
 pnpm docs:validate
-pnpm governance:validate-agents
-pnpm exec brainwav-governance validate --strict --config .agentic-governance/config.ci.ubuntu.json
 ```
 
 ## Task evidence contract (required for implementation work)
@@ -73,10 +73,10 @@ Use `tasks/<slug>/` layout and Evidence Triplet requirements in:
 - `.agentic-governance/config.json` selects `mode`, `profile`, `packs`, and overlays.
 - Pointer mode resolves canonical docs from `node_modules/@brainwav/brainwav-agentic-governance`.
 
-## Non‑negotiables (summary)
+## Non-negotiables (summary)
 
 - No TODO/FIXME/HACK in production paths.
-- No fake telemetry, placeholder adapters, or random/non‑deterministic outputs.
+- No fake telemetry, placeholder adapters, or random/non-deterministic outputs.
 - Use ripgrep (`rg`) for repo search.
 
 If you need more detail, read the canonical docs above. Do not expand this file without a strong reason.

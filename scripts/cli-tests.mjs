@@ -7,6 +7,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { execSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { runGovernanceUpgrade } from './upgrade-governance.mjs';
 
@@ -152,12 +153,58 @@ function testProfileFallback() {
 }
 
 /**
+ * Assert spec init scaffolds spec-kit compatible layout and slug substitution.
+ * @returns {void} No return value.
+ */
+function testSpecInitSpeckit() {
+	const tempRoot = makeTempRepo();
+	try {
+		writeFile(
+			path.join(tempRoot, 'package.json'),
+			JSON.stringify(
+				{
+					name: 'cli-test-spec',
+					version: '0.0.0',
+					private: true
+				},
+				null,
+				2
+			) + '\n'
+		);
+		writeFile(
+			path.join(tempRoot, '.agentic-governance', 'config.json'),
+			JSON.stringify(
+				{
+					version: '1.0',
+					mode: 'pointer',
+					profile: 'delivery',
+					packs: ['sdd']
+				},
+				null,
+				2
+			) + '\n'
+		);
+		execSync(
+			`node ${path.join(repoRoot, 'scripts', 'governance-cli.mjs')} spec init --root ${tempRoot} --slug 001-sample --compat speckit --no-input --yes`,
+			{ stdio: 'inherit' }
+		);
+		const specPath = path.join(tempRoot, '.specify', 'specs', '001-sample', 'spec.md');
+		assert.ok(fs.existsSync(specPath), 'spec init should create spec.md');
+		const content = fs.readFileSync(specPath, 'utf8');
+		assert.ok(content.includes('001-sample'), 'spec template should include slug');
+	} finally {
+		fs.rmSync(tempRoot, { recursive: true, force: true });
+	}
+}
+
+/**
  * CLI entry point for tests.
  * @returns {void} No return value.
  */
 function main() {
 	testUpgradeForceFlag();
 	testProfileFallback();
+	testSpecInitSpeckit();
 	console.log('[brAInwav] cli tests passed.');
 }
 

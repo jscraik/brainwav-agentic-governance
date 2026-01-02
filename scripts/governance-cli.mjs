@@ -441,8 +441,12 @@ function resolvePacksSafe(packs) {
 function buildReportPath(target, command, dryRun) {
 	if (!target) return null;
 	const resolved = path.resolve(target);
-	const isDir = fs.existsSync(resolved) && fs.statSync(resolved).isDirectory();
-	if (!isDir) return resolved;
+	const hasTrailingSlash = /[\\/]$/.test(target);
+	const ext = path.extname(resolved);
+	const exists = fs.existsSync(resolved);
+	const isDir = exists && fs.statSync(resolved).isDirectory();
+	const dirIntent = hasTrailingSlash || (!exists && !ext);
+	if (!isDir && !dirIntent) return resolved;
 	if (command === 'validate') return path.join(resolved, 'validate.report.json');
 	if (command === 'doctor') return path.join(resolved, 'doctor.report.json');
 	if (command === 'cleanup-plan') return path.join(resolved, 'cleanup-plan.json');
@@ -2195,7 +2199,11 @@ function initSpec({ rootPath, govRoot, specRoot, slug, force, compat }) {
 	const baseRoot = path.join(rootPath, effectiveSpecRoot, slug);
 	ensureDir(baseRoot, actions);
 	const replaceSlug = (content) =>
-		content.replace(/<feature-slug>/g, slug).replace(/<slug>/g, slug);
+		content
+			.replace(/<feature-slug>/g, slug)
+			.replace(/<slug>/g, slug)
+			.replace(/\{\{SPEC_SLUG\}\}/g, slug)
+			.replace(/\$\{SPEC_SLUG\}/g, slug);
 
 	if (compat === 'speckit') {
 		const compatRoot = path.join(rootPath, '.specify');
@@ -2722,6 +2730,21 @@ async function main() {
 			console.error(`[brAInwav] Invalid spec slug: ${flags.taskSlug}`);
 			exitWithCode(2);
 			return;
+		}
+		if (specFlags.compat === 'speckit') {
+			const speckitPattern = /^\d{3}-[a-z0-9][a-z0-9-]*$/;
+			if (!speckitPattern.test(flags.taskSlug)) {
+				const message =
+					`spec-kit slugs must match ^\\d{3}-[a-z0-9][a-z0-9-]*$ (got "${flags.taskSlug}")`;
+				if (normalizedProfile === 'delivery' || normalizedProfile === 'release') {
+					console.error(`[brAInwav] ${message}`);
+					exitWithCode(1);
+					return;
+				}
+				if (!global.json && !global.quiet) {
+					console.warn(`[brAInwav] ${message}`);
+				}
+			}
 		}
 		const installedPacks = readInstalledPacks(rootPath, configPath);
 		const hasSddPack = installedPacks?.packs?.includes('sdd');

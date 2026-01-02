@@ -232,15 +232,15 @@ function renderWorkflow({ permissions, includeMacos }) {
 	const permLines = Object.entries(permissions)
 		.map(([key, value]) => `  ${key}: ${value}`)
 		.join('\n');
-	const env = `\n\nenv:\n  GOVERNANCE_MODE: delivery\n  GOVERNANCE_PROFILE: release\n\n`;
+	const env = '';
 	const versions = getToolVersions();
 	const nodeVersion = versions.node ?? '24.11.0';
 	const pnpmVersion = versions.pnpm ?? '10.26.0';
-	const baseJobs = `jobs:\n  governance-ubuntu:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1\n      - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0\n        with:\n          version: ${pnpmVersion}\n      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0\n        with:\n          node-version: '${nodeVersion}'\n          cache: 'pnpm'\n      - run: pnpm install --frozen-lockfile\n      - run: pnpm exec brainwav-governance validate --strict --config .agentic-governance/config.ci.ubuntu.json --report .agentic-governance/reports\n\n`;
+	const baseJobs = `jobs:\n  governance-ubuntu:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1\n      - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0\n        with:\n          version: ${pnpmVersion}\n      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0\n        with:\n          node-version: '${nodeVersion}'\n          cache: 'pnpm'\n      - run: pnpm install --frozen-lockfile\n      - run: pnpm exec brainwav-governance validate --strict --config .agentic-governance/config.ci.ubuntu.json --report .agentic-governance/reports/\n\n`;
 	if (!includeMacos) {
 		return `${header}${permLines}${env}${baseJobs}`;
 	}
-	const macosJob = `  governance-macos:\n    runs-on: macos-latest\n    needs: [governance-ubuntu]\n    steps:\n      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1\n      - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0\n        with:\n          version: ${pnpmVersion}\n      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0\n        with:\n          node-version: '${nodeVersion}'\n          cache: 'pnpm'\n      - run: pnpm install --frozen-lockfile\n      - run: pnpm exec brainwav-governance validate --strict --config .agentic-governance/config.ci.macos.json --report .agentic-governance/reports\n`;
+	const macosJob = `  governance-macos:\n    runs-on: macos-latest\n    needs: [governance-ubuntu]\n    steps:\n      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1\n      - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0\n        with:\n          version: ${pnpmVersion}\n      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0\n        with:\n          node-version: '${nodeVersion}'\n          cache: 'pnpm'\n      - run: pnpm install --frozen-lockfile\n      - run: pnpm exec brainwav-governance validate --strict --config .agentic-governance/config.ci.macos.json --report .agentic-governance/reports/\n`;
 	return `${header}${permLines}${env}${baseJobs}${macosJob}`;
 }
 
@@ -452,8 +452,12 @@ function synthesizePackSection(manifest) {
 		lines.push('', manifest.description);
 	}
 	lines.push('', `Applies when: pack "${manifest.id}" is selected.`);
-	const validateChecks = Array.isArray(manifest.checks?.validate) ? manifest.checks.validate : [];
-	const doctorChecks = Array.isArray(manifest.checks?.doctor) ? manifest.checks.doctor : [];
+	const normalizeChecks = (entries) =>
+		Array.isArray(entries)
+			? entries.map((entry) => (typeof entry === 'string' ? entry : entry?.id)).filter(Boolean)
+			: [];
+	const validateChecks = normalizeChecks(manifest.checks?.validate);
+	const doctorChecks = normalizeChecks(manifest.checks?.doctor);
 	lines.push('', 'Checks:');
 	lines.push(`- validate: ${validateChecks.length > 0 ? validateChecks.join(', ') : 'none'}`);
 	lines.push(`- doctor: ${doctorChecks.length > 0 ? doctorChecks.join(', ') : 'none'}`);
