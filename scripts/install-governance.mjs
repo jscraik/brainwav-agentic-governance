@@ -27,6 +27,9 @@ import {
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(__dirname, '..');
+const packageJson = JSON.parse(
+	fs.readFileSync(path.join(repoRoot, 'package.json'), 'utf8')
+);
 
 const COPY_LIST = [
 	'AGENTS.md',
