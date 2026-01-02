@@ -78,7 +78,8 @@
       "cosign",
       "osv-scanner",
       "markdownlint-cli2"
-    ]
+    ],
+    "note": "required_toolchain corresponds to the release profile. For other profiles, use toolchain_profiles."
   },
   "profile_defaults": {
     "mode": "pointer",

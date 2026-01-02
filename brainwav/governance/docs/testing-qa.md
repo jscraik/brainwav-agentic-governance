@@ -7,31 +7,19 @@ owner: "Governance Team"
 
 # Testing & QA
 
-The governance framework mandates test-driven development (TDD) with specific coverage requirements.
+The governance framework mandates test-driven development (TDD) with profile- and change-class-driven quality gates.
 
 ## TDD Requirements
 
 - **Red-Green-Refactor** – Write failing test first, implement, then refactor.
 - **Evidence Triplet** – Milestone test red→green proof is mandatory.
-- **Test-first commits** – ≥90% TDD compliance ratio.
+- **Test-first commits** – recommended metric (advisory unless required by change class/profile).
 
-## Coverage Gates
+## Quality Gates (Profile + Change Class)
 
-| Metric | Threshold | Enforcement |
-|--------|-----------|-------------|
-| Global coverage | ≥90% | CI blocker |
-| Changed lines | ≥95% | CI blocker |
-| Mutation score | ≥90% | CI blocker (where enabled) |
-
-## Quality Checks
-
-Before submitting work:
-
-1. Run unit tests with coverage
-2. Run linting and type checking
-3. Run security scans (Semgrep, Gitleaks)
-4. Generate SBOM if dependencies changed
-5. Complete code review checklist
+- creative: warn-only for coverage/mutation unless change class requires strictness
+- delivery: enforce change-class minimums; warn on aspirational targets
+- release: strict enforcement of configured thresholds and required evidence
 
 ## Evidence Requirements
 
@@ -41,4 +29,4 @@ Each task must include:
 - `tasks/<slug>/json/contracts-snapshot.json` – API/schema snapshot
 - `tasks/<slug>/evidence/tests.md` – Test coverage summary
 
-See [Checklists](../20-checklists/checklists.md) for gate-specific requirements.
+See `20-checklists/checklists.md` for gate-specific requirements and `90-infra/change-classes.json` for class-driven evidence/threshold enforcement.

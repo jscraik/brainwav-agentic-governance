@@ -108,7 +108,7 @@
         "https://github.com/ossf/scorecard-action",
         "https://github.com/ossf/scorecard-action/releases"
       ],
-      "verified_on": "2026-01-01"
+      "verified_on": "2026-01-31"
     },
     "mitre_atlas": {
       "name": "MITRE ATLAS",

@@ -29,7 +29,7 @@ controls:
     intent: "Require Evidence Triplet for behavioral change."
     rationale: "Evidence Triplet makes reviews repeatable and reduces unverifiable changes."
     enforcement: "hard"
-    scope: ["delivery"]
+    scope: ["delivery", "release"]
     gates: ["G5", "G6"]
     evidence_required:
       - "tasks/<slug>/logs/tests/milestone.log"
@@ -69,7 +69,7 @@ controls:
     intent: "Detect vulnerabilities and secrets before merge."
     rationale: "Automated scans catch high-severity issues early in the delivery cycle."
     enforcement: "hard"
-    scope: ["delivery"]
+    scope: ["delivery", "release"]
     gates: ["G5"]
     evidence_required:
       - "tasks/<slug>/logs/security/"
@@ -88,7 +88,7 @@ controls:
     intent: "Maintain supply-chain integrity with SBOM, provenance, signing."
     rationale: "SBOMs and provenance artifacts make releases auditable and tamper-evident."
     enforcement: "hard"
-    scope: ["delivery"]
+    scope: ["delivery", "release"]
     gates: ["G5", "G8"]
     evidence_required:
       - "tasks/<slug>/sbom/"
@@ -110,7 +110,7 @@ controls:
     intent: "Ensure user-facing changes meet WCAG 2.2 AA."
     rationale: "Accessibility checks prevent regressions and reduce compliance risk."
     enforcement: "hard"
-    scope: ["delivery"]
+    scope: ["delivery", "release"]
     gates: ["G5"]
     evidence_required:
       - "tasks/<slug>/verification/wcag/"
@@ -128,7 +128,7 @@ controls:
     intent: "Mitigate LLM-specific threats in agentic workflows."
     rationale: "LLM threat controls reduce prompt injection, data leakage, and excessive agency."
     enforcement: "hard"
-    scope: ["creative", "delivery"]
+    scope: ["creative", "delivery", "release"]
     gates: ["G2", "G5"]
     evidence_required:
       - "brainwav/governance/00-core/llm-threat-controls.md"
@@ -146,7 +146,7 @@ controls:
     intent: "Align AI system governance to risk management practices."
     rationale: "Oversight enforces time-freshness, licensing, and risk checks before action."
     enforcement: "hard"
-    scope: ["delivery"]
+    scope: ["delivery", "release"]
     gates: ["G2", "G5"]
     evidence_required:
       - "tasks/<slug>/logs/vibe-check/"

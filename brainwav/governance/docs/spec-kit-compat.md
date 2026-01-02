@@ -2,6 +2,7 @@
 
 This document defines what “Spec-Kit compatible” means in Brainwav governance.
 It is enforced by `brainwav-governance spec validate` and the `sdd` pack checks.
+Compatibility is pack-scoped; no additional toolchain is required beyond the pack.
 
 ## Layouts (supported)
 
@@ -17,16 +18,15 @@ specs/
     tasks.md
 ```
 
-2) **.specify layout**
+2) **Spec-kit layout**
 
 ```
 .specify/
-  memory/constitution.md
+  constitution.md
   templates/
     spec-template.md
     plan-template.md
     tasks-template.md
-  scripts/        (optional)
   specs/
     <slug>/
       spec.md
@@ -38,6 +38,14 @@ If both layouts exist, validation warns and you must choose one.
 
 ## Required files
 
+- `spec.md` (must include: Current state, Desired state, Success criteria, Verification)
+- `plan.md` (must include: Architecture/approach, Risks, Verification plan)
+- `tasks.md` (must include: a task list and trace pointers to implementation artifacts)
+
+## Naming
+
+- `<slug>` SHOULD match `^\d{3}-[a-z0-9][a-z0-9-]*$` (warn in creative; fail in release if enabled by change class).
+
 Per spec directory (`specs/<slug>/` or `.specify/specs/<slug>/`):
 
 - `spec.md`
@@ -46,7 +54,7 @@ Per spec directory (`specs/<slug>/` or `.specify/specs/<slug>/`):
 
 For `.specify` layout only:
 
-- `.specify/memory/constitution.md`
+- `.specify/constitution.md`
 - `.specify/templates/spec-template.md`
 - `.specify/templates/plan-template.md`
 - `.specify/templates/tasks-template.md`
@@ -87,7 +95,7 @@ If `plan.md` exists, the following artifacts are expected (warn if missing):
 - `research.md`
 - `quickstart.md`
 
-## Check ID mapping
+## Checks (stable IDs)
 
 These checks are emitted by `brainwav-governance spec validate`:
 

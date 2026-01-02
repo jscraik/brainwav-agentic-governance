@@ -9,14 +9,14 @@ owner: "Governance Team"
 
 This documentation governance policy is mandatory for all docs in this repo.
 
-This policy enforces documentation quality using the OpenAI Cookbook guidance ("What makes documentation good") and mandates JSDoc coverage across all JavaScript/TypeScript code.
+This policy enforces documentation quality using industry documentation heuristics and mandates JSDoc coverage across all JavaScript/TypeScript code.
 
 ## Table of Contents
 
 - [Documentation Governance](#documentation-governance)
   - [Table of Contents](#table-of-contents)
   - [Scope](#scope)
-  - [Quality Bar (OpenAI Cookbook-aligned)](#quality-bar-openai-cookbook-aligned)
+- [Quality Bar (Industry-aligned)](#quality-bar-industry-aligned)
   - [Documentation Acceptance Checklist](#documentation-acceptance-checklist)
   - [JSDoc Implementation Standard](#jsdoc-implementation-standard)
     - [JSDoc template (TypeScript)](#jsdoc-template-typescript)
@@ -28,11 +28,11 @@ This policy enforces documentation quality using the OpenAI Cookbook guidance ("
 ## Scope
 
 - Applies to all documentation in this repository (markdown, READMEs, runbooks, specs) and to all JS/TS source files, tests, scripts, and config code that expose functions/types/classes.
-- Complements `AGENTS.md`, `CODESTYLE.md`, and `brainwav/governance/00-core/RULES_OF_AI.md`. Package-level `AGENTS.md` MAY tighten but MUST NOT weaken these rules.
+- Complements `AGENTS.md`, `CODESTYLE.md`, and canonical governance docs. Package-level `AGENTS.md` MAY tighten but MUST NOT weaken these rules.
 
-## Quality Bar (OpenAI Cookbook-aligned)
+## Quality Bar (Industry-aligned)
 
-Authors and reviewers MUST apply these rules from [What makes documentation good](https://cookbook.openai.com/articles/what_makes_documentation_good):
+Authors and reviewers MUST apply these rules (summarized here) for documentation quality:
 
 - **Make docs easy to skim**: Table of contents for docs > 400 words; headings are sentence-style and informative; paragraphs short; bullets/tables used for lists; bold key takeaways; topic sentences lead each section.
 - **Put takeaways up front**: Each doc and section starts with the conclusion or result before process/detail. Avoid slow reveals or Socratic buildup.
@@ -106,4 +106,4 @@ export async function loadGovernanceIndex(path: string, expectedDigest: string):
 
 - Link this policy in PR descriptions when documentation or JS/TS code is touched.
 - If a package has tighter rules, cite both this file and the package `AGENTS.md`.
-- For waivers, follow `AGENTS.md §27` and record the waiver id in the PR.
+- For waivers, follow the waiver process referenced by `AGENTS.md` and record the waiver id in the PR.

@@ -7,11 +7,11 @@
 ---
 limits:
   stepBudget:
-    file: AGENTS.md
+    file: 00-core/AGENT_CHARTER.md
     anchor: "PACK:limits.stepBudget"
-    regex: "step Budget (?:<=|≤)\\s*(\\d+)"
+    regex: "Step Budget (?:<=|≤)\\s*(\\d+)"
   askFirst:
-    file: AGENTS.md
+    file: 00-core/AGENT_CHARTER.md
     anchor: "PACK:limits.askFirst"
     regex: "Ask-First (?:<=|≤)\\s*(\\d+)"
 

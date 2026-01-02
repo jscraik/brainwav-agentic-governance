@@ -19,8 +19,7 @@
         "creative",
         "delivery",
         "release",
-        "core",
-        "full"
+        "core"
       ],
       "default": "delivery"
     },
@@ -91,9 +90,9 @@
       "type": "object",
       "additionalProperties": true
     },
-    "deprecated": {
+    "deprecatedAliases": {
       "type": "object",
-      "description": "Legacy compatibility fields. 'profile=full' is deprecated; use mode='full'.",
+      "description": "Legacy compatibility aliases. Prefer profile=creative|delivery|release and mode=pointer|full.",
       "additionalProperties": true
     }
   }

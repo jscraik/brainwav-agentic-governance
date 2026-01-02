@@ -2,6 +2,7 @@
   "description": "Governance document index with precedence order and SHA verification",
   "version": "2025.12.2",
   "updated": "2026-01-02",
+  "note": "Core governance docs only. Pack-scoped artifacts (Nx configs, dependency-cruiser configs, generated snapshots) must not be included in precedence/infra; they are installed only by packs or treated as generated outputs.",
   "precedence": [
     "00-core/constitution.md",
     "00-core/AGENT_CHARTER.md",
@@ -212,7 +213,7 @@
     },
     "governance-index.json": {
       "path": "90-infra/governance-index.json",
-      "sha256": "5914c4a060876504e2459fc1291e1c8d4da3e3e19895790609ad3aacfbf7e0b2",
+      "sha256": "0696f335aa11f632705bb5900eabacba0619f4c35186bc3cd2b249ee4658d3b8",
       "hash_mode": "exclude_self",
       "required_tokens": [
         "precedence",
@@ -235,7 +236,7 @@
     },
     "agentic-config.schema.json": {
       "path": "90-infra/agentic-config.schema.json",
-      "sha256": "506989973856f653bda87b252852499fdb22ee2d6d640a68ee7c35d151acc5a5",
+      "sha256": "27bb414a237ada43e3b40d229f9e8bff53e28177e077e1fbae30440a21179567",
       "required_tokens": [
         "Governance Config",
         "profile",
@@ -247,7 +248,7 @@
     },
     "governance-pack.map.yaml": {
       "path": "90-infra/governance-pack.map.yaml",
-      "sha256": "0450fbb2255ce288952d17a387ed11af0bb45826a8cb721beba87c75f61eaf0e",
+      "sha256": "160f62923dba7e82b5b70972e1059de257e02c3be96a886fc149ab3fcfc0f6a0",
       "required_tokens": [
         "pack",
         "overlay"
@@ -281,7 +282,7 @@
     },
     "standards.versions.json": {
       "path": "90-infra/standards.versions.json",
-      "sha256": "aa9d459184c57545392ebca0172cf0fbdc4aebb41fb897b4126710f2a973b5a4",
+      "sha256": "62b3cb23da5ba26562a7a3974c47159cbe2a10955f5b43c2c35aa11230ac06ad",
       "required_tokens": [
         "standards",
         "owasp_top10",
@@ -387,7 +388,7 @@
     },
     "compat.json": {
       "path": "90-infra/compat.json",
-      "sha256": "e9b97308721e1ecdf2aadc8355f3753423c33784fe150556b8ecd6e357471f43",
+      "sha256": "fd093631af4d5891f6809cce2a5187337135a2b61ab6919bbeb5d64f78507610",
       "required_tokens": [
         "compatibility_policy",
         "support_matrix",
@@ -399,7 +400,7 @@
     },
     "control-registry.core.yaml": {
       "path": "90-infra/control-registry.core.yaml",
-      "sha256": "f038856c320c30377f575ed478e5c59979fb6d389e997f5036deb36578a690fa",
+      "sha256": "ef8936356721de4b392cc9548365e5ed61ab1263ae7fee797e281025357b735f",
       "required_tokens": [
         "BW-GOV-001",
         "controls"
@@ -421,7 +422,7 @@
     },
     "documentation-governance.md": {
       "path": "docs/documentation-governance.md",
-      "sha256": "4f0c816c386124fbc2f0a37743b07b992a5857cf96d1a038522a19a590bd9009",
+      "sha256": "98c3de7980b7969331cfb633a3e818699bc15cb9f68f21fd51140897a94573a9",
       "required_tokens": [
         "documentation governance",
         "JSDoc",
@@ -433,7 +434,7 @@
     },
     "spec-kit-compat.md": {
       "path": "docs/spec-kit-compat.md",
-      "sha256": "3041c7a98c729f4b7ff5a816149f57183315aa2f7661668c6115fec50a0551f3",
+      "sha256": "d3c2a44c15fe7793d11d979290b05eabfc9267cea370140a1aa0f2146f632be8",
       "required_tokens": [
         "Spec-Kit Compatibility Contract",
         "Layout"
