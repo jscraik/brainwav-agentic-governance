@@ -196,6 +196,7 @@ function checkToolchainMentions(govRoot, rootPath) {
  * Enforce pointer-mode stub validation and canonical-only constraints.
  * @param {Record<string, unknown>|null} pointer - Pointer metadata.
  * @param {string} targetRoot - Repository root.
+ * @param {string} indexPath - Governance index path.
  * @returns {string[]} Failure messages.
  */
 function checkPointerStubs(pointer, targetRoot, indexPath) {
