@@ -133,7 +133,7 @@
     },
     "governance-quickstart.md": {
       "path": "10-flow/governance-quickstart.md",
-      "sha256": "0f4037c02a7b984177e4e5c9fbb82fd75c9814dad3a7ca41cbff27f2f431136d",
+      "sha256": "8f304d56a555208af126974369285224814d208001771c04cabfef67b5f9db9b",
       "required_tokens": [
         "governance quickstart",
         "workflow selection"
@@ -144,7 +144,7 @@
     },
     "agentic-coding-workflow.md": {
       "path": "10-flow/agentic-coding-workflow.md",
-      "sha256": "069efc9c86046280caa3df0e351c716a10b3347a875197095ecb3a207e09b1a1",
+      "sha256": "c245ef40daf04ca6fed7f7b4511cfa90e71d64ef64296f073785fae42cf96ad4",
       "required_tokens": [
         "G0 Initialize",
         "Evidence Triplet",
@@ -165,7 +165,7 @@
     },
     "assurance-system.md": {
       "path": "10-flow/assurance-system.md",
-      "sha256": "53af26b6fec20faed2cd2597a65e73279cd357f59ae3336791b7a2cba146f1af",
+      "sha256": "ae56d27912e4bb48f6167991f3dc59766874ca4ce70d7ecc7cd8b60dbc1cefe9",
       "required_tokens": [
         "Assurance System",
         "Time Freshness"
@@ -176,7 +176,7 @@
     },
     "checklists.md": {
       "path": "20-checklists/checklists.md",
-      "sha256": "e64d3f5c9c23728925e4c344d710e4565ed9221a9f9cf54de41689cb2c1c257a",
+      "sha256": "615159ae66afecd34219dea95f04cd68504b295ff82be3578b857f786558c6dc",
       "required_tokens": [
         "checklist",
         "quality gates"
@@ -198,7 +198,7 @@
     },
     "governance-index.json": {
       "path": "90-infra/governance-index.json",
-      "sha256": "d3044a13cbf72638c6bbd9b9c7c3b9202eeb1cfe1bea320b40b7f507314aed6d",
+      "sha256": "f4aa40b2d870fc12ad00298c38592548b72c2a6ad184fa12e7a83c89a8e2da5c",
       "hash_mode": "exclude_self",
       "required_tokens": [
         "precedence",
@@ -244,7 +244,7 @@
     },
     "SECURITY.md": {
       "path": "SECURITY.md",
-      "sha256": "6c54218e6cd5080d4b1076864f3f5d56fb168d4ab8b5ecb4ef1a3de71978322c",
+      "sha256": "a05f1405a7bc1150d7a3d8dba61869dc042de6e4488644f3727ab25369c38ac7",
       "required_tokens": [
         "Security Policy",
         "Standards & References",
@@ -279,7 +279,7 @@
     },
     "README.md": {
       "path": "README.md",
-      "sha256": "72f583d436f79367fabf1a81a6babe03553a51846d9482e0dcd668285946af10",
+      "sha256": "e2db474cb1599f85243f54d3a4669c6c183e5fa594877bec44a09f0f9492933a",
       "required_tokens": [
         "governance",
         "structure"
@@ -408,7 +408,7 @@
     },
     "CODESTYLE.md": {
       "path": "CODESTYLE.md",
-      "sha256": "461eec56cdb9982b1736c35a18bc8a17576357c27ae8da7ab87ef8208cfc87e8",
+      "sha256": "b1d58e5d088b92dae4c06516c62b481943d62076859369729bc88ca660e6bc86",
       "required_tokens": [
         "CODESTYLE.md",
         "mandatory coding standards"

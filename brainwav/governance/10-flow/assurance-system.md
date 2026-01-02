@@ -16,6 +16,8 @@
 - Time-freshness validation for research and external sources
 - Compliance checking for security, privacy, and accessibility standards
 
+**Practical minimum**: call Assurance for feature/fix/refactor **only when risk ≥ medium**, when you change contracts, or when you rely on external research. Skip it for low‑risk docs/typos if no new evidence is required.
+
 ---
 
 ## 2. Time Freshness Policy

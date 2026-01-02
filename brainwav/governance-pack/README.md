@@ -57,16 +57,16 @@ Templates use `${var}` placeholders. See `config.example.yaml` for the canonical
 
 ## Enforcement Wiring (future)
 
-A helper script (`../../scripts/governance/render-pack.mjs`) will merge core + overlay into `governance-pack/dist/` for CI and AGENTS consumption. Until then, CI and agents should continue to read the top-level `governance-pack/*.yaml` (Cortex defaults). The same tooling can emit a heavier variant with `dist/docs.index.yaml` enriched by `full_text` for offline use.
+Core + overlay sources are merged into `governance-pack/dist/` for CI and AGENTS consumption. CI and agents should read the `governance-pack/dist/*.yaml` files as the authoritative pack.
 
 ## Output targets
 - Top-level `governance-pack/*.yaml` are the current Cortex defaults.
-- When you run `scripts/governance/render-pack.mjs` (or `pnpm governance:render-pack`), the emitted `dist/` files become the authoritative pack for CI/agents.
+- The committed `dist/` files are the authoritative pack for CI/agents.
 - `dist/docs.index.yaml` can optionally inline `full_text` for offline/air-gapped review; leave empty to keep downloads light.
 
 ## Render to dist
 
-- Run: `pnpm governance:render-pack` (or `node scripts/governance/render-pack.mjs`) to merge core + overlay into `governance-pack/dist/`.
+- When pack sources change, regenerate and commit `governance-pack/dist/` with the same merge logic used by CI.
 - Flags: `--overlay <org>` (default `cortex`), `--project <name>` (optional), `--config <path>` (default `config.example.yaml`), `--full-doc` to force inlining doc `full_text`.
 - Behavior: deep-merge core → overlay → project; arrays are replaced by later layers; unknown placeholders are left as-is.
 - Outputs: `governance.yaml`, `checklists.yaml`, `assurance.yaml`, `structure.yaml`, `dist/docs.index.yaml`, `agents-header.md` under `governance-pack/dist/`.

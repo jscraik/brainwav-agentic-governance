@@ -9,7 +9,7 @@
 ## Packaging
 - Source anchors: keep `<!-- PACK:key=value -->` markers in governance docs so pack builds stay in sync.
 - Mapping: see `90-infra/governance-pack.map.yaml` for anchor -> field mapping used by tooling.
-- Build: `../../scripts/governance/render-pack.mjs` merges core + overlays into `governance-pack/dist/` for CI/offline packs.
+- Build: `governance-pack/dist/` is committed and used by CI/agents; update it when pack sources change.
 
 ## Core + Packs + Adapters
 
