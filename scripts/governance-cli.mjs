@@ -24,7 +24,7 @@ const repoRoot = path.resolve(__dirname, '..');
 const pkg = JSON.parse(fs.readFileSync(path.join(repoRoot, 'package.json'), 'utf8'));
 
 const COMMANDS = new Set(['init', 'install', 'upgrade', 'validate', 'doctor', 'packs']);
-const COMMON_FLAGS = new Set(['--mode', '--profile', '--packs', '--dry-run', '--yes', '--force']);
+const COMMON_FLAGS = new Set(['--mode', '--profile', '--packs', '--dry-run', '--yes', '--force', '--no-install']);
 const GLOBAL_FLAGS = new Set([
 	'-h',
 	'--help',
@@ -63,11 +63,17 @@ const CHECK_REGISTRY = new Set([
 	'tool.fd',
 	'tool.jq',
 	'tool.semgrep',
+	'tool.semgrep.version',
 	'tool.gitleaks',
+	'tool.gitleaks.version',
 	'tool.trivy',
+	'tool.trivy.version',
 	'tool.cosign',
+	'tool.cosign.version',
 	'tool.osv-scanner',
+	'tool.osv-scanner.version',
 	'tool.markdownlint-cli2',
+	'tool.markdownlint-cli2.version',
 	'pack.missing',
 	'pack.present'
 ]);
@@ -128,6 +134,7 @@ function parseArgs(argv) {
 		dryRun: false,
 		yes: false,
 		force: false,
+		noInstall: false,
 		strict: false,
 		preserve: true
 	};
@@ -215,6 +222,9 @@ function parseArgs(argv) {
 
 		if (COMMON_FLAGS.has(arg) || arg === '--strict' || arg === '--preserve=false' || arg === '--preserve=true') {
 			switch (arg) {
+				case '--no-install':
+					flags.noInstall = true;
+					break;
 				case '--mode': {
 					const value = takeValue(i);
 					if (!value) return { error: 'Missing value for --mode' };
@@ -1448,14 +1458,14 @@ async function main() {
 					mode: flags.modeProvided ? flags.mode : null,
 					profile: flags.profileProvided ? normalizedProfile : null,
 					preserveConfig: flags.preserve,
-				force: flags.force,
-				dryRun: flags.dryRun,
-				noInstall: false,
-				silent: global.json || global.quiet,
-				configPath,
-				packs: selectedPacks,
-				packOptions
-			});
+					force: flags.force,
+					dryRun: flags.dryRun,
+					noInstall: flags.noInstall,
+					silent: global.json || global.quiet,
+					configPath,
+					packs: selectedPacks,
+					packOptions
+				});
 			report.data.actions = result.actions ?? [];
 			report.summary = `upgrade completed (${report.data.actions.length} actions)`;
 			outputReport(report, global);

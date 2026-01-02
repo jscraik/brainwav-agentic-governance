@@ -43,11 +43,18 @@ export function resolveGovernancePaths(repoRoot) {
 
 	const pointer = readJson(pointerPath);
 	const packageName = pointer.package || '@brainwav/brainwav-agentic-governance';
-	const packageRoot = pointer.packageRoot || path.join(repoRoot, 'node_modules', packageName);
-	const govRoot = pointer.governanceRoot || path.join(packageRoot, 'brainwav', 'governance');
-	const agentsPath = pointer.agentsPath || path.join(packageRoot, 'AGENTS.md');
+	const resolvePointerPath = (value) => {
+		if (!value) return null;
+		return path.isAbsolute(value) ? value : path.resolve(repoRoot, value);
+	};
+	const packageRoot =
+		resolvePointerPath(pointer.packageRoot) ?? path.join(repoRoot, 'node_modules', packageName);
+	const govRoot =
+		resolvePointerPath(pointer.governanceRoot) ?? path.join(packageRoot, 'brainwav', 'governance');
+	const agentsPath = resolvePointerPath(pointer.agentsPath) ?? path.join(packageRoot, 'AGENTS.md');
 	const indexPath =
-		pointer.governanceIndexPath || path.join(govRoot, '90-infra', 'governance-index.json');
+		resolvePointerPath(pointer.governanceIndexPath) ??
+		path.join(govRoot, '90-infra', 'governance-index.json');
 
 	return {
 		mode: 'pointer',
