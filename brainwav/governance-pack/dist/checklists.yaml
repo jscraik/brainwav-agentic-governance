@@ -9,43 +9,37 @@ variables:
 checklists:
   items:
     - id: dependencies-install-cleanly-pnpm-install-or-pnpm-install-frozen-lockfile
-      description: "Dependencies install cleanly: `pnpm install` (or `pnpm install
-        --frozen-lockfile`)."
+      description: "Dependencies install cleanly: `pnpm install` (or `pnpm install --frozen-lockfile`)."
       severity: MAJOR
       appliesTo:
         phases:
           - PLAN
     - id: lint-passes-for-affected-projects-pnpm-nx-affected-t-lint-fallback-pnpm-lint
-      description: "Lint passes for affected projects: `pnpm nx affected -t lint`
-        (fallback `pnpm lint`)."
+      description: "Lint passes for affected projects: `pnpm nx affected -t lint` (fallback `pnpm lint`)."
       severity: MAJOR
       appliesTo:
         phases:
           - PLAN
     - id: typecheck-passes-pnpm-nx-affected-t-typecheck-fallback-pnpm-typecheck
-      description: "Typecheck passes: `pnpm nx affected -t typecheck` (fallback `pnpm
-        typecheck`)."
+      description: "Typecheck passes: `pnpm nx affected -t typecheck` (fallback `pnpm typecheck`)."
       severity: MAJOR
       appliesTo:
         phases:
           - PLAN
     - id: build-dev-target-succeeds-for-touched-surface-pnpm-nx-affected-t-build-or-the-pa
-      description: "Build/dev target succeeds for touched surface: `pnpm nx affected
-        -t build` or the package-specific `pnpm --filter <pkg> build`."
+      description: "Build/dev target succeeds for touched surface: `pnpm nx affected -t build` or the package-specific `pnpm --filter <pkg> build`."
       severity: MAJOR
       appliesTo:
         phases:
           - PLAN
     - id: agent-read-cortex-rules-10-flow-governance-quickstart-md-and-10-flow-agentic-cod
-      description: Agent read `.cortex/rules/10-flow/governance-quickstart.md` and
-        `10-flow/agentic-coding-workflow.md` this session.
+      description: Agent read `.cortex/rules/10-flow/governance-quickstart.md` and `10-flow/agentic-coding-workflow.md` this session.
       severity: MAJOR
       appliesTo:
         phases:
           - PLAN
     - id: task-type-flow-selected-task-folder-located-current-gate-g0-g10-identified-in-ru
-      description: Task type + flow selected; task folder located; current gate
-        (G0–G10) identified in `run-manifest.json`.
+      description: Task type + flow selected; task folder located; current gate (G0–G10) identified in `run-manifest.json`.
       severity: MAJOR
       appliesTo:
         phases:
@@ -63,22 +57,19 @@ checklists:
         phases:
           - PLAN
     - id: breaking-contracts-api-event-schema-documented-in-context-requirements-md-and-ta
-      description: Breaking contracts (API/event/schema) documented in
-        `context/requirements.md` and target docs/ADR.
+      description: Breaking contracts (API/event/schema) documented in `context/requirements.md` and target docs/ADR.
       severity: MAJOR
       appliesTo:
         phases:
           - PLAN
     - id: feature-flags-config-defaults-are-safe-off-by-default-and-described-in-ops-rollo
-      description: Feature flags/config defaults are safe/off by default and described
-        in `ops/rollout-plan.md`.
+      description: Feature flags/config defaults are safe/off by default and described in `ops/rollout-plan.md`.
       severity: MAJOR
       appliesTo:
         phases:
           - PLAN
     - id: secrets-pulled-via-op-1password-cli-no-secrets-committed-or-persisted
-      description: Secrets pulled via `op` (1Password CLI); no secrets committed or
-        persisted.
+      description: Secrets pulled via `op` (1Password CLI); no secrets committed or persisted.
       severity: MAJOR
       appliesTo:
         phases:
@@ -90,93 +81,79 @@ checklists:
         phases:
           - IMPLEMENT
     - id: pr-states-task-type-flow-and-highest-gate-completed-e-g-feature-flow-through-g6
-      description: PR states task type + flow and highest gate completed (e.g.
-        "Feature flow through G6").
+      description: PR states task type + flow and highest gate completed (e.g. "Feature flow through G6").
       severity: MAJOR
       appliesTo:
         phases:
           - IMPLEMENT
     - id: run-manifest-json-committed-updated-with-tier-gates-evidence-triplet-pointers-an
-      description: "`run-manifest.json` committed/updated with tier, gates, Evidence
-        Triplet pointers, and `reuseEvidence` entries."
+      description: "`run-manifest.json` committed/updated with tier, gates, Evidence Triplet pointers, and `reuseEvidence` entries."
       severity: MAJOR
       appliesTo:
         phases:
           - IMPLEMENT
     - id: tests-cite-failing-test-path-log-pre-change-and-passing-evidence-post-change-evi
-      description: "**Tests**: cite failing test path/log pre-change and passing
-        evidence post-change (`evidence/tests.md`, `evidence/test-results/*`)."
+      description: "**Tests**: cite failing test path/log pre-change and passing evidence post-change (`evidence/tests.md`, `evidence/test-results/*`)."
       severity: MAJOR
       appliesTo:
         phases:
           - IMPLEMENT
     - id: plan-plan-plan-md-7-steps-matches-implemented-work-include-link-anchor
-      description: "**Plan**: `plan/PLAN.md` (≤7 steps) matches implemented work;
-        include link/anchor."
+      description: "**Plan**: `plan/PLAN.md` (≤7 steps) matches implemented work; include link/anchor."
       severity: MAJOR
       appliesTo:
         phases:
           - IMPLEMENT
     - id: review-reviewer-neuron-scheduled-human-reviewer-requested-evidence-review-json-r
-      description: "**Review**: Reviewer neuron scheduled; human reviewer requested;
-        `evidence/review.json` & `review-notes.md` placeholders present."
+      description: "**Review**: Reviewer neuron scheduled; human reviewer requested; `evidence/review.json` & `review-notes.md` placeholders present."
       severity: MAJOR
       appliesTo:
         phases:
           - IMPLEMENT
     - id: meta-task-json-context-requirements-md-north-star-context-research-md-plan-plan-
-      description: "`meta/task.json`, `context/requirements.md` (North-Star),
-        `context/research.md`, `plan/PLAN.md`, `plan/tdd-plan.md`,
-        `work/implementation-log.md`."
+      description: "`meta/task.json`, `context/requirements.md` (North-Star), `context/research.md`, `plan/PLAN.md`, `plan/tdd-plan.md`, `work/implementation-log.md`."
       severity: MAJOR
       appliesTo:
         phases:
           - IMPLEMENT
     - id: evidence-aegis-report-json-uploaded-cortex-aegis-g2-g5-verdicts-logs-vibe-check-
-      description: "`evidence/aegis-report.json` uploaded (Cortex-Aegis G2/G5
-        verdicts) + `logs/vibe-check/*.json`."
+      description: "`evidence/aegis-report.json` uploaded (Cortex-Aegis G2/G5 verdicts) + `logs/vibe-check/*.json`."
       severity: MAJOR
       appliesTo:
         phases:
           - IMPLEMENT
     - id: implementation-plan-md-reuse-ledger-updated-run-manifest-json-reuseevidence-fill
-      description: "`implementation-plan.md#reuse-ledger` updated;
-        `run-manifest.json.reuseEvidence.*` filled."
+      description: "`implementation-plan.md#reuse-ledger` updated; `run-manifest.json.reuseEvidence.*` filled."
       severity: MAJOR
       appliesTo:
         phases:
           - IMPLEMENT
     - id: meta-task-json-type-research-context-research-md-with-queries-citations-license-
-      description: "`meta/task.json` type=Research; `context/research.md` with queries
-        + citations; license checks logged in `research/connectors-health.log`."
+      description: "`meta/task.json` type=Research; `context/research.md` with queries + citations; license checks logged in `research/connectors-health.log`."
       severity: MAJOR
       appliesTo:
         phases:
           - IMPLEMENT
     - id: recommendation-recorded-in-plan-plan-md-and-summary-md-code-changes-flagged-as-e
-      description: Recommendation recorded in `plan/PLAN.md` and `SUMMARY.md`; code
-        changes flagged as experimental if any.
+      description: Recommendation recorded in `plan/PLAN.md` and `SUMMARY.md`; code changes flagged as experimental if any.
       severity: MAJOR
       appliesTo:
         phases:
           - IMPLEMENT
     - id: reproducer-documented-in-context-requirements-md-failing-regression-test-attache
-      description: Reproducer documented in `context/requirements.md` + failing
-        regression test attached.
+      description: Reproducer documented in `context/requirements.md` + failing regression test attached.
       severity: MAJOR
       appliesTo:
         phases:
           - IMPLEMENT
     - id: ops-postmortem-md-for-sev-2-incidents-roll-forward-back-strategy-in-ops-rollout-
-      description: "`ops/postmortem.md` for SEV≤2+ incidents; roll-forward/back
-        strategy in `ops/rollout-plan.md`/`rollback-plan.md`."
+      description: "`ops/postmortem.md` for SEV≤2+ incidents; roll-forward/back strategy in `ops/rollout-plan.md`/`rollback-plan.md`."
       severity: MAJOR
       appliesTo:
         phases:
           - IMPLEMENT
     - id: evidence-aegis-report-json-risk-medium-and-connectors-health-log-updated
-      description: "`evidence/aegis-report.json` (risk ≥ medium) and connectors health
-        log updated."
+      description: "`evidence/aegis-report.json` (risk ≥ medium) and connectors health log updated."
       severity: MAJOR
       appliesTo:
         phases:
@@ -188,8 +165,7 @@ checklists:
         phases:
           - IMPLEMENT
     - id: plan-plan-md-clarifies-boundaries-success-metrics-no-behaviour-change
-      description: "`plan/PLAN.md` clarifies boundaries + success metrics (no
-        behaviour change)."
+      description: "`plan/PLAN.md` clarifies boundaries + success metrics (no behaviour change)."
       severity: MAJOR
       appliesTo:
         phases:
@@ -201,8 +177,7 @@ checklists:
         phases:
           - IMPLEMENT
     - id: meta-task-json-type-review-evidence-review-json-review-notes-md-populated-checkl
-      description: "`meta/task.json` type=Review; `evidence/review.json` +
-        `review-notes.md` populated; checklist pasted as PR comment."
+      description: "`meta/task.json` type=Review; `evidence/review.json` + `review-notes.md` populated; checklist pasted as PR comment."
       severity: MAJOR
       appliesTo:
         phases:
@@ -214,15 +189,13 @@ checklists:
         phases:
           - IMPLEMENT
     - id: ops-rollout-plan-md-ops-rollback-plan-md-committed-when-rollout-flags-apply
-      description: "`ops/rollout-plan.md` + `ops/rollback-plan.md` committed when
-        rollout/flags apply."
+      description: "`ops/rollout-plan.md` + `ops/rollback-plan.md` committed when rollout/flags apply."
       severity: MAJOR
       appliesTo:
         phases:
           - IMPLEMENT
     - id: changelog-entry-created-pnpm-changelog-new-slug-slug-tier-type-or-successor-tool
-      description: Changelog entry created (`pnpm changelog:new --slug <slug> --tier
-        <type>` or successor tooling) and referenced in PR.
+      description: Changelog entry created (`pnpm changelog:new --slug <slug> --tier <type>` or successor tooling) and referenced in PR.
       severity: MAJOR
       appliesTo:
         phases:
@@ -234,8 +207,7 @@ checklists:
         phases:
           - REVIEW
     - id: constitution-agent-charter-requirements-satisfied-branding-secrets-reality-filte
-      description: Constitution + AGENT_CHARTER requirements satisfied (branding,
-        secrets, reality filter, no fake telemetry).
+      description: Constitution + AGENT_CHARTER requirements satisfied (branding, secrets, reality filter, no fake telemetry).
       severity: MAJOR
       appliesTo:
         phases:
@@ -247,22 +219,19 @@ checklists:
         phases:
           - REVIEW
     - id: reuse-first-artefacts-analysis-reuse-evaluation-md-plan-reuse-ledger-reviewed-he
-      description: Reuse-first artefacts (analysis/reuse-evaluation.md + PLAN reuse
-        ledger) reviewed; helper diffs cite evidence.
+      description: Reuse-first artefacts (analysis/reuse-evaluation.md + PLAN reuse ledger) reviewed; helper diffs cite evidence.
       severity: MAJOR
       appliesTo:
         phases:
           - REVIEW
     - id: tests-cover-new-behaviour-edge-cases-and-failure-modes-regression-tests-prove-fi
-      description: Tests cover new behaviour, edge cases, and failure modes;
-        regression tests prove fixes.
+      description: Tests cover new behaviour, edge cases, and failure modes; regression tests prove fixes.
       severity: MAJOR
       appliesTo:
         phases:
           - REVIEW
     - id: evidence-triplet-verified-failing-passing-tests-plan-anchor-reviewer-proof
-      description: Evidence Triplet verified (failing→passing tests, plan anchor,
-        reviewer proof).
+      description: Evidence Triplet verified (failing→passing tests, plan anchor, reviewer proof).
       severity: MAJOR
       appliesTo:
         phases:
@@ -274,15 +243,13 @@ checklists:
         phases:
           - REVIEW
     - id: ui-cli-changes-meet-wcag-2-2-aa-axe-jest-axe-evidence-and-support-keyboard-only-
-      description: UI/CLI changes meet WCAG 2.2 AA (axe/jest-axe evidence) and support
-        keyboard-only + screen readers.
+      description: UI/CLI changes meet WCAG 2.2 AA (axe/jest-axe evidence) and support keyboard-only + screen readers.
       severity: MAJOR
       appliesTo:
         phases:
           - REVIEW
     - id: no-color-only-signalling-focus-order-labels-verified-mention-no-ui-impact-if-not
-      description: No color-only signalling; focus order + labels verified; mention
-        "no UI impact" if not applicable.
+      description: No color-only signalling; focus order + labels verified; mention "no UI impact" if not applicable.
       severity: MAJOR
       appliesTo:
         phases:
@@ -294,29 +261,25 @@ checklists:
         phases:
           - REVIEW
     - id: new-inputs-validated-outputs-encoded-threat-model-touched-if-risk-tags-include-s
-      description: New inputs validated; outputs encoded; threat model touched if risk
-        tags include security/privacy.
+      description: New inputs validated; outputs encoded; threat model touched if risk tags include security/privacy.
       severity: MAJOR
       appliesTo:
         phases:
           - REVIEW
     - id: semgrep-gitleaks-osv-pnpm-security-scan-sbom-cyclonedx-1-7-and-slsa-v1-1-attesta
-      description: Semgrep, gitleaks, OSV, `pnpm security:scan`, SBOM (CycloneDX 1.7),
-        and SLSA v1.2 attestations referenced.
+      description: Semgrep, gitleaks, OSV, `pnpm security:scan`, SBOM (CycloneDX 1.7), and SLSA v1.2 attestations referenced.
       severity: MAJOR
       appliesTo:
         phases:
           - REVIEW
     - id: hot-path-changes-reviewed-for-allocations-complexity-long-running-operations-can
-      description: Hot path changes reviewed for allocations + complexity;
-        long-running operations cancellable.
+      description: Hot path changes reviewed for allocations + complexity; long-running operations cancellable.
       severity: MAJOR
       appliesTo:
         phases:
           - REVIEW
     - id: observability-logs-metrics-traces-include-service-trace-id-traceparent
-      description: 'Observability: logs/metrics/traces include `service:"<service_name>"`,
-        `trace_id`, `traceparent`.'
+      description: 'Observability: logs/metrics/traces include `service:"<service_name>"`, `trace_id`, `traceparent`.'
       severity: MAJOR
       appliesTo:
         phases:
@@ -328,29 +291,25 @@ checklists:
         phases:
           - REVIEW
     - id: live-model-usage-only-logs-models-show-health-smoke-runs-with-ids-latency
-      description: Live model usage only; `logs/models/*` show health/smoke runs with
-        IDs + latency.
+      description: Live model usage only; `logs/models/*` show health/smoke runs with IDs + latency.
       severity: MAJOR
       appliesTo:
         phases:
           - REVIEW
     - id: prompt-schema-changes-versioned-tested-mcp-connectors-documented-healthy
-      description: Prompt/schema changes versioned + tested; MCP connectors documented
-        + healthy.
+      description: Prompt/schema changes versioned + tested; MCP connectors documented + healthy.
       severity: MAJOR
       appliesTo:
         phases:
           - REVIEW
     - id: reviewer-notes-include-disposition-for-each-ai-finding-accept-reject-follow-up-i
-      description: Reviewer notes include disposition for each AI finding
-        (Accept/Reject/Follow-up) in `evidence/review-notes.md`.
+      description: Reviewer notes include disposition for each AI finding (Accept/Reject/Follow-up) in `evidence/review-notes.md`.
       severity: MAJOR
       appliesTo:
         phases:
           - REVIEW
     - id: task-folder-created-meta-task-json-meta-tags-json-populated-type-tier-owners-ris
-      description: Task folder created; `meta/task.json` + `meta/tags.json` populated
-        (type, tier, owners, risk tags, feature flags).
+      description: Task folder created; `meta/task.json` + `meta/tags.json` populated (type, tier, owners, risk tags, feature flags).
       severity: MAJOR
       appliesTo:
         phases:
@@ -374,8 +333,7 @@ checklists:
         gates:
           - G0
     - id: repo-project-scan-local-memory-recall-executed-findings-logged-in-context-resear
-      description: Repo/project scan + Local Memory `/recall` executed; findings
-        logged in `context/research.md`.
+      description: Repo/project scan + Local Memory `/recall` executed; findings logged in `context/research.md`.
       severity: MAJOR
       appliesTo:
         phases:
@@ -383,9 +341,7 @@ checklists:
         gates:
           - G1
     - id: academic-connectors-wikidata-3029-arxiv-3041-semantic-scholar-openalex-context7-
-      description: Academic connectors (Wikidata 3029, arXiv 3041, Semantic Scholar,
-        OpenAlex, Context7) health-checked; log under
-        `research/connectors-health.log`.
+      description: Academic connectors (Wikidata 3029, arXiv 3041, Semantic Scholar, OpenAlex, Context7) health-checked; log under `research/connectors-health.log`.
       severity: MAJOR
       appliesTo:
         phases:
@@ -401,8 +357,7 @@ checklists:
         gates:
           - G1
     - id: plan-plan-md-plan-tdd-plan-md-plan-risk-register-md-updated-7-steps-per-arc
-      description: "`plan/PLAN.md`, `plan/tdd-plan.md`, `plan/risk-register.md`
-        updated (≤7 steps per arc)."
+      description: "`plan/PLAN.md`, `plan/tdd-plan.md`, `plan/risk-register.md` updated (≤7 steps per arc)."
       severity: MAJOR
       appliesTo:
         phases:
@@ -410,8 +365,7 @@ checklists:
         gates:
           - G2
     - id: cortex-aegis-executed-when-required-see-7-evidence-aegis-report-json-stored
-      description: Cortex-Aegis executed when required (see §7);
-        `evidence/aegis-report.json` stored.
+      description: Cortex-Aegis executed when required (see §7); `evidence/aegis-report.json` stored.
       severity: MAJOR
       appliesTo:
         phases:
@@ -427,8 +381,7 @@ checklists:
         gates:
           - G2
     - id: failing-milestone-tests-implemented-and-logged-run-manifest-json-reuseevidence-f
-      description: Failing milestone tests implemented and logged
-        (`run-manifest.json.reuseEvidence.failingTest`).
+      description: Failing milestone tests implemented and logged (`run-manifest.json.reuseEvidence.failingTest`).
       severity: MAJOR
       appliesTo:
         phases:
@@ -452,8 +405,7 @@ checklists:
         gates:
           - G3
     - id: implementation-aligned-with-plan-md-deviations-noted-in-work-implementation-log-
-      description: Implementation aligned with PLAN.md; deviations noted in
-        `work/implementation-log.md`.
+      description: Implementation aligned with PLAN.md; deviations noted in `work/implementation-log.md`.
       severity: MAJOR
       appliesTo:
         phases:
@@ -477,9 +429,7 @@ checklists:
         gates:
           - G4
     - id: test-suites-pnpm-test-coverage-pnpm-exec-tsx-scripts-ci-summarize-coverage-mjs-r
-      description: Test suites + `pnpm test:coverage`/`pnpm exec tsx
-        scripts/ci/summarize-coverage.mjs` run; coverage/mutation thresholds
-        met.
+      description: Test suites + `pnpm test:coverage`/`pnpm exec tsx scripts/ci/summarize-coverage.mjs` run; coverage/mutation thresholds met.
       severity: MAJOR
       appliesTo:
         phases:
@@ -487,8 +437,7 @@ checklists:
         gates:
           - G5
     - id: security-pnpm-security-scan-semgrep-gitleaks-osv-a11y-pnpm-test-a11y-performance
-      description: Security (`pnpm security:scan`, Semgrep, gitleaks, OSV), a11y
-        (`pnpm test:a11y`), performance (bench/perf reports) executed.
+      description: Security (`pnpm security:scan`, Semgrep, gitleaks, OSV), a11y (`pnpm test:a11y`), performance (bench/perf reports) executed.
       severity: MAJOR
       appliesTo:
         phases:
@@ -496,9 +445,7 @@ checklists:
         gates:
           - G5
     - id: sbom-cyclonedx-1-7-slsa-v1-1-provenance-cosign-v3-bundle-produced-evidence-tripl
-      description: SBOM (CycloneDX 1.7) + SLSA v1.2 provenance + Cosign v3 bundle
-        produced; Evidence Triplet complete;
-        `run-manifest.json.reuseEvidence.passingTest` populated.
+      description: SBOM (CycloneDX 1.7) + SLSA v1.2 provenance + Cosign v3 bundle produced; Evidence Triplet complete; `run-manifest.json.reuseEvidence.passingTest` populated.
       severity: MAJOR
       appliesTo:
         phases:
@@ -514,8 +461,7 @@ checklists:
         gates:
           - G6
     - id: human-reviewer-completes-section-4-checklist-dispositions-logged-in-evidence-rev
-      description: Human reviewer completes Section 4 checklist; dispositions logged
-        in `evidence/review-notes.md`.
+      description: Human reviewer completes Section 4 checklist; dispositions logged in `evidence/review-notes.md`.
       severity: MAJOR
       appliesTo:
         phases:
@@ -539,8 +485,7 @@ checklists:
         gates:
           - G7
     - id: ops-rollout-plan-md-rollback-plan-md-finalized-work-implementation-log-md-refere
-      description: "`ops/rollout-plan.md` + `rollback-plan.md` finalized;
-        `work/implementation-log.md` references docs."
+      description: "`ops/rollout-plan.md` + `rollback-plan.md` finalized; `work/implementation-log.md` references docs."
       severity: MAJOR
       appliesTo:
         phases:
@@ -548,8 +493,7 @@ checklists:
         gates:
           - G7
     - id: deployment-executed-per-rollout-plan-feature-flags-managed-cosign-bundles-refere
-      description: Deployment executed per rollout plan; feature flags managed; Cosign
-        bundles referenced.
+      description: Deployment executed per rollout plan; feature flags managed; Cosign bundles referenced.
       severity: MAJOR
       appliesTo:
         phases:
@@ -565,8 +509,7 @@ checklists:
         gates:
           - G8
     - id: logs-metrics-traces-monitored-alert-tuning-documented-logs-models-updated-if-mod
-      description: Logs/metrics/traces monitored; alert tuning documented;
-        `logs/models/*` updated if models changed.
+      description: Logs/metrics/traces monitored; alert tuning documented; `logs/models/*` updated if models changed.
       severity: MAJOR
       appliesTo:
         phases:
@@ -574,8 +517,7 @@ checklists:
         gates:
           - G9
     - id: reuse-telemetry-tier-escalation-metrics-pushed-to-ops-observability-dashboards
-      description: Reuse telemetry + tier escalation metrics pushed to
-        `ops/observability/*` dashboards.
+      description: Reuse telemetry + tier escalation metrics pushed to `ops/observability/*` dashboards.
       severity: MAJOR
       appliesTo:
         phases:
@@ -583,8 +525,7 @@ checklists:
         gates:
           - G9
     - id: summary-md-lessons-learned-md-archive-json-completed-local-memory-entries-record
-      description: "`SUMMARY.md`, `lessons-learned.md`, `archive.json` completed;
-        Local Memory entries recorded (`json/memory-ids.json`)."
+      description: "`SUMMARY.md`, `lessons-learned.md`, `archive.json` completed; Local Memory entries recorded (`json/memory-ids.json`)."
       severity: MAJOR
       appliesTo:
         phases:
@@ -592,8 +533,7 @@ checklists:
         gates:
           - G10
     - id: review-checklist-snapshot-mirrored-to-cortex-audit-reviews-pr-sha-md
-      description: Review checklist snapshot mirrored to
-        `.cortex/audit/reviews/<PR>-<sha>.md`.
+      description: Review checklist snapshot mirrored to `.cortex/audit/reviews/<PR>-<sha>.md`.
       severity: MAJOR
       appliesTo:
         phases:
@@ -601,22 +541,19 @@ checklists:
         gates:
           - G10
     - id: feature-flows-at-g2-plan-and-again-at-g5-verification-for-any-risk-tag-medium-or
-      description: Feature flows at G2 (plan) and again at G5 (verification) for any
-        risk tag ≥ `medium` or touching user-facing / contract surfaces.
+      description: Feature flows at G2 (plan) and again at G5 (verification) for any risk tag ≥ `medium` or touching user-facing / contract surfaces.
       severity: MAJOR
       appliesTo:
         phases:
           - VERIFY
     - id: fix-flows-impacting-security-privacy-data-protection-or-critical-infrastructure
-      description: Fix flows impacting security, privacy, data protection, or critical
-        infrastructure.
+      description: Fix flows impacting security, privacy, data protection, or critical infrastructure.
       severity: MAJOR
       appliesTo:
         phases:
           - VERIFY
     - id: refactor-flows-when-contracts-storage-schemas-or-security-boundaries-change
-      description: Refactor flows when contracts, storage schemas, or security
-        boundaries change.
+      description: Refactor flows when contracts, storage schemas, or security boundaries change.
       severity: MAJOR
       appliesTo:
         phases:
@@ -628,8 +565,7 @@ checklists:
         phases:
           - VERIFY
     - id: plan-plan-md-7-steps-plan-tdd-plan-md-summarised-in-the-aegis-request-steps-fiel
-      description: "`plan/PLAN.md` (≤7 steps) + `plan/tdd-plan.md` summarised in the
-        Aegis request (`steps` field, ≤7 items)."
+      description: "`plan/PLAN.md` (≤7 steps) + `plan/tdd-plan.md` summarised in the Aegis request (`steps` field, ≤7 items)."
       severity: MAJOR
       appliesTo:
         phases:
@@ -653,22 +589,19 @@ checklists:
         phases:
           - VERIFY
     - id: raw-response-saved-to-evidence-aegis-report-json-logs-vibe-check-json-for-audit
-      description: Raw response saved to `evidence/aegis-report.json`;
-        `logs/vibe-check/*.json` for audit.
+      description: Raw response saved to `evidence/aegis-report.json`; `logs/vibe-check/*.json` for audit.
       severity: MAJOR
       appliesTo:
         phases:
           - VERIFY
     - id: block-verdict-halts-the-gate-until-resolved-attach-mitigation-evidence-before-re
-      description: "`block` verdict halts the gate until resolved; attach mitigation
-        evidence before retrying."
+      description: "`block` verdict halts the gate until resolved; attach mitigation evidence before retrying."
       severity: MAJOR
       appliesTo:
         phases:
           - VERIFY
     - id: warn-verdict-requires-human-disposition-in-evidence-review-notes-md
-      description: "`warn` verdict requires human disposition in
-        `evidence/review-notes.md`."
+      description: "`warn` verdict requires human disposition in `evidence/review-notes.md`."
       severity: MAJOR
       appliesTo:
         phases:
@@ -704,8 +637,7 @@ checklists:
         phases:
           - VERIFY
     - id: a11y-report-axe-jest-axe-or-equivalent-attached-in-evidence-test-results
-      description: A11y report (axe/jest-axe or equivalent) attached in
-        `evidence/test-results/`.
+      description: A11y report (axe/jest-axe or equivalent) attached in `evidence/test-results/`.
       severity: MAJOR
       appliesTo:
         phases:
@@ -717,24 +649,19 @@ checklists:
         phases:
           - PLAN
     - id: governance-index-json-structure-guard-json-and-export-freeze-snapshot-json-updat
-      description: "`governance-index.json`, `structure-guard.json`, and
-        `export-freeze.snapshot.json` updated to reference new sections; follow
-        `GOVERNANCE_HASH_UPDATE.md`."
+      description: "`governance-index.json`, `structure-guard.json`, and `export-freeze.snapshot.json` updated to reference new sections; follow `GOVERNANCE_HASH_UPDATE.md`."
       severity: MAJOR
       appliesTo:
         phases:
           - PLAN
     - id: ci-jobs-referencing-legacy-checklist-names-updated-to-point-here-checklist-secti
-      description: CI jobs referencing legacy checklist names updated to point here
-        (`CHECKLIST_SECTION` tags).
+      description: CI jobs referencing legacy checklist names updated to point here (`CHECKLIST_SECTION` tags).
       severity: MAJOR
       appliesTo:
         phases:
           - PLAN
     - id: redundant-checklist-files-checklist-cortex-os-md-ci-review-checklists-md-code-re
-      description: Redundant checklist files (`CHECKLIST.cortex-os.md`,
-        `ci-review-checklists.md`, `code-review-checklist.md`) either migrate
-        content here or become stubs referencing this file.
+      description: Redundant checklist files (`CHECKLIST.cortex-os.md`, `ci-review-checklists.md`, `code-review-checklist.md`) either migrate content here or become stubs referencing this file.
       severity: MAJOR
       appliesTo:
         phases:

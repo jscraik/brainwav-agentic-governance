@@ -11,6 +11,5 @@ assurance:
       - FAIL
   timeFreshness:
     required: true
-    anchorRules: Anchor to harness timezone; convert relative language to ISO-8601;
-      distinguish past/future explicitly.
+    anchorRules: Anchor to harness timezone; convert relative language to ISO-8601; distinguish past/future explicitly.
     allowedDrift: See assurance-system.md §2

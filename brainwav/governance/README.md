@@ -8,8 +8,8 @@
 
 ## Packaging
 - Source anchors: keep `<!-- PACK:key=value -->` markers in governance docs so pack builds stay in sync.
-- Mapping: see `governance-pack.map.yaml` for anchor -> field mapping used by tooling.
-- Build: `scripts/governance/render-pack.mjs` merges core + overlays into `governance-pack/dist/` for CI/offline packs.
+- Mapping: see `90-infra/governance-pack.map.yaml` for anchor -> field mapping used by tooling.
+- Build: `../../scripts/governance/render-pack.mjs` merges core + overlays into `governance-pack/dist/` for CI/offline packs.
 
 ## Core + Packs + Adapters
 
@@ -64,7 +64,7 @@ Unified checklist source covering:
 
 ### For Adopters
 
-**Recommended path**: [`docs/introduction.md`](./docs/introduction.md) → [`docs/getting-started.md`](./docs/getting-started.md) → [`docs/configuration.md`](./docs/configuration.md)
+**Recommended path**: [`10-flow/governance-quickstart.md`](./10-flow/governance-quickstart.md) → [`docs/documentation-governance.md`](./docs/documentation-governance.md)
 
 Comprehensive guide for:
 
@@ -253,12 +253,12 @@ Original files converted to stubs for backward compatibility.
 
 - `/AGENTS.md` - Root-level agent operational rules
 - `/CODESTYLE.md` - Coding conventions and testing standards
-- `/CHANGELOG.md` - Project changelog
+- `/README.md` - Repository overview and install guidance
 
 ### Related Documentation
 
-- `/docs/governance/` - Extended governance documentation
-- `/docs/runbooks/` - Operational runbooks
+- `brainwav/governance/docs/` - Core governance reference docs
+- `brainwav/governance/runbooks/` - Operational runbooks
 - `.github/instructions/` - GitHub Copilot instructions
 
 ---

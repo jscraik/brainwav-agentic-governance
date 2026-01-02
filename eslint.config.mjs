@@ -14,7 +14,6 @@ export default tseslint.config(
       "**/.cache/**",
       "**/.git/**",
       "brainwav/governance/templates/**",
-      "brainwav/governance/context/**",
       "brainwav/governance/docs/**",
       "**/tasks/**/logs/**"
     ],

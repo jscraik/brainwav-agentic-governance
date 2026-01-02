@@ -49,7 +49,9 @@ function isIgnored(value) {
 }
 
 function normalizeCandidate(candidate) {
-  return candidate.replace(/`/g, '').trim();
+  const cleaned = candidate.replace(/`/g, '').trim();
+  const withoutQuery = cleaned.split('?')[0];
+  return withoutQuery.split('#')[0];
 }
 
 function collectCandidates(content) {
@@ -101,12 +103,31 @@ function validateAgentsPaths(files) {
   return failures;
 }
 
-function validateAgentsSize(files) {
-  const totalBytes = files.reduce((sum, filePath) => sum + fs.statSync(filePath).size, 0);
-  if (totalBytes > MAX_BYTES) {
-    return [`AGENTS size budget exceeded: ${totalBytes} bytes > ${MAX_BYTES} bytes`];
+function collectAncestorAgents(filePath) {
+  const ancestors = [];
+  let current = path.dirname(filePath);
+  while (true) {
+    const candidate = path.join(current, AGENTS_GLOB);
+    if (fs.existsSync(candidate)) ancestors.push(candidate);
+    if (current === repoRoot) break;
+    const parent = path.dirname(current);
+    if (parent === current) break;
+    current = parent;
   }
-  return [];
+  return ancestors;
+}
+
+function validateAgentsSize(files) {
+  const failures = [];
+  files.forEach((filePath) => {
+    const chain = collectAncestorAgents(filePath);
+    const bytes = chain.reduce((sum, entry) => sum + fs.statSync(entry).size, 0);
+    if (bytes > MAX_BYTES) {
+      const rel = path.relative(repoRoot, filePath);
+      failures.push(`AGENTS size budget exceeded for ${rel}: ${bytes} bytes > ${MAX_BYTES} bytes`);
+    }
+  });
+  return failures;
 }
 
 function validateJobs(files) {

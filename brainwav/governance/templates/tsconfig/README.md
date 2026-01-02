@@ -305,7 +305,7 @@ apps/example-app/
 
 - [CODESTYLE.md](../../../CODESTYLE.md) - brAInwav coding standards
 - [TypeScript Project References](https://www.typescriptlang.org/docs/handbook/project-references.html)
-- [Troubleshooting Guide](../../../docs/troubleshooting/typescript-config.md)
+- Troubleshooting: run `brainwav-governance doctor --root .` and `pnpm structure:validate`
 
 ---
 

@@ -36,7 +36,6 @@
     "90-infra/governance-index.json"
   ],
   "reference": [
-    "docs/research/arxiv-agentic-governance-summary.md",
     "README.md"
   ],
   "docs": {
@@ -166,7 +165,7 @@
     },
     "assurance-system.md": {
       "path": "10-flow/assurance-system.md",
-      "sha256": "7c192d91de9ed774f2cc7fc38a1f2724d22890811259642c2f3a98db80a1e5f9",
+      "sha256": "53af26b6fec20faed2cd2597a65e73279cd357f59ae3336791b7a2cba146f1af",
       "required_tokens": [
         "Assurance System",
         "Time Freshness"
@@ -177,7 +176,7 @@
     },
     "checklists.md": {
       "path": "20-checklists/checklists.md",
-      "sha256": "9a7fe5fefa2d955411c938cf64928d160e7f5b1691ac8dcee0864d7fbb87e739",
+      "sha256": "e64d3f5c9c23728925e4c344d710e4565ed9221a9f9cf54de41689cb2c1c257a",
       "required_tokens": [
         "checklist",
         "quality gates"
@@ -188,7 +187,7 @@
     },
     "governance-maintainers.md": {
       "path": "90-infra/governance-maintainers.md",
-      "sha256": "1147b940fc441cb10a992df7c43c8a068d1ba94ab834a7e86fd5a188f54549b8",
+      "sha256": "bbec06add1675704d8163f1e9944bf2aa443e3c8d3b487f6dc79209eefdccdf4",
       "required_tokens": [
         "hash sync",
         "maintainer"
@@ -199,7 +198,7 @@
     },
     "governance-index.json": {
       "path": "90-infra/governance-index.json",
-      "sha256": "9e0327db9ffe9b6d0ea2d5d9f03a40de1978100b0aad2ca3bc26f6973932c654",
+      "sha256": "d3044a13cbf72638c6bbd9b9c7c3b9202eeb1cfe1bea320b40b7f507314aed6d",
       "hash_mode": "exclude_self",
       "required_tokens": [
         "precedence",
@@ -245,7 +244,7 @@
     },
     "SECURITY.md": {
       "path": "SECURITY.md",
-      "sha256": "8372aa7db3bcfafd5573c92461f0ef6f8e765199bd208c7dcf476024aee64503",
+      "sha256": "6c54218e6cd5080d4b1076864f3f5d56fb168d4ab8b5ecb4ef1a3de71978322c",
       "required_tokens": [
         "Security Policy",
         "Standards & References",
@@ -280,7 +279,7 @@
     },
     "README.md": {
       "path": "README.md",
-      "sha256": "d389d8dc7368698d39e17084bfa0fcfc62140f8e19ab0a314db1ae69f98858f5",
+      "sha256": "72f583d436f79367fabf1a81a6babe03553a51846d9482e0dcd668285946af10",
       "required_tokens": [
         "governance",
         "structure"
@@ -407,21 +406,9 @@
       "owner": "brAInwav Development Team",
       "change_class": "docs"
     },
-    "arxiv-agentic-governance-summary.md": {
-      "path": "docs/research/arxiv-agentic-governance-summary.md",
-      "sha256": "70496bac848cb893de3582546941637e6cac8d4920e489b37de9dcdb2198f772",
-      "required_tokens": [
-        "arXiv",
-        "mapping",
-        "research summary"
-      ],
-      "class": "reference",
-      "owner": "brAInwav Development Team",
-      "change_class": "docs"
-    },
     "CODESTYLE.md": {
       "path": "CODESTYLE.md",
-      "sha256": "85ba6d23b9667ceab5c729a9da7089fa91c50910f576239ce75e4ffa1b35c55e",
+      "sha256": "461eec56cdb9982b1736c35a18bc8a17576357c27ae8da7ab87ef8208cfc87e8",
       "required_tokens": [
         "CODESTYLE.md",
         "mandatory coding standards"

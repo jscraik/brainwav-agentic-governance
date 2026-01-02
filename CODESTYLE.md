@@ -4,7 +4,7 @@
 
 This document defines **mandatory coding standards** for the agentic governance framework.  
 All contributors and automation agents must follow these rules. CI enforces them via Nx targets and checks (Biome, ESLint **v9 flat config**, Ruff, Pyright, Clippy, pytest, mutation testing, Semgrep, supply-chain scanners).  
-**Baselines**: Node **24 Active LTS** (see [ADR 004](./docs/architecture/decisions/004-node-24-active-lts.md)); TypeScript **≥ 5.9** when using TS; Rust **2024 edition** (rustc ≥ **1.85**) when using Rust. Framework-specific baselines are defined in packs.
+**Baselines**: Node **24 Active LTS** (pinned in `.mise.toml` and `brainwav/governance/90-infra/compat.json`); TypeScript **≥ 5.9** when using TS; Rust **2024 edition** (rustc ≥ **1.85**) when using Rust. Framework-specific baselines are defined in packs.
 
 > **Security advisories override baselines.** When a CVE or security advisory is published for any baseline framework, all affected projects MUST upgrade to the patched version immediately, regardless of the stated baseline. Monitor framework security channels and vendor advisories for each pack you adopt.
 
@@ -282,12 +282,10 @@ pnpm vitest run tests/scripts/typescript-templates.test.ts
 
 ### Common Errors & Solutions
 
-See `docs/troubleshooting/typescript-config.md` for:
+If tsconfig validation fails, run:
 
-- TS6059: File not under rootDir
-- TS5056: File would be overwritten
-- TS6307: File not in project references
-- Missing composite flag issues
+- `pnpm structure:validate` (structure + tsconfig checks)
+- `brainwav-governance doctor --root .` (tooling + config diagnostics)
 
 ### Phase Implementation Status
 
@@ -319,7 +317,7 @@ Stack-specific guidance lives in packs to keep core standards portable. Apply th
 - `rust-cli` – Rust 2024 CLI/TUI conventions.
 - `nx` – Nx affected-only orchestration and diagnostics.
 
-Pack docs live in `brainwav/governance/docs/packs/`; pack metadata lives in `brainwav/governance-pack/packs/`.
+Pack metadata lives in `brainwav/governance-pack/packs/`. Use `brainwav-governance packs list` for the current catalog.
 
 ---
 
@@ -344,7 +342,7 @@ Pack docs live in `brainwav/governance/docs/packs/`; pack metadata lives in `bra
 
 ## 9. Toolchain & Lockfiles
 
-- **Node**: **24 Active LTS** pinned in `.mise.toml` (see [ADR 004](./docs/architecture/decisions/004-node-24-active-lts.md)).
+- **Node**: **24 Active LTS** pinned in `.mise.toml` and `brainwav/governance/90-infra/compat.json`.
 - **Mise** (`.mise.toml`) pins Node, Python, uv, Rust, and other tool versions.
 - **Package manager**: **pnpm** (single repo-wide choice).
 - **Corepack** manages pnpm version; Bun is not used.
@@ -529,9 +527,9 @@ Pack docs live in `brainwav/governance/docs/packs/`; pack metadata lives in `bra
 ## 19. Config References (Authoritative)
 
 - **ESLint**: `eslint.config.mjs` (flat config) for policy/security/import-boundaries rules
-- **Mise**: `.mise.toml` pins tool versions (Node 24 Active LTS, Python, uv, Rust; per [ADR-004](./docs/architecture/decisions/004-node-24-active-lts.md))
+- **Mise**: `.mise.toml` pins tool versions (Node 24 Active LTS, Python, uv, Rust).
 - **CI**: `.github/workflows/*.yml` enforce gates (quality, security, supply chain, badges)
-- **ADRs**: `docs/architecture/decisions/` (MADR template)
+- **ADRs**: `docs/adr/` (MADR template) in consumer repos.
 - **Rules of AI**: `brainwav/governance/00-core/RULES_OF_AI.md` (primary production standards)
 
 ---

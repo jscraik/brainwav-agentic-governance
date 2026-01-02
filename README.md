@@ -67,7 +67,7 @@ pnpm readiness:check
 
 > Use this when you want to drop governance into an existing repo.
 
-See `docs/adoption.md` for the canonical pointer-mode adoption checklist and stub-only policy.
+Pointer mode is the default, canonical-only adoption path. Use the install/upgrade commands below for consumer repos.
 
 1. From this repo: `pnpm install` (Node 24.11.x, pnpm 10.26.x).  
 2. Install governance into the target repo (local clone):  
@@ -78,7 +78,7 @@ See `docs/adoption.md` for the canonical pointer-mode adoption checklist and stu
    `pnpm exec brainwav-governance install --root /path/to/consumer-repo [--mode full|pointer] [--profile creative|delivery|release] [--packs a11y,supply-chain]`  
    - Default profile is `delivery`. CI should use `release` for gold-standard gating.
    - Default install mode is `pointer` (canonical-only distribution). Use `full` only for air-gapped or exceptional cases.
-   - `full` copies AGENTS, CODESTYLE, SECURITY, `brainwav/governance/**`, issue/PR templates, and the GitHub Actions workflow.  
+   - `full` copies AGENTS, CODESTYLE, SECURITY, `brainwav/governance/**`, and the GitHub Actions workflow.  
    - `pointer` writes pointer stubs + `.agentic-governance/pointer.json` and expects a lockfile-pinned `@brainwav/brainwav-agentic-governance` dependency.
    - **Supported CLI:** `brainwav-governance` is the only stable public entrypoint. `brainwav-agentic-governance` is a legacy alias.
 4. In the consumer repo, run:  
@@ -175,8 +175,7 @@ brainwav/governance/
 ├── 30-compliance/            # e.g., EU AI Act mapping
 ├── 90-infra/                 # governance-index.json, dependency guards, structure schemas
 ├── commands/                 # Executable commands (memorize, recall, daily-summary, incident-review)
-├── context/                  # Curated research + "how to" references
-├── docs/                     # Extended documentation (Cortex-Aegis, accessibility, API ref)
+├── docs/                     # Pack catalog (generated)
 ├── runbooks/                 # Incident + ops procedures
 └── templates/                # Feature, research, TDD plan templates
 

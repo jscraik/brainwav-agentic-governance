@@ -22,9 +22,7 @@ const COPY_LIST = [
 	'scripts/readiness-check.mjs',
 	'scripts/ensure-tools.mjs',
 	'scripts/oversight-vibe-check.mjs',
-	'scripts/sync-governance-hashes.mjs',
-	'.github/ISSUE_TEMPLATE',
-	'.github/pull_request_template.md',
+	'scripts/sync-governance-hashes.mjs'
 ];
 
 /**

@@ -165,16 +165,23 @@ jobs:
 
   scripts-smoke:
     runs-on: ubuntu-latest
+    env:
+      GOVERNANCE_PROFILE: creative
     needs: [readiness, hash-drift, dep-boundary, governance-validate, oversight, security]
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
         with:
-          version: 10.19.0
+          version: 10.26.0
       - uses: actions/setup-node@v4
         with:
           node-version: '24.11.0'
           cache: 'pnpm'
+      - name: Install minimal tooling (creative profile)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ripgrep fd-find jq
+          sudo ln -sf /usr/bin/fdfind /usr/local/bin/fd
       - run: pnpm install --frozen-lockfile=false
       - run: pnpm ensure:tools
       - run: pnpm task:scaffold --slug ci-smoke

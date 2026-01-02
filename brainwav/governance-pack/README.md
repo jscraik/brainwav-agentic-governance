@@ -37,7 +37,7 @@ Pick a profile and merge/override if needed:
 - **Brownfield** — For existing/legacy code. Enforces changed-code rigor (coverage on touched lines, mutation, structure checks) while allowing staged uplift for untouched areas. Requires risk-register entries, compensating controls (feature flags, shadow traffic), and dated uplift plans.
 - **Regulated/Safety-Critical** — Adds privacy + safety evidence (DPIA where applicable), signed SBOM/provenance per release, model health/bias evaluations, and mandatory human sign-off for rollout/rollback.
 
-Profiles live in `governance.core.yaml` (templates), `governance.yaml` (defaults), and `dist/governance.yaml` (rendered) so downstream projects can consume them without Cortex-specific assumptions.
+Profiles live in `core/governance.core.yaml` (templates), `governance.yaml` (defaults), and `dist/governance.yaml` (rendered) so downstream projects can consume them without Cortex-specific assumptions.
 
 ## Pointer mode distribution
 
@@ -57,18 +57,18 @@ Templates use `${var}` placeholders. See `config.example.yaml` for the canonical
 
 ## Enforcement Wiring (future)
 
-A helper script (e.g., `scripts/apply-governance-pack.sh`) will merge core + overlay into `governance-pack/dist/` for CI and AGENTS consumption. Until then, CI and agents should continue to read the top-level `governance-pack/*.yaml` (Cortex defaults). The same tooling can emit a heavier variant with `docs.index.yaml` enriched by `full_text` for offline use.
+A helper script (`../../scripts/governance/render-pack.mjs`) will merge core + overlay into `governance-pack/dist/` for CI and AGENTS consumption. Until then, CI and agents should continue to read the top-level `governance-pack/*.yaml` (Cortex defaults). The same tooling can emit a heavier variant with `dist/docs.index.yaml` enriched by `full_text` for offline use.
 
 ## Output targets
 - Top-level `governance-pack/*.yaml` are the current Cortex defaults.
 - When you run `scripts/governance/render-pack.mjs` (or `pnpm governance:render-pack`), the emitted `dist/` files become the authoritative pack for CI/agents.
-- `docs.index.yaml` can optionally inline `full_text` for offline/air-gapped review; leave empty to keep downloads light.
+- `dist/docs.index.yaml` can optionally inline `full_text` for offline/air-gapped review; leave empty to keep downloads light.
 
 ## Render to dist
 
 - Run: `pnpm governance:render-pack` (or `node scripts/governance/render-pack.mjs`) to merge core + overlay into `governance-pack/dist/`.
-- Flags: `--overlay <org>` (default `cortex`), `--project <name>` (optional), `--config <path>` (default `governance-pack/config.example.yaml`), `--full-doc` to force inlining doc `full_text`.
+- Flags: `--overlay <org>` (default `cortex`), `--project <name>` (optional), `--config <path>` (default `config.example.yaml`), `--full-doc` to force inlining doc `full_text`.
 - Behavior: deep-merge core → overlay → project; arrays are replaced by later layers; unknown placeholders are left as-is.
-- Outputs: `governance.yaml`, `checklists.yaml`, `assurance.yaml`, `structure.yaml`, `docs.index.yaml`, `agents-header.md` under `governance-pack/dist/`.
+- Outputs: `governance.yaml`, `checklists.yaml`, `assurance.yaml`, `structure.yaml`, `dist/docs.index.yaml`, `agents-header.md` under `governance-pack/dist/`.
 - Top-level `governance-pack/*.yaml` stay as the Cortex defaults; switch CI/agents to `dist/` when ready.
 - Full-doc mode: honors `includeFullText` in config or `--full-doc`; inline targets must use `{{INLINE:<path>}}` and resolve repo-relative.

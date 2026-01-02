@@ -223,12 +223,7 @@ memory.delete  - Delete from Local Memory
 
 ### For Lower Severity Issues (CVSS < 7.0)
 
-You may use the public [Security Vulnerability issue template](.github/ISSUE_TEMPLATE/security-vulnerability.yml), but:
-- **DO NOT** include working exploits
-- **DO NOT** include credentials or secrets
-- **DO NOT** include personal/sensitive data
-
-Expect acknowledgement within 48 hours; fixes are prioritized by severity.
+After triage, maintainers may request a standard issue for tracking. Do **not** include exploits, credentials, or sensitive data. Expect acknowledgement within 48 hours; fixes are prioritized by severity.
 
 ---
 
@@ -313,7 +308,7 @@ Expect acknowledgement within 48 hours; fixes are prioritized by severity.
 
 - `governance-index.json` contains SHA-256 hashes of all governance documents
 - `charter-enforce` workflow validates hashes on every PR
-- Hash updates require maintainer approval per `governance-hash-update.md`
+- Hash updates require maintainer approval per `governance-maintainers.md`
 
 ---
 
@@ -341,5 +336,3 @@ Expect acknowledgement within 48 hours; fixes are prioritized by severity.
 - [llm-threat-controls.md](brainwav/governance/00-core/llm-threat-controls.md) - LLM-specific threat controls
 - [AGENT_CHARTER.md](brainwav/governance/00-core/AGENT_CHARTER.md) - Agent behavioral constraints
 - [checklists.md](brainwav/governance/20-checklists/checklists.md) - Quality gates including security
-- [CONTRIBUTING.md](CONTRIBUTING.md) - Contribution guidelines
-- [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) - Community standards

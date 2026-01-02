@@ -26,4 +26,4 @@ This page defines what is **enforced in CI**, what is **advisory**, and what is 
 
 - `brainwav/governance/90-infra/compat.json`
 - `brainwav/governance/docs/testing-qa.md`
-- `AGENTS.md`
+- `../../../AGENTS.md`

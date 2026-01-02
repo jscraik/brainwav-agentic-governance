@@ -25,8 +25,8 @@ This consolidation eliminates duplication between charter and rules while mainta
 - **[Assurance System](../10-flow/assurance-system.md)**
 - **[Checklists](../20-checklists/checklists.md)**
 - **[Constitution](./constitution.md)**
-- **[Governance Standards Mapping](../docs/standards-mapping.md)**
-- **[EU AI Act Timeline](../docs/eu-ai-act-dates.md)**
+- **[Standards Versions](../90-infra/standards.versions.json)**
+- **[EU AI Act Mapping](../30-compliance/eu-ai-act.md)**
 
 ---
 

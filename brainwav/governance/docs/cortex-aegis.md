@@ -23,7 +23,7 @@ Cortex Aegis is an MCP (Model Context Protocol) server that enforces the **Vibe 
 
 ## When to Run the Vibe Check
 
-- Trigger immediately after the implementation plan (`plan/PLAN.md` or `implementation-plan.md`) is drafted.
+- Trigger immediately after the implementation plan (`tasks/<slug>/plan/PLAN.md` or `tasks/<slug>/implementation-plan.md`) is drafted.
 - Run **before** touching the working tree, calling external services, or launching long jobs.
 - **Academic research + license validation** **must** be completed prior to calling `vibe_check`.
 - Re-run if:
@@ -276,7 +276,7 @@ Cortex Aegis integrates with the ArcTDD workflow at specific gates:
 
 When calling Aegis at G2/G5:
 
-- [ ] `plan/PLAN.md` (≤7 steps) summarized in `steps` field
+- [ ] `tasks/<slug>/plan/PLAN.md` (≤7 steps) summarized in `steps` field
 - [ ] `context/research.md` citations and connector health references
 - [ ] Risk tags and tier from `meta/task.json`
 - [ ] Time freshness anchor (ISO-8601 date)

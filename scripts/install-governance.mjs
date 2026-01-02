@@ -9,7 +9,6 @@
  * Copies:
  * - AGENTS.md, CODESTYLE.md, SECURITY.md
  * - brainwav/governance/** (policies, templates, index)
- * - .github/ISSUE_TEMPLATE/* and PR template
  * - governance workflow (.github/workflows/governance.yml) from the bundled template
  */
 import fs from 'node:fs';
@@ -36,9 +35,7 @@ const COPY_LIST = [
 	'CODESTYLE.md',
 	'SECURITY.md',
 	'brainwav/README.md',
-	'brainwav/governance',
-	'.github/ISSUE_TEMPLATE',
-	'.github/pull_request_template.md',
+	'brainwav/governance'
 ];
 
 function loadCompat() {
@@ -610,16 +607,6 @@ export function runGovernanceInstall({
 		});
 	} else {
 		writePointerFiles(destRoot, profile, { force, dryRun, actions });
-		copyRecursive(
-			path.join(repoRoot, '.github', 'ISSUE_TEMPLATE'),
-			path.join(destRoot, '.github', 'ISSUE_TEMPLATE'),
-			{ force, dryRun, actions }
-		);
-		copyRecursive(
-			path.join(repoRoot, '.github', 'pull_request_template.md'),
-			path.join(destRoot, '.github', 'pull_request_template.md'),
-			{ force, dryRun, actions }
-		);
 	}
 
 	const existingConfig = preserveConfig ? readExistingConfig(destRoot, configPath) : null;

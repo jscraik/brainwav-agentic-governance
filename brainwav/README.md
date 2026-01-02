@@ -28,12 +28,10 @@ This directory is the **single source of truth** for the agentic governance pack
 - **`governance/90-infra/`** - Governance infrastructure (schemas, indexes)
 - **`governance/audit/`** - Compliance tracking and audit logs
 - **`governance/commands/`** - CLI command definitions and utilities
-- **`governance/context/`** - Agent context and reference materials
 - **`governance/docs/`** - Governance reference documentation
 - **`governance/runbooks/`** - Operational procedures and incident response
 - **`governance/templates/`** - Document and artifact templates
 - **`governance-pack/`** - Portable governance configurations
-- **`research/`** - Research notes and integrations
 
 ## Usage
 

@@ -185,7 +185,7 @@
 | `CI:mutation` | `pnpm exec tsx scripts/ci/mutation.sh` | `mutation-results.json`, `reports/mutation/`. Threshold ≥90%. |
 | `CI:a11y` | `pnpm test:a11y` / Playwright axe run | axe/jest-axe reports; fails on critical issues. |
 | `CI:security` | `pnpm security:scan` + Semgrep/gitleaks/OSV | Scanner SARIF/JSON; SBOM (`sbom/*.cdx.json`), `pnpm sbom:generate`, `pnpm attest:sign` bundles. |
-| `CI:structure` | `pnpm structure:validate` + governance hash check | `structure-guard.json` output, `governance-index.json` hash, `export-freeze.snapshot.json` digest update per `governance-hash-update.md`. |
+| `CI:structure` | `pnpm structure:validate` + governance hash check | `structure-guard.json` output, `governance-index.json` hash, `export-freeze.snapshot.json` digest update per `governance-maintainers.md`. |
 | `CI:charter` | `charter-enforce` workflow | `quality-report.json`, narrated diff, trace-context log, evidence of `run-manifest.json.reuseEvidence` pointers. |
 
 CI jobs must fail closed; waivers recorded in `governance/waivers/` with expiry ≤30 days and linked in PR/quality report.
@@ -331,11 +331,11 @@ CI jobs must fail closed; waivers recorded in `governance/waivers/` with expiry 
 ## 9. Change Management for This File
 
 - [ ] Updates reviewed/approved by GovOps maintainers.
-- [ ] `governance-index.json`, `structure-guard.json`, and `export-freeze.snapshot.json` updated to reference new sections; follow `governance-hash-update.md`.
+- [ ] `governance-index.json`, `structure-guard.json`, and `export-freeze.snapshot.json` updated to reference new sections; follow `governance-maintainers.md`.
 - [ ] CI jobs referencing legacy checklist names updated to point here (`CHECKLIST_SECTION` tags).
 - [ ] Redundant checklist files (`ci-review-checklists.md`, `code-review-checklist.md`) either migrate content here or become stubs referencing this file.
 
 ### 9.1 Changelog
 
-- `[2025-12-04] v2025.12.0 – Added Cortex Aegis MCP installation info; fixed file path references (lowercase governance-hash-update.md); linked cortex-aegis.md documentation.`
+- `[2025-12-04] v2025.12.0 – Added Cortex Aegis MCP installation info; fixed file path references; linked cortex-aegis.md documentation.`
 - `[2025-11-22] v2025.11.0 – Consolidated local, PR, review, CI, gate, and Aegis checklists into a single canonical source under 20-checklists/.`

@@ -29,7 +29,6 @@ This document consolidates all governance infrastructure maintenance procedures,
     "90-infra/standards.versions.json"
   ],
   "reference": [
-    "docs/research/arxiv-agentic-governance-summary.md"
   ],
   "docs": {
     "constitution.md": {

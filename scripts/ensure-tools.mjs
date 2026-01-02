@@ -27,6 +27,7 @@ import { resolveGovernancePaths } from './governance-paths.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(__dirname, '..');
+const packageJsonPath = path.join(repoRoot, 'package.json');
 
 /**
  * Required tools with their purpose and installation instructions.
@@ -206,22 +207,45 @@ function checkToolVersion(command, args, minVersion) {
  * @returns {boolean} True if the command is available.
  */
 function check(cmd) {
+	if (process.platform === 'win32') {
+		const res = spawnSync('where', [cmd], { stdio: 'ignore' });
+		return res.status === 0;
+	}
 	const res = spawnSync('bash', ['-lc', `command -v ${cmd}`], { stdio: 'ignore' });
 	return res.status === 0;
 }
 
 /**
- * Check if a command meets the minimum version requirement.
+ * Check if a command meets the minimum/maximum version requirement.
  * @param {string} command - The command to check version for.
  * @param {string} min - The minimum required version (e.g., '24.11.0').
+ * @param {string|null} max - Optional exclusive upper bound (e.g., '25.0.0').
  * @returns {{ok: boolean, version: string}} Object with ok status and detected version.
  */
-function checkVersion(command, min) {
+function checkVersionRange(command, min, max) {
 	const res = spawnSync(command, ['-v'], { encoding: 'utf8' });
 	if (res.status !== 0) return { ok: false, version: 'missing' };
 	const version = res.stdout.trim();
-	const ok = compareVersions(version, min) >= 0;
-	return { ok, version };
+	const meetsMin = compareVersions(version, min) >= 0;
+	const underMax = max ? compareVersions(version, max) < 0 : true;
+	return { ok: meetsMin && underMax, version };
+}
+
+function parseEngineRange(range) {
+	if (!range || typeof range !== 'string') return null;
+	const match = range.match(/>=\s*([0-9.]+)\s*<\s*([0-9.]+)/);
+	if (!match) return null;
+	return { min: match[1], max: match[2] };
+}
+
+function loadEngineRange(key) {
+	if (!fs.existsSync(packageJsonPath)) return null;
+	try {
+		const pkg = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+		return parseEngineRange(pkg?.engines?.[key]);
+	} catch {
+		return null;
+	}
 }
 
 /**
@@ -254,7 +278,14 @@ export function runToolingChecks({ profile = 'release', targetRoot = repoRoot } 
 	const checks = [];
 	let ok = true;
 
-	const nodeCheck = checkVersion(process.argv[0], '24.11.0', 'node');
+	const nodeRange = loadEngineRange('node');
+	const pnpmRange = loadEngineRange('pnpm');
+	const nodeMin = nodeRange?.min ?? '24.11.0';
+	const nodeMax = nodeRange?.max ?? null;
+	const pnpmMin = pnpmRange?.min ?? '10.26.0';
+	const pnpmMax = pnpmRange?.max ?? null;
+
+	const nodeCheck = checkVersionRange(process.argv[0], nodeMin, nodeMax);
 	checks.push({
 		id: 'tool.node',
 		severity: nodeCheck.ok ? 'info' : 'high',
@@ -262,11 +293,11 @@ export function runToolingChecks({ profile = 'release', targetRoot = repoRoot } 
 		status: nodeCheck.ok ? 'pass' : 'fail',
 		message: nodeCheck.ok
 			? `Node ${nodeCheck.version} OK`
-			: `Node version too low: ${nodeCheck.version} (need >=24.11.0)`
+			: `Node version out of range: ${nodeCheck.version} (need >=${nodeMin}${nodeMax ? ` <${nodeMax}` : ''})`
 	});
 	if (!nodeCheck.ok) ok = false;
 
-	const pnpmCheck = checkVersion('pnpm', '10.26.0', 'pnpm');
+	const pnpmCheck = checkVersionRange('pnpm', pnpmMin, pnpmMax);
 	checks.push({
 		id: 'tool.pnpm',
 		severity: pnpmCheck.ok ? 'info' : 'high',
@@ -274,7 +305,7 @@ export function runToolingChecks({ profile = 'release', targetRoot = repoRoot } 
 		status: pnpmCheck.ok ? 'pass' : 'fail',
 		message: pnpmCheck.ok
 			? `pnpm ${pnpmCheck.version} OK`
-			: `pnpm missing or too low: ${pnpmCheck.version} (need >=10.26.0)`
+			: `pnpm missing or out of range: ${pnpmCheck.version} (need >=${pnpmMin}${pnpmMax ? ` <${pnpmMax}` : ''})`
 	});
 	if (!pnpmCheck.ok) ok = false;
 
@@ -330,7 +361,12 @@ export function runToolingChecks({ profile = 'release', targetRoot = repoRoot } 
  * @returns {void} No return value.
  */
 function main() {
-	const result = runToolingChecks();
+	const args = process.argv.slice(2);
+	const profileArgIndex = args.indexOf('--profile');
+	const profileArg = profileArgIndex !== -1 ? args[profileArgIndex + 1] : null;
+	const profileEnv = process.env.GOVERNANCE_PROFILE || process.env.BRAINWAV_PROFILE;
+	const profile = profileArg || profileEnv || 'release';
+	const result = runToolingChecks({ profile });
 	if (!result.ok) {
 		console.error('[brAInwav] Missing required tools or versions:');
 		result.checks

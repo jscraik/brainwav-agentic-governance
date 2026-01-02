@@ -330,9 +330,9 @@ Failure to meet any item keeps the PR in a blocked state (`agents-guard` job).
 
 ## 6. Related Resources
 
-- Runbook with troubleshooting scripts: `docs/runbooks/vibe-check.md`
-- Governance reference: `governance/rules/agentic-coding-workflow.md` §0.1 and §G5
-- CLI helper source: `scripts/oversight/vibe-check-call.mjs`
-- Oversight evidence index: `governance/audit/`
+- Runbook for escalation: `brainwav/governance/runbooks/incident.md`
+- Governance reference: `brainwav/governance/10-flow/agentic-coding-workflow.md` §0.1 and §G5
+- CLI helper source: `scripts/oversight-vibe-check.mjs`
+- Oversight evidence index: `brainwav/governance/audit/`
 
 ---
