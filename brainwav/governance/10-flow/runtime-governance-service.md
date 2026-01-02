@@ -132,19 +132,13 @@ These artefacts are referenced in `run-manifest.json.evidence.runtime` for tasks
 
 ## 10. Operations
 
-```bash
-# Deploy runtime governance service (Nx target)
-pnpm nx run runtime-governance:deploy --env staging
+Deployment commands are pack-scoped (e.g., `pack:runtime-governance-nx`). Core governance defines evidence requirements and interfaces; implementation details belong to adapters.
 
-# Check trust score for an agent
-pnpm runtime-governance:trust --agent-id <uuid>
-
-# Simulate sentinel drill
-pnpm runtime-governance:simulate --scenario prompt-injection --agent-id <uuid>
-```
+Example (adapter-provided):
+`brainwav-governance runtime trust --agent-id <uuid>`
 
 - **Health Checks**: `pnpm runtime-governance:health` publishes service stats and last policy bundle hash.
-- **Incident Flow**: On SEV1 alerts, runtime service triggers `pnpm agent:kill --session <id>` per emergency protocol.
+- **Incident Flow**: On SEV1 alerts, runtime service triggers emergency stop per `emergency-stop-protocol.md` (kill switch file or process termination), with evidence logged.
 
 ---
 

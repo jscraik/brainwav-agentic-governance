@@ -4,6 +4,8 @@
 
 > **At a glance:** Flows = Feature, Fix, Refactor, Research, Review. Gates bundle R→G→F→REVIEW with optional compact mode (Plan, Implement, Verify/Review). Oversight (Cortex-Aegis) required when code/model/data/external-call changes or risk ≥ medium. Evidence Triplet + run-manifest are mandatory; memory parity required. See §2.3 for compact flow; §4 for tool gating.
 
+> **Neutrality note:** This document is project-neutral. Stack- or tool-specific setup (Next.js/Nx, specific MCP clients, vendor packages, OS-specific install commands) must live in packs/adapters (e.g., `pack:mcp-*`, `pack:web-*`, `pack:monorepo-*`). This document defines the canonical workflow and evidence contract only.
+
 > Canonical, enforceable workflow for humans + agents across feature, research, fix, refactor, and review flows.
 
 ---
@@ -367,21 +369,15 @@ tasks/dashboard-metrics-widget/
 - **Pro Edit (XML)**: Produces minimal, reviewable diffs for targeted changes
 - **MCP Pair**: Orchestrates multi-step implementations with repo awareness
 
-**MCP Configuration** (example for `~/.config/Code/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json`):
+**MCP Configuration** (pack-scoped):
 
-```json
-{
-  "mcpServers": {
-    "RepoPrompt": {
-      "command": "/path/to/repoprompt_cli",
-      "args": [],
-      "env": {},
-      "toolOutputTokenLimit": 25000,
-      "toolTimeoutSec": 1000
-    }
-  }
-}
-```
+MCP client configuration is adapter-specific. Do not hardcode editor paths or vendor-specific config files in core governance. Enable `pack:mcp-repoprompt` (or equivalent) to install client templates and adapter docs.
+
+> Adapter templates (examples, optional) must be provided by packs:
+> - `pack:mcp-repoprompt` (Repo-aware context builder)
+> - `pack:mcp-context7` (library docs)
+> - `pack:mcp-local-memory` (memory parity)
+> - `pack:mcp-aegis` (oversight)
 
 **Integration Points by Gate**:
 
@@ -404,16 +400,16 @@ tasks/dashboard-metrics-widget/
 
 | Tool | Package/CLI | Purpose | Evidence Location |
 |------|-------------|---------|-------------------|
-| **RepoPrompt** | `repoprompt_cli` | Repo-aware context building, planning, minimal edits | `context/research.md`, `plan/PLAN.md`, `work/implementation-log.md` |
-| **Local Memory** | `local-memory-mcp` | Cross-session decision persistence, semantic search | `json/memory-ids.json`, `.github/instructions/memories.instructions.md` |
-| **Cortex-Aegis** | `@brainwav/cortex-aegis-mcp` | Governance validation, risk assessment, time freshness | `evidence/aegis-report.json`, `logs/vibe-check/*.json` |
-| **Context7** | `@upstash/context7-mcp` | Up-to-date library docs, version-specific examples | `context/research.md`, `plan/PLAN.md` (cited sources) |
+| **RepoPrompt** | pack-provided | Repo-aware context building, planning, minimal edits | `context/research.md`, `plan/PLAN.md`, `work/implementation-log.md` |
+| **Local Memory** | pack-provided | Cross-session decision persistence, semantic search | `json/memory-ids.json`, configured mirror path |
+| **Cortex-Aegis** | pack-provided | Governance validation, risk assessment, time freshness | `evidence/aegis-report.json`, `logs/vibe-check/*.json` (legacy-compatible) |
+| **Library Docs MCP** | pack-provided | Up-to-date library docs, version-specific examples | `context/research.md`, `plan/PLAN.md` (cited sources) |
 
-> **Security Tooling (MANDATORY)** – Before running any gated flow, install and keep updated the security toolchain defined in `SECURITY.md` §“Standards & References (Jan 2026)” and §“Continuous Security”. At minimum every workstation/CI runner MUST have: Semgrep (SAST), Gitleaks (secret scan), OSV/pnpm audit tooling, Trivy (container/IaC scan), CycloneDX CLI for SBOM generation, and Sigstore Cosign v3 for attestation. Use package manager of choice (e.g., `brew install semgrep gitleaks aquasecurity/trivy/trivy cosign cyclonedx-cli`) and ensure `pnpm audit`/OSV client versions match the repo’s `package.json` engines and CI workflow pins. Evidence of these tools running must appear at G5 per §4.3.
+> **Security Tooling (MANDATORY)** – Toolchain versions and install guidance are defined by `compat.json` and the generated CI workflow. Do not embed OS-specific install commands (brew/apt/winget) in this canonical workflow doc. Use `brainwav-governance doctor` to verify tool presence; CI enforces required versions.
 
 #### Gate-by-Gate Tool Usage
 
-| Gate | RepoPrompt | Local Memory | Cortex-Aegis | Context7 |
+| Gate | RepoPrompt | Local Memory | Cortex-Aegis | Library Docs MCP |
 |------|------------|--------------|--------------|----------|
 | **G0 – Initialize** | — | `search` (recall prior work) | — | — |
 | **G1 – Discover** | **Context Builder** (MUST for medium+) | `search` (architectural decisions) | — | `resolve-library-id` + `get-library-docs` (for external libs) |
@@ -903,9 +899,9 @@ The phase machine maps onto ArcTDD gates as follows:
 2. **No HITL before REVIEW.** Any other `human_input` pre-REVIEW is a violation unless a time-boxed waiver exists.
 3. **Structured outputs required.** Any model output that drives tools/files/network **must** be function/tool-calling or conform to a JSON-Schema, with validation on receipt.
 4. **Observability.** All charter-governed logs carry `[<service>]`, `service:"<service_name>"`, ISO-8601 timestamp, `trace_id` (32 lower-hex), and **HTTP `traceparent`** for correlation. `brand:"<org>"` is optional and may be required by overlays. Missing fields fail gates.
-5. **Supply-chain.** Generate **CycloneDX 1.7** SBOM; produce **SLSA v1.2** provenance; sign/verify with **Cosign v3 bundle**.
+5. **Supply-chain.** Generate **CycloneDX 1.7** SBOM; produce **SLSA v1.2** provenance; sign/verify with **Cosign bundle v3** (or newer pinned in `standards.versions.json`).
 6. **Identity & secrets.** CI authenticates to cloud via **OIDC/WIF** only. Secrets are fetched at runtime using the **1Password CLI** (`op`); never persisted.
-7. **Hybrid models — live only.** No stubs/recordings/dry-runs for embeddings/rerankers/generation. Frontier/Ollama health logs required.
+7. **Hybrid models — profile-driven.** Release requires live (or verifiably recorded with time-freshness evidence) per Constitution. Delivery warns unless explicitly documented. Creative allows prototypes but cannot claim production readiness.
 8. **A11y baseline.** WCAG 2.2 AA (ISO/IEC 40500:2025).
 
 ### 6.2 Context Pruning Rules
@@ -984,7 +980,7 @@ Use RepoPrompt's `manage_selection` with mode transitions:
 | `COVERAGE:OK CHANGED_LINES:OK MUTATION:OK` | Test quality gates met |
 | `MEMORY_PARITY:OK` | Local Memory sync confirmed |
 | `TRACE_CONTEXT:OK` | Trace propagation verified |
-| `SUPPLY_CHAIN:OK sbom=cyclonedx@1.7 slsa=1.1 cosign=bundle` | Supply-chain artefacts present |
+| `SUPPLY_CHAIN:OK sbom=cyclonedx@1.7 slsa=1.2 cosign=bundle.v3` | Supply-chain artefacts present |
 | `CONTEXT_PRUNE:OK gate=<Gn> removed=<n>KB retained=<n>KB` | Context pruning executed |
 | `CRITIC_REVIEW:OK findings=<n> addressed=<n>` | Critic subagent completed |
 | `JIT_DOCS:OK calls=<n> libs=<list>` | Just-in-time docs fetched at G4 |

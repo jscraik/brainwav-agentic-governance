@@ -47,7 +47,7 @@ This document defines the emergency termination procedures for AI agents operati
 
 | Trigger | Authority | Procedure |
 |---------|-----------|-----------|
-| **Kill Switch** | Any team member | CLI: `pnpm agent:kill --session <id>` |
+| **Kill Switch** | Any team member | Create `.agentic-governance/STOP` (preferred for bounded loops) or terminate the agent process (SIGTERM/SIGKILL). |
 | **Project Halt** | Project lead | CLI: `pnpm project:halt --name <project>` |
 | **Global Stop** | Maintainer | CLI: `pnpm agents:stop-all` |
 | **Incident Response** | Security team | Via incident response system |
@@ -62,8 +62,8 @@ This document defines the emergency termination procedures for AI agents operati
 # Agent receives SIGTERM
 1. Stop accepting new tasks
 2. Complete current atomic operation (if < 2s remaining)
-3. Commit any in-progress work with "[EMERGENCY-STOP]" message
-4. Persist state checkpoint to `tasks/<slug>/json/emergency-checkpoint.json`
+3. Persist state checkpoint to `tasks/<slug>/json/emergency-checkpoint.json`
+4. Write a patch bundle if possible (no commit required): `tasks/<slug>/work/patches/emergency-<timestamp>.patch`
 5. Emit A2A event: `agent.emergency_stop`
 6. Release all held resources
 7. Exit with code 1
@@ -159,13 +159,10 @@ Before resuming an agent after emergency stop:
 
 ### 4.2 Resume Command
 
-```bash
-# Review checkpoint
-pnpm agent:review-checkpoint --session <id>
-
-# Resume with additional monitoring
-pnpm agent:resume --session <id> --monitoring enhanced
-```
+Resume tooling is adapter-specific. At minimum:
+1) Review `tasks/<slug>/json/emergency-checkpoint.json`
+2) Re-run `brainwav-governance doctor` and `brainwav-governance validate --strict`
+3) Resume from the recorded gate/step after human review when required
 
 ---
 

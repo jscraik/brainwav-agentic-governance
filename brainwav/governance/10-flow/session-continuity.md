@@ -87,7 +87,7 @@ startup_sequence:
     
   4_health_check:
     action: "Run smoke tests"
-    command: "pnpm test:smoke"
+    command: "<repo smoke command configured in .agentic-governance/config.json>"
     purpose: "Verify codebase is in healthy state"
     fail_action: "Stop and fix before proceeding"
     
@@ -178,8 +178,8 @@ Every session must execute before termination:
 shutdown_sequence:
   1_commit_work:
     action: "Commit all changes"
-    command: "git add -A && git commit -m '<descriptive message>'"
-    skip_if: "No uncommitted changes"
+    command: "Optional: commit if policy allows and work is clean; otherwise write a patch bundle and checkpoint"
+    skip_if: "Policy forbids auto-commit or work is unsafe to commit"
     
   2_update_progress:
     action: "Append to work/implementation-log.md"
@@ -286,15 +286,12 @@ Every session must produce:
 
 Session continuity must be verifiable:
 
+Session tooling commands are pack/adapter specific. Examples:
+
 ```bash
-# List all sessions for a task
-pnpm sessions:list --task <slug>
-
-# Show session timeline
-pnpm sessions:timeline --task <slug>
-
-# Verify checkpoint chain
-pnpm checkpoints:verify --task <slug>
+brainwav-governance sessions list --task <slug>
+brainwav-governance sessions timeline --task <slug>
+brainwav-governance checkpoints verify --task <slug>
 ```
 
 ---

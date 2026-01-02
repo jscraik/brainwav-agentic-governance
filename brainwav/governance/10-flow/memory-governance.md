@@ -137,7 +137,7 @@ Every memory operation must log:
   "namespace": "project/user-auth",
   "content_hash": "sha256:abc123...",
   "result": "success",
-  "trace_id": "trace-12345"
+  "trace_id": "c6f2b0d7a9124f6c9c1d77cd2a4f6aa1"
 }
 ```
 
@@ -152,12 +152,10 @@ Every memory operation must log:
 
 ### 3.3 Audit Search
 
-```bash
-# Search audit logs
-pnpm memory:audit --agent <agent-id> --from <date> --to <date>
+Memory tooling commands are pack/adapter specific. If your environment installs a memory tooling pack, you MAY provide helper commands (examples):
 
-# Export for compliance
-pnpm memory:audit-export --format json --output audit-report.json
+```bash
+brainwav-governance memory audit --agent <agent-id> --from <date> --to <date>
 ```
 
 ---
@@ -295,7 +293,7 @@ const results = await memory.search({
 All significant memories must be written to:
 
 1. **Local Memory MCP** - Primary storage with semantic search
-2. **Repository mirror** - `.github/instructions/memories.instructions.md`
+2. **Repository mirror** - path is configurable. Default mirror location is a repo-owned documentation file (e.g., `.github/instructions/memories.instructions.md`) but may be overridden by `.agentic-governance/config.json`.
 
 ### 7.2 Sync Verification
 

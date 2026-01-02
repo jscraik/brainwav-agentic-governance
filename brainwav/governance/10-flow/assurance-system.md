@@ -22,7 +22,9 @@
 
 ### 2.1 Context Anchoring
 
-The user's timezone is {{USER_TIMEZONE}}. Today's date is {{TODAY}}.
+The user's timezone and "today" date are runtime values. Agents must emit a freshness anchor token when a plan or research depends on recency:
+
+`TIME_FRESHNESS:OK tz=<IANA> today=<YYYY-MM-DD>`
 
 Treat dates before this as past and after this as future. When asked for "latest", "most recent", "today's", etc., do not assume knowledge is current; verify freshness or ask the user.
 
@@ -49,7 +51,7 @@ The Assurance System MUST validate time-freshness for:
 - **Feature Implementation (G2 + G5)**: All feature flows must call the Assurance System at plan validation (G2) and verification (G5) stages
 - **High-Risk Changes**: Any modification with risk tags ≥ `medium` or touching security/privacy boundaries
 - **Contract Changes**: API modifications, schema updates, or interface changes
-- **Research Validation**: Academic source verification and time-freshness checks
+- **Research Validation**: Academic source verification and time-freshness checks (required in delivery/release for medium+ risk; optional in creative)
 - **Compliance Requirements**: When WCAG, security, or regulatory compliance is involved
 
 ### 3.2 Optional but Recommended
@@ -61,17 +63,18 @@ The Assurance System MUST validate time-freshness for:
 
 ---
 
-## 4. Academic Research Integration (Mandatory)
+## 4. Academic Research Integration (Profile-Driven)
 
 ### 4.1 Available Academic MCP Providers
 
-Before running Cortex-Aegis validation, all implementation plans MUST be enhanced with academic research using the built-in MCP providers:
+Before running Cortex-Aegis validation, plans SHOULD be enhanced with research when available. Requirements are profile-driven:
+- **Release:** MUST for medium+ risk and external-call/model/data-boundary changes
+- **Delivery:** SHOULD for medium+ risk
+- **Creative:** OPTIONAL (document uncertainties instead)
 
-- **Wikidata MCP** (Port 3029): Vector search for entities, properties, and relationships via `mcp_wikidata_*` tools
-- **arXiv MCP** (Port 3041): Semantic search for recent papers and technical approaches via `mcp_arxiv_*` tools
-- **Semantic Scholar API**: Identify proven solutions and highly-cited approaches
-- **OpenAlex API**: Discover broad research patterns and collaborations
-- **Context7 MCP**: Access domain-specific knowledge and best practices via `mcp_context7_*` tools
+Provider endpoints/ports are adapter-specific. Do not hardcode ports in core governance docs; packs/adapters define endpoints and health checks.
+
+Provider lists are non-normative. The assurance system consumes artifacts; the model/provider is a project decision recorded in evidence.
 
 ### 4.2 Research Workflow
 
@@ -102,7 +105,7 @@ fs.writeFileSync(
 ### 5.1 MCP Tool Invocation
 
 ```typescript
-// Call cortex-aegis MCP tool (replaces legacy vibe_check)
+// Call Cortex-Aegis MCP tool (canonical)
 const response = await mcpClient.callTool('cortex_aegis_validate', {
   goal: '<task summary>',
   plan: '1. Step one. 2. Step two. ... (max 7 steps)',
@@ -176,14 +179,14 @@ fs.writeFileSync(
 
 ---
 
-## 6. Legacy Compatibility
+## 6. Legacy Compatibility (Vibe Check → Cortex-Aegis)
 
 ### 6.1 Vibe Check Migration
 
 **Transition Period**: 2025-11-22 through 2025-12-31
 
 - Legacy `vibe_check` tool calls redirect to `cortex_aegis_validate`
-- Existing log paths (`logs/vibe-check/`) maintained for compatibility
+- Existing log paths (`logs/vibe-check/`) may be maintained for compatibility via pack/adapters.
 - Gradual migration of references from "vibe check" to "Cortex-Aegis"
 
 **Breaking Changes After 2025-12-31**:
@@ -216,10 +219,7 @@ fs.writeFileSync(
 - [Agentic Workflow](../10-flow/agentic-coding-workflow.md) - Detailed gate specifications
 - [Unified Checklists](../20-checklists/checklistsgovernance-os.md) - Section 7 Aegis requirements
 
-- When any academic MCP connector is unavailable, check connector health via `/health` endpoints:
-  - Wikidata MCP: `curl ${WIKIDATA_MCP_URL:-http://127.0.0.1:3029}/health`
-  - arXiv MCP: `curl ${ARXIV_MCP_URL:-http://127.0.0.1:3041}/health`
-  - Cortex Aegis MCP: `curl ${CORTEX_AEGIS_HTTP_URL:-http://127.0.0.1:2091}/health`
+- When any academic MCP connector is unavailable, check connector health via adapter-defined `/health` endpoints and record the evidence path.
 - Document the outage in a waiver JSON at `logs/academic-research/<slug>-<timestamp>-waiver.json` with service identity (`[<service>]`) metadata
 - Record the waiver pointer in `run-manifest.json` and schedule a follow-up check within 72 hours
 - Plans submitted to Oversight must surface outstanding uncertainties (e.g., connector uptime, attestation tooling) so reviewers can challenge mitigations early
@@ -244,44 +244,17 @@ Plan for: "Implement API rate limiting"
 3. **License Validation**: Assess risk levels and filter content by usage rights
 4. **Evidence Integration**: Incorporate license-compliant findings into plan steps with proper citations
 5. **Validation**: Cross-reference approaches across multiple academic sources
-6. **Documentation**: Store research evidence and license validation alongside vibe-check responses
+6. **Documentation**: Store research evidence and license validation alongside Aegis responses
 
-### 3.2 Server Setup
+### 3.2 Legacy server setup (pack-scoped)
 
-The Vibe Check MCP server is now included in the governance framework monorepo:
+Legacy server setup steps (monorepo paths, Nx targets, local launch agents) are pack-scoped. Enable `pack:legacy-vibe-check` if you must run the legacy server; otherwise prefer `cortex_aegis_validate` via the canonical adapter.
 
-```bash
-# Local development setup
-cd packages/vibe-check-mcp-server
-pnpm install
-pnpm build
-
-# Start the server
-pnpm start --port 2001
-
-# Or use launchd service
-launchctl load ~/Library/LaunchAgents/com.brainwavgovernance-vibe.plist
-```
-
-**Server Configuration:**
-
-- **Default URL**: `http://127.0.0.1:2001` (configurable via `CORTEX_VIBE_HTTP_URL`)
-- **Health Check**: `GET /health`
-- **MCP Endpoint**: `POST /mcp` (JSON-RPC 2.0)
-- **Tools Available**:
-  - `vibe_check` - Oversight with clarifying questions and alignment validation
-  - `vibe_learn` - Optional logging of mistakes and successes for review
-
-**Supported LLM Providers**:
-
-- OpenAI (GPT models)
-- Anthropic (Claude models)
-- Google (Gemini models)
-- OpenRouter (various models)
+Provider lists are non-normative. The assurance system consumes artifacts; the model/provider is a project decision recorded in evidence.
 
 ### 3.3 JSON-RPC Fallback
 
-POST to `${CORTEX_VIBE_HTTP_URL:-http://127.0.0.1:2001}/mcp` with:
+POST to the adapter-configured MCP endpoint (e.g., `${CORTEX_AEGIS_HTTP_URL}/mcp`) with:
 
 ```json
 {
@@ -324,7 +297,7 @@ Failure to meet any item keeps the PR in a blocked state (`agents-guard` job).
 - **Server unreachable / health check fails:** stop work, mark the task blocked, and escalate per the Constitution. Do **not** bypass the gate without a formally recorded waiver under `governance/waivers/`.
 - **HTTP 406 or schema errors:** verify headers and ensure the plan contains numbered steps ≤ 7. Correct and retry.
 - **Timeouts:** retry once after confirming server health; repeated timeouts require escalation.
-- **Session resets:** if a `pnpm session:reset` run occurs, perform a new vibe check before resuming implementation.
+- **Session resets:** if a session reset occurs, perform a new validation before resuming implementation.
 
 ---
 

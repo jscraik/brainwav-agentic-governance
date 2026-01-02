@@ -91,9 +91,9 @@ This governance quickstart is the entry point for **workflow selection**.
 
 **Steps**:
 
-1. If the `sdd` pack is enabled, run `brainwav-governance spec init --slug <slug>` to create `specs/<slug>/{spec.md,plan.md,tasks.md}`
-2. If the `agent-loop` pack is enabled, run `node .agentic-governance/tools/agent-loop.mjs --slug <slug>` to execute the bounded loop with verification gates.
-2. Create task folder and register North-Star acceptance criteria
+1. If the `sdd` pack is enabled, run `brainwav-governance spec init --slug <slug>` to create `specs/<slug>/{spec.md,plan.md,tasks.md}`.
+2. If the `agent-loop` pack is enabled, run `brainwav-governance loop run --slug <slug>` to execute the bounded loop with verification gates.
+3. Create task folder and register North-Star acceptance criteria.
 3. Run repo context sweep and write `research.md`
 4. Draft `PLAN.md` / `implementation-plan.md` (agent first, human review)
 5. Call **Cortex-Aegis** to validate the plan vs governance + external evidence
@@ -257,7 +257,7 @@ This quickstart connects to comprehensive checklists in:
 <!-- PROJECT-SPECIFIC: START -->
 ## 9. Project-Specific Workflow Configuration
 
-> **Instructions:** Add project-specific workflow tweaks, custom gates, or additional requirements here. This section is NOT overwritten when upgrading the governance pack.
+> **Instructions:** Add project-specific workflow tweaks as additive overlays. Do not duplicate canonical governance docs; use `.agentic-governance/overlays/` for local deltas.
 
 ### Custom Gates
 
