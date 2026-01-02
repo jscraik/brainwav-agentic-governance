@@ -1,6 +1,6 @@
 {
   "name": "@brainwav/brainwav-agentic-governance",
-  "version": "0.2.39",
+  "version": "0.2.40",
   "private": false,
   "type": "module",
   "description": "Governance automation scripts and MCP helpers",
@@ -26,7 +26,21 @@
     "README.md",
     ".github/ISSUE_TEMPLATE",
     ".github/pull_request_template.md",
-    "brainwav/",
+    "docs/architecture/decisions/**",
+    "brainwav/README.md",
+    "brainwav/governance/00-core/**",
+    "brainwav/governance/10-flow/**",
+    "brainwav/governance/20-checklists/**",
+    "brainwav/governance/90-infra/**",
+    "brainwav/governance/audit/**",
+    "brainwav/governance/commands/**",
+    "brainwav/governance/docs/**",
+    "brainwav/governance/generated/**",
+    "brainwav/governance/runbooks/**",
+    "brainwav/governance/templates/**",
+    "brainwav/governance/README.md",
+    "brainwav/governance-pack/**",
+    "brainwav/research/**",
     "scripts/",
     ".agentic-governance/"
   ],
@@ -57,6 +71,7 @@
     "governance:bootstrap-consumer": "node scripts/bootstrap-consumer.mjs",
     "governance:generate-control-docs": "node scripts/generate-control-docs.mjs",
     "docs:generate-packs": "node scripts/generate-packs-docs.mjs",
+    "docs:validate": "node scripts/validate-docs.mjs",
     "commands:daily-summary": "node brainwav/governance/commands/daily-summary.mjs",
     "commands:memorize": "node brainwav/governance/commands/memorize.mjs",
     "commands:recall": "node brainwav/governance/commands/recall.mjs",
@@ -65,7 +80,8 @@
     "lint:fix": "eslint . --fix",
     "lint:ci": "eslint . --max-warnings 0",
     "test:cli": "node scripts/cli-tests.mjs",
-    "test:fixtures": "node scripts/fixture-tests.mjs"
+    "test:fixtures": "node scripts/fixture-tests.mjs",
+    "governance:validate-agents": "node scripts/validate-agents.mjs"
   },
   "dependencies": {
     "yaml": "^2.8.2"

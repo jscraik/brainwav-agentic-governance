@@ -175,6 +175,9 @@ function checkToolVersion(command, args, minVersion) {
 		if (fallback.status === 0) {
 			detected = extractVersion(`${fallback.stdout}\n${fallback.stderr}`) ?? 'unknown';
 		}
+		if (detected === 'unknown' && process.env.GITLEAKS_VERSION) {
+			detected = extractVersion(process.env.GITLEAKS_VERSION) ?? 'unknown';
+		}
 	}
 	const ok = detected !== 'unknown' && compareVersions(detected, minVersion) >= 0;
 	return { ok, version: detected };
