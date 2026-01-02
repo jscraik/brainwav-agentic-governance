@@ -73,7 +73,7 @@ jobs:
 
   governance-validate:
     runs-on: ubuntu-latest
-    needs: [readiness, hash-drift, dep-boundary, nx-graph]
+    needs: [readiness, hash-drift, dep-boundary, nx-graph, docs-validate, agents-integrity]
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -90,9 +90,39 @@ jobs:
       - run: pnpm test:cli
       - run: pnpm test:fixtures
 
+  docs-validate:
+    runs-on: ubuntu-latest
+    needs: [readiness, hash-drift]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.26.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.11.0'
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile=false
+      - run: pnpm docs:validate
+
+  agents-integrity:
+    runs-on: ubuntu-latest
+    needs: [readiness, hash-drift]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.26.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.11.0'
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile=false
+      - run: pnpm governance:validate-agents
+
   oversight:
     runs-on: ubuntu-latest
-    needs: [readiness, hash-drift, dep-boundary, governance-validate]
+    needs: [readiness, hash-drift, dep-boundary, docs-validate, agents-integrity, governance-validate]
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4

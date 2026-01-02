@@ -199,7 +199,7 @@
     },
     "governance-index.json": {
       "path": "90-infra/governance-index.json",
-      "sha256": "f1b507c4e878abb005a9cc25fb393aa51cf5e6fe0f6f52a1aa2d4d1675c6df8b",
+      "sha256": "9e0327db9ffe9b6d0ea2d5d9f03a40de1978100b0aad2ca3bc26f6973932c654",
       "hash_mode": "exclude_self",
       "required_tokens": [
         "precedence",
@@ -280,7 +280,7 @@
     },
     "README.md": {
       "path": "README.md",
-      "sha256": "bd7ed4f64fe804ef545994ea40cc0b78fe1cbf9b03ac080ae3adaa8597675a44",
+      "sha256": "d389d8dc7368698d39e17084bfa0fcfc62140f8e19ab0a314db1ae69f98858f5",
       "required_tokens": [
         "governance",
         "structure"
@@ -339,7 +339,7 @@
     },
     "eu-ai-act.md": {
       "path": "30-compliance/eu-ai-act.md",
-      "sha256": "a1b7290965c27651f2862f2a81ebff0e90c41f44fa58960317f909467cfbcfe8",
+      "sha256": "205b636e0337bf9e8b4a0aa67376422ba84d2b759880abe697b4107fb66c8144",
       "required_tokens": [
         "EU AI Act",
         "risk classification",
@@ -421,7 +421,7 @@
     },
     "CODESTYLE.md": {
       "path": "CODESTYLE.md",
-      "sha256": "ad79bd4da8eb69408b1ef3e4a7998a7ced8bdd5b49e695ad4b46a1a61b67ade5",
+      "sha256": "85ba6d23b9667ceab5c729a9da7089fa91c50910f576239ce75e4ffa1b35c55e",
       "required_tokens": [
         "CODESTYLE.md",
         "mandatory coding standards"

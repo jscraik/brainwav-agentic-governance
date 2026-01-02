@@ -26,4 +26,6 @@ jobs:
           node-version: '24.11.0'
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile=false
+      - run: pnpm docs:validate
+      - run: pnpm governance:validate-agents
       - run: node scripts/governance-cli.mjs validate --strict --config .agentic-governance/config.ci.ubuntu.json --report .agentic-governance/reports

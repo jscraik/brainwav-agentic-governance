@@ -28,7 +28,7 @@ owner: "Governance Team"
 
 ## Adopting the Framework
 
-### Quick start (pointer mode, release profile)
+### Quick start (pointer mode default, release profile)
 
 1. Install governance into your repo:
 
@@ -75,7 +75,7 @@ cp -R brainwav-agentic-governance/brainwav /path/to/your-project/
 brainwav-governance install --root /path/to/your-project --mode pointer --profile release
 ```
 
-- Adds `.agentic-governance/pointer.json` and pointer stubs for AGENTS/CODESTYLE/SECURITY.  
+- Pointer mode is the default. It adds `.agentic-governance/pointer.json` and pointer stubs for AGENTS/CODESTYLE/SECURITY.  
 - Requires `@brainwav/brainwav-agentic-governance` as a dev dependency, pinned in the lockfile (run scripts from `node_modules/@brainwav/brainwav-agentic-governance/scripts` or via `pnpm dlx`).
 - Sets `.agentic-governance/config.json` with the selected profile (creative/delivery/release). CI enforces **release** gates by default. `core/full` are accepted as legacy synonyms.
 

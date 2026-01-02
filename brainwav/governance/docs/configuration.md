@@ -75,9 +75,9 @@ Add MCP servers to your client configuration:
 | `LOCAL_MEMORY_BASE_URL` | `http://localhost:3002/api/v1` | Local Memory API endpoint |
 | `CORTEX_AEGIS_PORT` | `2091` | Cortex Aegis MCP port |
 
-## Pointer Mode Configuration
+## Pointer Mode Configuration (Default)
 
-Pointer mode is enabled by `.agentic-governance/pointer.json`. It redirects governance validation and hashing to the pinned package under `node_modules/@brainwav/brainwav-agentic-governance` and keeps local overrides small.
+Pointer mode is the default installation mode. It is enabled by `.agentic-governance/pointer.json`, redirects governance validation and hashing to the pinned package under `node_modules/@brainwav/brainwav-agentic-governance`, and keeps local overrides small.
 
 Key fields:
 - `package`: npm package name (default `@brainwav/brainwav-agentic-governance`)

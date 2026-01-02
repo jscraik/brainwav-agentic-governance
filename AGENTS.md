@@ -105,21 +105,21 @@ audit:
 
 ## 1) Hierarchy of Authority
 
-1. **Governance Pack** (`brainwav/governance/*`):
+1. **Governance Pack** (brainwav/governance/):
 
-- `00-core/RULES_OF_AI.md`
-- `00-core/AGENT_CHARTER.md`
-- `10-flow/agentic-coding-workflow.md` (G0–G10, Phase Machine R→G→F→REVIEW in §4.4)
-- `00-core/constitution.md`
-- `00-core/llm-threat-controls.md` *(if LLM/tools)*
-- `00-core/skills-system-governance.md` *(if `skills/`)*
-- `10-flow/assurance-system.md` (includes time freshness policy)
-- `00-core/vision.md`
+- `brainwav/governance/00-core/RULES_OF_AI.md`
+- `brainwav/governance/00-core/AGENT_CHARTER.md`
+- `brainwav/governance/10-flow/agentic-coding-workflow.md` (G0–G10, Phase Machine R→G→F→REVIEW in §4.4)
+- `brainwav/governance/00-core/constitution.md`
+- `brainwav/governance/00-core/llm-threat-controls.md` *(if LLM/tools)*
+- `brainwav/governance/00-core/skills-system-governance.md` *(if `skills/`)*
+- `brainwav/governance/10-flow/assurance-system.md` (includes time freshness policy)
+- `brainwav/governance/00-core/vision.md`
 
 2) `CODESTYLE.md` (CI‑enforced)
 3) **This** `AGENTS.md` (root)
 4) Nearest package `AGENTS.md` (MAY tighten; MUST NOT weaken)
-5) Model adapters (`/docs/models/*.md`) (MUST NOT weaken)
+5) Model adapters (docs/models/ when present) (MUST NOT weaken)
 
 ### 1.1) Operational Workflows (Unified)
 
@@ -259,6 +259,8 @@ pnpm build:smart
 pnpm test:smart
 pnpm lint:smart
 pnpm typecheck:smart
+pnpm docs:validate
+pnpm governance:validate-agents
 ```
 
 - **Environment baseline:** Node 24.11.x; pnpm 10.26.x pinned in `.mise.toml`.
@@ -296,7 +298,7 @@ no TODO/FIXME/HACK, no fake telemetry, no placeholder adapters.
 - **Containers:** minimal base, pinned digests, non‑root, read‑only FS, drop caps.
 - **Standards mapping (advisory):** NIST SSDF practices; ISO/IEC 42001 alignment; OWASP LLM Top‑10 controls via `llm-threat-controls.md`.
 - **Identity Gate:** CI/services authenticate via OIDC/WIF (no static cloud keys).
-- **Docs validation:** `docs-validate` job MUST pass; policy links must resolve.
+- **Docs validation:** `docs-validate` job MUST pass; policy links must resolve (`scripts/validate-docs.mjs`).
 
 ---
 
@@ -559,7 +561,8 @@ CI mirrors the filled checklist to `brainwav/governance/audit/reviews/<PR_NUMBER
 | AGENTS‑ACL‑004  | Package `AGENTS.md` not weakening root     | `structure-validate` | compare rule sets                          |
 | AGENTS‑ACL‑011  | Academic license validation evidence       | `agents-guard`       | check `license-validation.json`            |
 | AGENTS‑RFU‑012  | Reuse‑First compliance evidence            | `reuse-first`        | verify `analysis/reuse-evaluation.md`      |
-| AGENTS‑DOC‑005  | Docs validation (no ERROR)                 | `docs-validate`      | `scripts/validate-docs.ts`                 |
+| AGENTS‑DOC‑005  | Docs validation (no ERROR)                 | `docs-validate`      | `scripts/validate-docs.mjs`                |
+| AGENTS‑AGI‑013  | AGENTS integrity (size + references)      | `agents-integrity`   | `scripts/validate-agents.mjs`              |
 | AGENTS‑TRC‑006  | Trace Context verification                 | `trace-verify`       | `verify-trace-context.ts`                  |
 | AGENTS‑MEM‑007  | Local Memory parity (IDs present)          | `memory-parity`      | check `json/memory-ids.json` + repo mirror |
 | AGENTS‑A11Y‑008 | WCAG reports attached (if UI touched)      | `a11y-check`         | jest-axe/axe                               |

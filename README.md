@@ -67,14 +67,17 @@ pnpm readiness:check
 
 > Use this when you want to drop governance into an existing repo.
 
+See `docs/adoption.md` for the canonical pointer-mode adoption checklist and stub-only policy.
+
 1. From this repo: `pnpm install` (Node 24.11.x, pnpm 10.26.x).  
 2. Install governance into the target repo (local clone):  
    `brainwav-governance install --root /path/to/consumer-repo [--mode full|pointer] [--profile creative|delivery|release] [--packs a11y,supply-chain]`  
 3. Install governance into the target repo (published package):  
-   `pnpm dlx @brainwav/brainwav-agentic-governance@<version> brainwav-governance install --root /path/to/consumer-repo [--mode full|pointer] [--profile creative|delivery|release] [--packs a11y,supply-chain]`  
+   `pnpm dlx @brainwav/brainwav-agentic-governance@<version> brainwav-governance install --root /path/to/consumer-repo [--mode pointer|full] [--profile creative|delivery|release] [--packs a11y,supply-chain]`  
    Or, if installed as a dependency:  
    `pnpm exec brainwav-governance install --root /path/to/consumer-repo [--mode full|pointer] [--profile creative|delivery|release] [--packs a11y,supply-chain]`  
    - Default profile is `delivery`. CI should use `release` for gold-standard gating.
+   - Default install mode is `pointer` (canonical-only distribution). Use `full` only for air-gapped or exceptional cases.
    - `full` copies AGENTS, CODESTYLE, SECURITY, `brainwav/governance/**`, issue/PR templates, and the GitHub Actions workflow.  
    - `pointer` writes pointer stubs + `.agentic-governance/pointer.json` and expects a lockfile-pinned `@brainwav/brainwav-agentic-governance` dependency.
    - **Supported CLI:** `brainwav-governance` is the only stable public entrypoint. `brainwav-agentic-governance` is a legacy alias.
@@ -92,6 +95,8 @@ pnpm dlx @brainwav/brainwav-agentic-governance@<version> brainwav-governance upg
 `upgrade` refreshes pointer stubs + workflows, updates the pinned dependency, and runs `pnpm install` when a pnpm lockfile is present.
 
 By default, `upgrade` preserves existing files. Use `--force` to overwrite existing governance files when you intend to replace local edits.
+
+For automated upgrades, see `.github/workflows/governance-upgrade.yml`.
 
 ### Verify (quick sanity checks)
 
@@ -137,9 +142,12 @@ By default, `upgrade` preserves existing files. Use `--force` to overwrite exist
 - `brainwav-governance packs list [--json]` — list available packs/presets for discovery.
 - `pnpm governance:validate-standards` — check standards link freshness and `as_of` age in `standards.versions.json`.
 - `pnpm governance:sync-hashes:check` — fail on governance hash drift (non-writing).
+- `pnpm docs:validate` — validate doc links + referenced paths in core policy docs.
 - `pnpm task:scaffold --slug <id>` / `pnpm task:validate --slug <id>` — create and check task folders for Evidence Triplet placeholders.
 - `pnpm governance:check-nx` — run Nx graph when nx.json exists (skips if absent); included in CI template.
 - `pnpm governance:validate-evidence` — verify Evidence Triplet files, memory IDs, trace context, and academic research logs are present and non-empty.
+- `pnpm governance:validate-agents` — enforce AGENTS.md size + referenced path/job integrity.
+- See `brainwav/governance/docs/gold-standard-checklist.md` for the CI contract vs advisory vs local-only checks.
 - `brainwav-governance upgrade --root <path>` — refresh installs + update dependency in a consumer repo.
 - `brainwav-governance doctor --root <path>` — readiness + tooling checks.
 - `brainwav-governance <command>` — CLI wrapper for install/upgrade/validate/doctor (alias: `brainwav-agentic-governance`).

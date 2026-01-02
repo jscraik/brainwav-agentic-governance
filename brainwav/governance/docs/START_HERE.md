@@ -23,6 +23,8 @@ CI enforces **Release** gates by default for gold-standard delivery.
 
 ```bash
 brainwav-governance install --root /path/to/your-project --mode pointer --profile release
+
+Pointer mode is the default. Use `--mode full` only for air-gapped or exceptional cases.
 ```
 
 ## One‑command start (per task)

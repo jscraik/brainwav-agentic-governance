@@ -40,7 +40,7 @@ Every rule in the governance framework has corresponding CI automation. This mat
 | **AGENTS-PRV-002** | Oversight logs attached | 🔴 BLOCKER | `agents-guard` | Search `aegis-vibe-check` in artifacts | Waiver only |
 | **AGENTS-HMS-003** | Live model evidence present | 🔴 BLOCKER | `models-smoke` | Verify `MODELS:LIVE:OK` in logs | Waiver only |
 | **AGENTS-ACL-004** | Package AGENTS.md not weakening root | 🔴 BLOCKER | `structure-validate` | Compare rule sets programmatically | N/A |
-| **AGENTS-DOC-005** | Docs validation (no ERROR) | 🔴 BLOCKER | `docs-validate` | `scripts/gates/validate-docs.ts` | Waiver only |
+| **AGENTS-DOC-005** | Docs validation (no ERROR) | 🔴 BLOCKER | `docs-validate` | `scripts/validate-docs.mjs` | Waiver only |
 | **AGENTS-TRC-006** | Trace context verification | 🔴 BLOCKER | `trace-verify` | `verify-trace-context.ts` | Waiver only |
 | **AGENTS-MEM-007** | Local Memory parity (IDs present) | 🔴 BLOCKER | `memory-parity` | Check `json/memory-ids.json` + repo mirror | Waiver only |
 | **AGENTS-A11Y-008** | WCAG reports attached (if UI touched) | 🔴 BLOCKER | `a11y-check` | jest-axe/axe JSON output | Skip if no UI |

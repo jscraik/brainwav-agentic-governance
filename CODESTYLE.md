@@ -451,11 +451,11 @@ Pack docs live in `brainwav/governance/docs/packs/`; pack metadata lives in `bra
 
 | Rule ID | Source | Summary | Charter linkage |
 | --- | --- | --- | --- |
-| `no-dotenv-in-prod` | `semgrep/brAInwav.yml` | Blocks `dotenv.config()` in prod paths; require shared loader. | Guardrail #9 (preflight secrets) + G4 env discipline |
-| `no-console-in-prod` | `semgrep/brAInwav.yml` + ESLint `no-console` override | Forces `traceLogger.log()` with structured identity payload + `trace_id`. | Guardrail #6 (identity logs) + trace context |
-| `no-math-random-in-prod` | `semgrep/brAInwav.yml` | Prevents fabricated data/entropy. | Guardrail #6 & Proof integrity |
-| `require-service-identity-in-logs` | `semgrep/brAInwav.yml` | Ensures `{ service:"<service_name>" }` attached to logs. | Guardrail #6 |
-| `async-must-accept-abortsignal` | `semgrep/brAInwav.yml` | Exported async APIs require `AbortSignal`. | Guardrail #7 (Arc Protocol resilience) |
+| `no-dotenv-in-prod` | Semgrep ruleset (see `SECURITY.md`) | Blocks `dotenv.config()` in prod paths; require shared loader. | Guardrail #9 (preflight secrets) + G4 env discipline |
+| `no-console-in-prod` | Semgrep ruleset + ESLint `no-console` override | Forces `traceLogger.log()` with structured identity payload + `trace_id`. | Guardrail #6 (identity logs) + trace context |
+| `no-math-random-in-prod` | Semgrep ruleset (see `SECURITY.md`) | Prevents fabricated data/entropy. | Guardrail #6 & Proof integrity |
+| `require-service-identity-in-logs` | Semgrep ruleset (see `SECURITY.md`) | Ensures `{ service:"<service_name>" }` attached to logs. | Guardrail #6 |
+| `async-must-accept-abortsignal` | Semgrep ruleset (see `SECURITY.md`) | Exported async APIs require `AbortSignal`. | Guardrail #7 (Arc Protocol resilience) |
 | `no-explicit-any` | ESLint `@typescript-eslint/no-explicit-any` | No `any` anywhere (not just boundaries). | Guardrail #4 (Proof) |
 | `no-unsafe-*` | ESLint `@typescript-eslint/no-unsafe-{assignment,member-access,argument,return}` | Blocks viral `any` spread from JSON.parse, etc. | Guardrail #4 (Proof) |
 | `no-unsafe-type-assertion` | ESLint `@typescript-eslint/no-unsafe-type-assertion` | Forbids narrowing via `as` without runtime guards. | Guardrail #4 (Proof) |
@@ -465,7 +465,7 @@ Pack docs live in `brainwav/governance/docs/packs/`; pack metadata lives in `bra
 | `import/no-default-export` | ESLint | Enforces named exports only (except framework files). | Guardrail #4 (Proof traceability) |
 | `no-restricted-imports` | ESLint | Blocks cross-domain imports; require interfaces. | Guardrail #7 |
 
-- **Local reproduction:** `pnpm lint:smart` (ESLint) and `pnpm dlx semgrep --config semgrep/brAInwav.yml`.
+- **Local reproduction:** `pnpm lint:smart` (ESLint) and Semgrep as configured in CI (see `SECURITY.md`).
 - **Waivers:** Submit a Maintainer-approved waiver with rule ID, scope, expiry (≤7 days), and mitigation. Reference waiver in PR body and task manifest.
 - **Waiver Activation Rule:** A charter waiver is valid only after the `charter-enforce / danger` job posts ✅ with a link to the `Apply Waiver` workflow run that recorded Maintainer approval.
 - **CI integration:** `charter-enforce` runs both tools; any ERROR result blocks merge and triggers `blocked:charter` until resolved.
@@ -504,8 +504,8 @@ Pack docs live in `brainwav/governance/docs/packs/`; pack metadata lives in `bra
 - Respect active mitigations until baseline is declared stable:
   - pnpm: `childConcurrency: 2`, engine pinning, `engineStrict: true`
   - Nx: serialized heavy tasks (`parallel: 1`, `maxParallel: 1`)
-  - `.nxignore` reduces watcher churn
-- Use `scripts/sample-memory.mjs` to record RSS/heap during heavy ops.
+  - Repo-specific ignore files reduce watcher churn (when present)
+- Record RSS/heap during heavy ops and attach results to the PR.
 - Before increasing parallelism, run comparative sampler sessions (before/after) and attach results to the PR.
 
 ---
@@ -513,34 +513,25 @@ Pack docs live in `brainwav/governance/docs/packs/`; pack metadata lives in `bra
 ## 17. Repository Scripts & Reports
 
 - **Codemap snapshots**
-  - `pnpm codemap` runs `scripts/codemap.py` and emits `out/codemap.json` + `out/codemap.md` with **service-identified** output.
-  - Optional tools (`lizard`, `madge`, `depcheck`) annotate results under `analysis` without failing if missing.
-  - Scopes: `repo`, `package:<name>`, `app:<name>`, `path:<relative>`.
-- **Badges & metrics**
-  - Coverage and mutation badges are static SVGs under `reports/badges/`.
-  - Inline sparkline is injected between `BRANCH_TREND_INLINE_START/END` markers via `pnpm sparkline:inline`.
-  - `reports/badges/metrics.json` carries composite metrics for GitHub Pages or API use.
+  - If a codemap script is present, emit service-identified reports and attach to the PR.
+  - Optional tools (`lizard`, `madge`, `depcheck`) may annotate results without failing if missing.
 
 ---
 
 ## 18. MCP & External Tools
 
 - MCP adapters and developer helpers must not hard-code user-specific paths.
-- Use `tools/mcp/wrap_local_memory.sh` and `tools/mcp/check_mcp_paths.sh` for local reproducibility.
+- Use reproducible wrapper scripts when present.
 - Expose MCP endpoints via the documented ports/tunnels; health checks must be scriptable.
 
 ---
 
 ## 19. Config References (Authoritative)
 
-- **Biome**: `.biome.json` (root; packages may extend)
-- **ESLint**: `eslint.config.js` (flat config) for policy/security/import-boundaries rules
-- **TSConfig**: `tsconfig.base.json` (project references enabled)
-- **Python**: `pyproject.toml` + `uv.lock` (Ruff/Pyright config)
-- **Rust**: `rustfmt.toml` + Clippy in CI; **rust-toolchain.toml** pins `channel = "1.85.0"`
+- **ESLint**: `eslint.config.mjs` (flat config) for policy/security/import-boundaries rules
 - **Mise**: `.mise.toml` pins tool versions (Node 24 Active LTS, Python, uv, Rust; per [ADR-004](./docs/architecture/decisions/004-node-24-active-lts.md))
 - **CI**: `.github/workflows/*.yml` enforce gates (quality, security, supply chain, badges)
-- **ADRs**: `docs/adr/` (MADR template)
+- **ADRs**: `docs/architecture/decisions/` (MADR template)
 - **Rules of AI**: `brainwav/governance/00-core/RULES_OF_AI.md` (primary production standards)
 
 ---
@@ -556,12 +547,11 @@ Pack docs live in `brainwav/governance/docs/packs/`; pack metadata lives in `bra
 
 ## Appendix B — Policy Automation (Semgrep & ESLint)
 
-- **Semgrep rule catalog**: See `semgrep/brAInwav.yml` (rules defined in [`security/semgrep/packs/brainwav-custom.yml`](security/semgrep/packs/brainwav-custom.yml)). These rules block `child_process.exec*` shell spawns, `NODE_TLS_REJECT_UNAUTHORIZED=0`, and AbortSignal gaps via `brainwav.async.fetch-missing-abort-signal`, `brainwav.async.fetch-options-missing-abort-signal`, `brainwav.async.axios-missing-cancellation`, and `brainwav.async.axios-options-missing-cancellation`.
-- **Testing/validation**: Regression tests live in [`security/semgrep/tests/abort-signal`](security/semgrep/tests/abort-signal) and run with `semgrep --test security/semgrep/packs/brainwav-custom.yml`.
+- **Semgrep rule catalog**: See `SECURITY.md` for the active ruleset and CI configuration.
+- **Testing/validation**: Run Semgrep locally against the configured ruleset and attach results when needed.
 - **Exemption criteria**: Helper factories that already inject `signal` are exempt because the rules only match object literals.
 - **Waiver process**: Request waivers via `/.agentic-governance/waivers/` with Maintainer approval.
-- **Legacy ESLint profile** — [`.eslintrc.cjs`](./.eslintrc.cjs) enforces the 40-line ceiling (`max-lines-per-function`), naming conventions, and cross-domain import guards; overrides live in per-package `eslint.config.js` fragments and require a documented waiver before relaxing.
-- **Flat ESLint config** — [`eslint.config.js`](./eslint.config.js) layers SonarJS + `typescript-eslint` async safety checks; together with the `AbortSignal` mandate in §3 and the `scripts/ensure-eslint-flat-config.mjs` guard (runs before `pnpm lint:smart` and emits `reports/policy/flat-config-guard.json`), this is how CI verifies cancellation-ready async boundaries. Adjustments also flow through the waiver process above.
+- **Flat ESLint config** — [`eslint.config.mjs`](./eslint.config.mjs) layers async safety checks; together with the `AbortSignal` mandate in §3, this is how CI verifies cancellation-ready async boundaries. Adjustments flow through the waiver process above.
 
 ---
 
