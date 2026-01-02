@@ -142,6 +142,7 @@ For automated upgrades, see `.github/workflows/governance-upgrade.yml`.
 - `brainwav-governance validate --root <path>` — verify required tokens and Step Budget <=7 across tasks.
 - `brainwav-governance task init --slug <id> --tier <feature|fix|refactor|research|update>` — scaffold a task folder with Evidence Triplet placeholders.
 - `brainwav-governance spec init --slug <id> --spec-root specs` — scaffold `specs/<slug>/{spec.md,plan.md,tasks.md}` when the `sdd` pack is enabled.
+- `brainwav-governance spec validate --spec-root specs --report .agentic-governance/reports/spec-validate.json` — validate spec-kit compatible layout and spec lifecycle.
 - `brainwav-governance cleanup-plan --root . --report .agentic-governance/reports/cleanup-plan.json` — plan pointer-mode cleanup.
 - `brainwav-governance cleanup-plan --root . --apply --force` — apply cleanup plan (writes `cleanup.applied.json`).
 - `brainwav-governance packs list [--json]` — list available packs/presets for discovery.

@@ -40,6 +40,12 @@ pnpm exec brainwav-governance spec init --slug <feature-slug>
 
 Creates `specs/<feature-slug>/{spec.md,plan.md,tasks.md}` and should precede task folder work.
 
+```bash
+pnpm exec brainwav-governance spec validate --spec-root specs --report .agentic-governance/reports/spec-validate.json
+```
+
+Validates spec-kit compatible layout and lifecycle ordering.
+
 ## Validate (required before shipping)
 
 ```bash

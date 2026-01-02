@@ -82,7 +82,17 @@ const CHECK_REGISTRY = new Set([
 	'pack.missing',
 	'pack.present',
 	'evidence.data_governance',
-	'evidence.vendor_governance'
+	'evidence.vendor_governance',
+	'spec.layout',
+	'spec.memory.constitution',
+	'spec.templates.present',
+	'spec.templates.claude',
+	'spec.scripts.present',
+	'spec.claude.present',
+	'spec.specs.present',
+	'spec.specs.naming',
+	'spec.lifecycle',
+	'spec.plan.artifacts'
 ]);
 
 const HIGH_RISK_ENTITLEMENTS = new Set([
@@ -110,6 +120,7 @@ Usage:
   brainwav-governance packs list [--json]
   brainwav-governance task init --slug <id> [--tier <feature|fix|refactor|research|update>] [--task-root <dir>]
   brainwav-governance spec init --slug <id> [--spec-root <dir>]
+  brainwav-governance spec validate [--spec-root <dir>]
   brainwav-governance cleanup-plan --root . [--report <path>] [--apply] [--force]
 `);
 }
@@ -1657,6 +1668,288 @@ function loadSpecTemplate(govRoot, name) {
 }
 
 /**
+ * Detect spec-kit compatible layout roots.
+ * @param {string} rootPath - Repository root.
+ * @param {string} specRootFlag - Optional spec root override.
+ * @returns {{layout: string, specRootPath: string|null, baseRoot: string|null}} Layout info.
+ */
+function detectSpecKitLayout(rootPath, specRootFlag) {
+	const dotSpecifyRoot = path.join(rootPath, '.specify');
+	const dotSpecifySpecs = path.join(dotSpecifyRoot, 'specs');
+	const rootSpecs = path.join(rootPath, 'specs');
+	const hasDotSpecify = fs.existsSync(dotSpecifySpecs);
+	const hasRoot = fs.existsSync(rootSpecs);
+	let layout = 'missing';
+	let specRootPath = null;
+	let baseRoot = null;
+
+	if (specRootFlag) {
+		specRootPath = path.resolve(rootPath, specRootFlag);
+		if (specRootPath.startsWith(`${dotSpecifyRoot}${path.sep}`)) {
+			layout = 'specify';
+			baseRoot = dotSpecifyRoot;
+		} else {
+			layout = 'root';
+			baseRoot = rootPath;
+		}
+		return { layout, specRootPath, baseRoot, hasDotSpecify, hasRoot };
+	}
+
+	if (hasDotSpecify) {
+		layout = 'specify';
+		specRootPath = dotSpecifySpecs;
+		baseRoot = dotSpecifyRoot;
+		return { layout, specRootPath, baseRoot, hasDotSpecify, hasRoot };
+	}
+
+	if (hasRoot) {
+		layout = 'root';
+		specRootPath = rootSpecs;
+		baseRoot = rootPath;
+		return { layout, specRootPath, baseRoot, hasDotSpecify, hasRoot };
+	}
+
+	return { layout, specRootPath, baseRoot, hasDotSpecify, hasRoot };
+}
+
+/**
+ * Build spec-kit compatibility checks.
+ * @param {string} rootPath - Repository root.
+ * @param {string} specRootFlag - Optional spec root override.
+ * @returns {{checks: Array<object>, specRoot: string|null, layout: string}} Check results.
+ */
+function runSpecKitValidation(rootPath, specRootFlag) {
+	const checks = [];
+	const addCheck = ({ id, status, message, severity = 'medium', category = 'spec' }) => {
+		checks.push({ id, status, message, severity, category });
+	};
+	const { layout, specRootPath, baseRoot, hasDotSpecify, hasRoot } = detectSpecKitLayout(
+		rootPath,
+		specRootFlag
+	);
+	if (layout === 'missing') {
+		addCheck({
+			id: 'spec.layout',
+			status: 'fail',
+			message: 'missing spec-kit layout (expected .specify/ or root specs/ layout)'
+		});
+		return { checks, specRoot: null, layout };
+	}
+	if (hasDotSpecify && hasRoot && !specRootFlag) {
+		addCheck({
+			id: 'spec.layout',
+			status: 'warn',
+			message: 'both .specify/ and root specs/ layouts detected; choose one for spec-kit compatibility'
+		});
+	} else if (layout === 'root') {
+		addCheck({
+			id: 'spec.layout',
+			status: 'pass',
+			message: 'spec-kit root layout detected'
+		});
+	} else {
+		addCheck({
+			id: 'spec.layout',
+			status: 'pass',
+			message: 'spec-kit .specify layout detected'
+		});
+	}
+
+	const memoryDir = path.join(baseRoot, 'memory');
+	const templatesDir = path.join(baseRoot, 'templates');
+	const scriptsDir = path.join(baseRoot, 'scripts');
+	const constitutionPath = path.join(memoryDir, 'constitution.md');
+	if (fs.existsSync(constitutionPath)) {
+		addCheck({
+			id: 'spec.memory.constitution',
+			status: 'pass',
+			message: 'constitution.md present'
+		});
+	} else {
+		addCheck({
+			id: 'spec.memory.constitution',
+			status: 'fail',
+			message: `missing constitution.md at ${constitutionPath}`
+		});
+	}
+
+	const requiredTemplates = ['spec-template.md', 'plan-template.md', 'tasks-template.md'];
+	const missingTemplates = requiredTemplates.filter(
+		(name) => !fs.existsSync(path.join(templatesDir, name))
+	);
+	if (missingTemplates.length > 0) {
+		addCheck({
+			id: 'spec.templates.present',
+			status: 'fail',
+			message: `missing templates: ${missingTemplates.join(', ')}`
+		});
+	} else {
+		addCheck({
+			id: 'spec.templates.present',
+			status: 'pass',
+			message: 'required templates present'
+		});
+	}
+
+	const claudeTemplatePath = path.join(templatesDir, 'claude-template.md');
+	if (fs.existsSync(claudeTemplatePath)) {
+		addCheck({
+			id: 'spec.templates.claude',
+			status: 'pass',
+			message: 'claude-template.md present'
+		});
+	} else {
+		addCheck({
+			id: 'spec.templates.claude',
+			status: 'warn',
+			message: 'claude-template.md missing (optional in spec-kit)'
+		});
+	}
+
+	if (fs.existsSync(scriptsDir)) {
+		addCheck({
+			id: 'spec.scripts.present',
+			status: 'pass',
+			message: 'scripts directory present'
+		});
+	} else {
+		addCheck({
+			id: 'spec.scripts.present',
+			status: 'warn',
+			message: 'scripts directory missing (optional in spec-kit)'
+		});
+	}
+
+	const claudePath = path.join(rootPath, 'CLAUDE.md');
+	if (fs.existsSync(claudePath)) {
+		addCheck({
+			id: 'spec.claude.present',
+			status: 'pass',
+			message: 'CLAUDE.md present'
+		});
+	} else {
+		addCheck({
+			id: 'spec.claude.present',
+			status: 'warn',
+			message: 'CLAUDE.md missing (optional in spec-kit)'
+		});
+	}
+
+	if (!specRootPath || !fs.existsSync(specRootPath)) {
+		addCheck({
+			id: 'spec.specs.present',
+			status: 'fail',
+			message: `missing specs root at ${specRootPath ?? '(not detected)'}`
+		});
+		return { checks, specRoot: specRootPath, layout };
+	}
+
+	const specDirs = fs
+		.readdirSync(specRootPath, { withFileTypes: true })
+		.filter((entry) => entry.isDirectory())
+		.map((entry) => entry.name);
+	const specDirsWithSpec = specDirs.filter((dir) =>
+		fs.existsSync(path.join(specRootPath, dir, 'spec.md'))
+	);
+
+	if (specDirsWithSpec.length === 0) {
+		addCheck({
+			id: 'spec.specs.present',
+			status: 'fail',
+			message: `no specs found under ${specRootPath}`
+		});
+	} else {
+		addCheck({
+			id: 'spec.specs.present',
+			status: 'pass',
+			message: `${specDirsWithSpec.length} spec(s) detected`
+		});
+	}
+
+	const nonCompliantNames = specDirsWithSpec.filter((dir) => !/^\d{3}-/.test(dir));
+	if (nonCompliantNames.length > 0) {
+		addCheck({
+			id: 'spec.specs.naming',
+			status: 'warn',
+			message: `spec dirs without numeric prefix: ${nonCompliantNames.join(', ')}`
+		});
+	} else {
+		addCheck({
+			id: 'spec.specs.naming',
+			status: 'pass',
+			message: 'spec dirs follow numeric prefix naming'
+		});
+	}
+
+	const lifecycleErrors = [];
+	const lifecycleWarnings = [];
+	const planArtifactMissing = [];
+	specDirsWithSpec.forEach((dir) => {
+		const planPath = path.join(specRootPath, dir, 'plan.md');
+		const tasksPath = path.join(specRootPath, dir, 'tasks.md');
+		const contractsPath = path.join(specRootPath, dir, 'contracts');
+		const dataModelPath = path.join(specRootPath, dir, 'data-model.md');
+		const researchPath = path.join(specRootPath, dir, 'research.md');
+		const quickstartPath = path.join(specRootPath, dir, 'quickstart.md');
+		const hasPlan = fs.existsSync(planPath);
+		const hasTasks = fs.existsSync(tasksPath);
+		if (hasTasks && !hasPlan) {
+			lifecycleErrors.push(dir);
+			return;
+		}
+		if (hasPlan && !hasTasks) {
+			lifecycleWarnings.push(dir);
+		}
+		if (hasPlan) {
+			const missing = [];
+			if (!fs.existsSync(contractsPath)) missing.push('contracts/');
+			if (!fs.existsSync(dataModelPath)) missing.push('data-model.md');
+			if (!fs.existsSync(researchPath)) missing.push('research.md');
+			if (!fs.existsSync(quickstartPath)) missing.push('quickstart.md');
+			if (missing.length > 0) {
+				planArtifactMissing.push(`${dir}: ${missing.join(', ')}`);
+			}
+		}
+	});
+
+	if (lifecycleErrors.length > 0) {
+		addCheck({
+			id: 'spec.lifecycle',
+			status: 'fail',
+			message: `tasks.md present without plan.md for: ${lifecycleErrors.join(', ')}`
+		});
+	} else if (lifecycleWarnings.length > 0) {
+		addCheck({
+			id: 'spec.lifecycle',
+			status: 'warn',
+			message: `plan.md present without tasks.md for: ${lifecycleWarnings.join(', ')}`
+		});
+	} else {
+		addCheck({
+			id: 'spec.lifecycle',
+			status: 'pass',
+			message: 'spec lifecycle ordering valid'
+		});
+	}
+
+	if (planArtifactMissing.length > 0) {
+		addCheck({
+			id: 'spec.plan.artifacts',
+			status: 'warn',
+			message: `plan artifacts missing: ${planArtifactMissing.join(' | ')}`
+		});
+	} else {
+		addCheck({
+			id: 'spec.plan.artifacts',
+			status: 'pass',
+			message: 'plan artifacts present when plan.md exists'
+		});
+	}
+
+	return { checks, specRoot: specRootPath, layout };
+}
+
+/**
  * Initialize spec-driven development artifacts.
  * @param {{rootPath: string, govRoot: string, specRoot: string, slug: string, force: boolean}} args - Inputs.
  * @returns {Array<object>} Actions performed.
@@ -1923,11 +2216,60 @@ async function main() {
 
 	if (command === 'spec') {
 		const subcommand = positionalOutput ?? 'init';
-		if (subcommand !== 'init') {
+		if (!['init', 'validate'].includes(subcommand)) {
 			console.error(`[brAInwav] Unknown spec subcommand "${subcommand}".`);
 			exitWithCode(2);
 			return;
 		}
+		const specReportPath = buildReportPath(global.report, `spec-${subcommand}`, flags.dryRun);
+		const specOutputPath = buildReportPath(global.output, `spec-${subcommand}`, flags.dryRun);
+
+		if (subcommand === 'validate') {
+			const report = {
+				schema: 'brainwav.governance.spec-validate.v1',
+				meta: buildMeta({
+					root: rootPath,
+					spec_root: specFlags.specRoot
+				}),
+				summary: '',
+				status: 'success',
+				data: {
+					repo_root: rootPath,
+					spec_root: specFlags.specRoot,
+					layout: 'unknown',
+					checks: []
+				},
+				errors: []
+			};
+			try {
+				const result = runSpecKitValidation(rootPath, specFlags.specRoot);
+				report.data.layout = result.layout;
+				report.data.checks = normalizeChecks(result.checks);
+				const registryMisses = checkRegistry(report.data.checks);
+				if (registryMisses.length > 0) {
+					report.status = 'error';
+					report.errors.push(`unknown check ids: ${registryMisses.map((c) => c.id).join(', ')}`);
+				}
+				const failed = report.data.checks.filter((c) => c.status === 'fail').length;
+				const warned = report.data.checks.filter((c) => c.status === 'warn').length;
+				report.status = failed > 0 || report.errors.length > 0 ? 'error' : warned > 0 ? 'warn' : 'success';
+				report.summary = formatSummary(report.data.checks, report.status);
+				outputReport(report, global);
+				writeReport(specReportPath, report);
+				writeReport(specOutputPath, report);
+				enforceExitCode(report.status, warned, flags.strict, 3, 4);
+			} catch (error) {
+				report.status = 'error';
+				report.errors.push(String(error.message ?? error));
+				report.summary = 'spec validate failed';
+				outputReport(report, global);
+				writeReport(specReportPath, report);
+				writeReport(specOutputPath, report);
+				exitWithCode(1);
+			}
+			return;
+		}
+
 		if (!flags.taskSlug) {
 			console.error('[brAInwav] Missing required --slug for spec init.');
 			exitWithCode(2);
@@ -1981,16 +2323,16 @@ async function main() {
 			report.data.actions = actions;
 			report.summary = `spec init completed (${actions.length} actions)`;
 			outputReport(report, global);
-			writeReport(reportPath, report);
-			writeReport(outputPath, report);
+			writeReport(specReportPath, report);
+			writeReport(specOutputPath, report);
 			exitWithCode(0);
 		} catch (error) {
 			report.status = 'error';
 			report.errors.push(String(error.message ?? error));
 			report.summary = 'spec init failed';
 			outputReport(report, global);
-			writeReport(reportPath, report);
-			writeReport(outputPath, report);
+			writeReport(specReportPath, report);
+			writeReport(specOutputPath, report);
 			exitWithCode(1);
 		}
 		return;
