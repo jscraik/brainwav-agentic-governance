@@ -388,6 +388,7 @@ function buildReportPath(target, command, dryRun) {
 	if (!isDir) return resolved;
 	if (command === 'validate') return path.join(resolved, 'validate.report.json');
 	if (command === 'doctor') return path.join(resolved, 'doctor.report.json');
+	if (command === 'cleanup-plan') return path.join(resolved, 'cleanup-plan.json');
 	if (command === 'upgrade') {
 		return path.join(resolved, dryRun ? 'upgrade.plan.json' : 'upgrade.applied.json');
 	}
@@ -2336,6 +2337,21 @@ async function main() {
 		outputReport(report, global);
 		writeReport(reportPath, report);
 		writeReport(outputPath, report);
+		if (global.apply) {
+			const appliedReport = {
+				schema: 'brainwav.governance.cleanup-apply.v1',
+				meta: buildMeta(inputs),
+				summary: `${applied.length} actions applied`,
+				status: applied.some((item) => item.status === 'failed') ? 'error' : 'success',
+				data: {
+					repo_root: rootPath,
+					applied
+				},
+				errors: []
+			};
+			const appliedPath = path.join(path.dirname(reportPath ?? rootPath), 'cleanup.applied.json');
+			writeReport(appliedPath, appliedReport);
+		}
 		return;
 	}
 }
