@@ -107,13 +107,18 @@ jobs:
         env:
           NPM_CONFIG_PROVENANCE: "false"
         run: npm publish ./dist/*.tgz --access ${NPM_ACCESS} --registry https://registry.npmjs.org/
+      - name: Checkout canary repo
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          repository: jscraik/brainwav-governance-canary
+          token: ${{ secrets.GH_CANARY_TOKEN }}
+          path: /tmp/brainwav-governance-canary
       - name: Canary validation
         env:
           RELEASE_VERSION: ${{ github.ref_name }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           version="${RELEASE_VERSION#v}"
-          git clone https://github.com/jscraik/brainwav-governance-canary.git /tmp/brainwav-governance-canary
           cd /tmp/brainwav-governance-canary
           npmrc="${RUNNER_TEMP}/.npmrc"
           echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > "${npmrc}"
