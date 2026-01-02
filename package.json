@@ -84,8 +84,10 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "lint:ci": "eslint . --max-warnings 0",
+    "test": "pnpm run test:cli && pnpm run test:fixtures",
     "test:cli": "node scripts/cli-tests.mjs",
     "test:fixtures": "node scripts/fixture-tests.mjs",
+    "build": "pnpm run docs:validate",
     "governance:validate-agents": "node scripts/validate-agents.mjs"
   },
   "dependencies": {
