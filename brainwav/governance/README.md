@@ -20,6 +20,9 @@
 Control catalog lives in `90-infra/control-registry.core.yaml` with schema validation in `90-infra/control-registry.schema.json`.
 Standards versions are pinned in `90-infra/standards.versions.json`.
 
+**Portfolio drift control**: All repos using pointer mode MUST pin the same governance major/minor version.
+Use Renovate/Dependabot (or equivalent) to keep the fleet aligned; drift beyond one minor requires a waiver.
+
 ## 📂 Directory Structure
 
 The governance directory is organized by purpose and audience:

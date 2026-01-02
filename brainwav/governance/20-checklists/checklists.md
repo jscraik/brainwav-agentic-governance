@@ -169,12 +169,15 @@ Use this when the change is docs‑only, a small fix, or a low‑risk refactor:
 - [ ] No secrets or keys committed; 1Password CLI usage documented.
 - [ ] New inputs validated; outputs encoded; threat model touched if risk tags include security/privacy.
 - [ ] Semgrep, gitleaks, OSV, `pnpm security:scan`, SBOM (CycloneDX 1.7), and SLSA v1.2 attestations referenced.
+- [ ] Data classification + retention windows documented for any new logs, traces, datasets, or prompt stores.
+- [ ] New vendors or SaaS tooling include license/DPA posture, security review, and an exit plan in the risk register.
 
 ### 4.5 Performance & Reliability
 
 - [ ] Hot path changes reviewed for allocations + complexity; long-running operations cancellable.
 - [ ] Observability: logs/metrics/traces include `service:"<service_name>"`, `trace_id`, `traceparent` (brand optional unless required by overlays).
 - [ ] Rollback plan realistic; feature flags guard risky features.
+- [ ] RTO/RPO targets referenced for critical services; most recent recovery drill noted or waiver recorded.
 
 ### 4.6 AI / MCP Specific
 

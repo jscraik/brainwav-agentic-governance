@@ -75,8 +75,11 @@ const CHECK_REGISTRY = new Set([
 	'tool.osv-scanner.version',
 	'tool.markdownlint-cli2',
 	'tool.markdownlint-cli2.version',
+	'portfolio.drift',
 	'pack.missing',
-	'pack.present'
+	'pack.present',
+	'evidence.data_governance',
+	'evidence.vendor_governance'
 ]);
 
 const HIGH_RISK_ENTITLEMENTS = new Set([
@@ -681,6 +684,40 @@ function readPackageJson(rootPath) {
 }
 
 /**
+ * Find dependency version for a package.
+ * @param {Record<string, unknown>|null} pkgJson - Parsed package.json.
+ * @param {string} packageName - Package name to lookup.
+ * @returns {string|null} Version string or null.
+ */
+function readDependencyVersion(pkgJson, packageName) {
+	if (!pkgJson) return null;
+	const deps = { ...(pkgJson.dependencies ?? {}), ...(pkgJson.devDependencies ?? {}) };
+	const version = deps?.[packageName];
+	return typeof version === 'string' ? version.trim() : null;
+}
+
+/**
+ * Check if a version string is an exact x.y.z pin.
+ * @param {string|null} version - Version string.
+ * @returns {boolean} True if exact pin.
+ */
+function isExactVersion(version) {
+	return Boolean(version && /^\d+\.\d+\.\d+$/.test(version));
+}
+
+/**
+ * Extract major.minor from a version string.
+ * @param {string|null} version - Version string.
+ * @returns {string|null} Major.minor string.
+ */
+function majorMinor(version) {
+	if (!version) return null;
+	const parts = version.split('.');
+	if (parts.length < 2) return null;
+	return `${parts[0]}.${parts[1]}`;
+}
+
+/**
  * Normalize pack check entries to objects.
  * @param {Array<string|Record<string, unknown>>} entries - Check entries.
  * @returns {Array<{id: string, severity?: string, category?: string, message?: string}>} Normalized checks.
@@ -846,6 +883,84 @@ function readTextFile(filePath) {
 	} catch {
 		return null;
 	}
+}
+
+/**
+ * Evaluate pointer-mode dependency drift rules.
+ * @param {string} rootPath - Repo root.
+ * @param {Record<string, unknown>|null} pointer - Pointer metadata.
+ * @returns {string[]} Failure messages.
+ */
+function checkPortfolioDrift(rootPath, pointer) {
+	if (!pointer || pointer.mode !== 'pointer') return [];
+	const packageName = pointer.package || '@brainwav/brainwav-agentic-governance';
+	const pointerVersion = typeof pointer.version === 'string' ? pointer.version.trim() : null;
+	const pkgJson = readPackageJson(rootPath);
+	const depVersion = readDependencyVersion(pkgJson, packageName);
+	const failures = [];
+
+	if (!pointerVersion) {
+		failures.push('pointer.json missing version');
+	}
+	if (!depVersion) {
+		failures.push(`package.json missing ${packageName} dependency`);
+	} else if (!isExactVersion(depVersion)) {
+		failures.push(`dependency ${packageName} must be an exact x.y.z pin (got "${depVersion}")`);
+	}
+	if (pointerVersion && !isExactVersion(pointerVersion)) {
+		failures.push(`pointer.json version must be an exact x.y.z pin (got "${pointerVersion}")`);
+	}
+	if (pointerVersion && depVersion && isExactVersion(pointerVersion) && isExactVersion(depVersion)) {
+		const pointerMajorMinor = majorMinor(pointerVersion);
+		const depMajorMinor = majorMinor(depVersion);
+		if (pointerMajorMinor && depMajorMinor && pointerMajorMinor !== depMajorMinor) {
+			failures.push(
+				`pointer.json ${pointerVersion} must match dependency ${depVersion} major.minor`
+			);
+		}
+		if (pointerVersion !== depVersion) {
+			failures.push(`pointer.json version ${pointerVersion} must match dependency ${depVersion}`);
+		}
+	}
+
+	return failures;
+}
+
+/**
+ * Check risk-register evidence for data and vendor governance.
+ * @param {string} rootPath - Repo root.
+ * @returns {{dataIssues: string[], vendorIssues: string[], skipped: boolean}} Result.
+ */
+function checkRiskRegisterEvidence(rootPath) {
+	const tasksDir = path.join(rootPath, 'tasks');
+	if (!fs.existsSync(tasksDir)) {
+		return { dataIssues: [], vendorIssues: [], skipped: true };
+	}
+	const dataIssues = [];
+	const vendorIssues = [];
+	const slugs = fs.readdirSync(tasksDir);
+	const dataTokens = ['data governance', 'data classification', 'retention', 'privacy'];
+	const vendorTokens = ['vendor', 'third-party', 'third party', 'dpa', 'license'];
+
+	slugs.forEach((slug) => {
+		const riskPath = path.join(tasksDir, slug, 'plan', 'risk-register.md');
+		if (!fs.existsSync(riskPath)) {
+			dataIssues.push(`task ${slug}: missing plan/risk-register.md`);
+			vendorIssues.push(`task ${slug}: missing plan/risk-register.md`);
+			return;
+		}
+		const content = readTextFile(riskPath) ?? '';
+		const hasData = dataTokens.some((token) => content.toLowerCase().includes(token));
+		const hasVendor = vendorTokens.some((token) => content.toLowerCase().includes(token));
+		if (!hasData) {
+			dataIssues.push(`task ${slug}: risk-register missing data governance/retention notes`);
+		}
+		if (!hasVendor) {
+			vendorIssues.push(`task ${slug}: risk-register missing vendor/license notes`);
+		}
+	});
+
+	return { dataIssues, vendorIssues, skipped: false };
 }
 
 /**
@@ -1858,7 +1973,10 @@ async function main() {
 			checks.push(buildCheck('hash.drift', 'pass', 'info', 'hash', 'no drift'));
 		}
 
-		const { govRoot, indexPath } = resolveGovernancePaths(rootPath);
+		const { govRoot, indexPath, pointerPath } = resolveGovernancePaths(rootPath);
+		const pointer = pointerPath && fs.existsSync(pointerPath)
+			? JSON.parse(fs.readFileSync(pointerPath, 'utf8'))
+			: null;
 		const jsonPretty = checkPrettyJson(indexPath, govRoot, rootPath);
 		if (!jsonPretty.ok) {
 			const status = normalizedProfile === 'release' ? 'fail' : 'warn';
@@ -1887,6 +2005,46 @@ async function main() {
 			);
 		} else {
 			checks.push(buildCheck('evidence.task', 'pass', 'info', 'evidence', 'task evidence ok'));
+		}
+
+		const driftFailures = checkPortfolioDrift(rootPath, pointer);
+		if (pointer?.mode === 'pointer') {
+			if (driftFailures.length > 0) {
+				const status = statusFromRelease(normalizedProfile);
+				driftFailures.forEach((failure) => {
+					checks.push(buildCheck('portfolio.drift', status, 'medium', 'policy', failure));
+				});
+			} else {
+				checks.push(buildCheck('portfolio.drift', 'pass', 'info', 'policy', 'portfolio pinning ok'));
+			}
+		}
+
+		const riskEvidence = checkRiskRegisterEvidence(rootPath);
+		if (riskEvidence.skipped) {
+			const status = normalizedProfile === 'release' ? 'warn' : 'info';
+			checks.push(
+				buildCheck('evidence.data_governance', status, 'low', 'evidence', 'no tasks directory; data governance checks skipped')
+			);
+			checks.push(
+				buildCheck('evidence.vendor_governance', status, 'low', 'evidence', 'no tasks directory; vendor governance checks skipped')
+			);
+		} else {
+			if (riskEvidence.dataIssues.length > 0) {
+				const status = statusFromRelease(normalizedProfile);
+				riskEvidence.dataIssues.forEach((failure) => {
+					checks.push(buildCheck('evidence.data_governance', status, 'medium', 'evidence', failure));
+				});
+			} else {
+				checks.push(buildCheck('evidence.data_governance', 'pass', 'info', 'evidence', 'data governance evidence ok'));
+			}
+			if (riskEvidence.vendorIssues.length > 0) {
+				const status = statusFromRelease(normalizedProfile);
+				riskEvidence.vendorIssues.forEach((failure) => {
+					checks.push(buildCheck('evidence.vendor_governance', status, 'medium', 'evidence', failure));
+				});
+			} else {
+				checks.push(buildCheck('evidence.vendor_governance', 'pass', 'info', 'evidence', 'vendor governance evidence ok'));
+			}
 		}
 
 		packValidateChecks.forEach((entry) => {

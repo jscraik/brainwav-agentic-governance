@@ -133,7 +133,7 @@
     },
     "governance-quickstart.md": {
       "path": "10-flow/governance-quickstart.md",
-      "sha256": "c8632575abf342b1c1ef05733aa84926b8884e1464d5ac5e2d59c7c1c78af5da",
+      "sha256": "f985442ec507a4ea61ac6cb74b317c23e630a837c29f2f2f730c96bb86de88e3",
       "required_tokens": [
         "governance quickstart",
         "workflow selection"
@@ -144,7 +144,7 @@
     },
     "agentic-coding-workflow.md": {
       "path": "10-flow/agentic-coding-workflow.md",
-      "sha256": "991e5c8038e71f89dc87fc3884a79d6e22c2577b0d0b22325c35caf5465c1cef",
+      "sha256": "0d217eb703d9a17fcdd3804379c5d8ba23a500dc84f33275cbcec54508f5d4f1",
       "required_tokens": [
         "G0 Initialize",
         "Evidence Triplet",
@@ -176,7 +176,7 @@
     },
     "checklists.md": {
       "path": "20-checklists/checklists.md",
-      "sha256": "7a5493d2801a941428dbfb0d6df5f3581aa3c62bcc0889cd0c818f2fb1f8d68d",
+      "sha256": "de1c2528707eaabb6404eb143df8c372ae01139886cbd1c80c7b7e3256e30acf",
       "required_tokens": [
         "checklist",
         "quality gates"
@@ -198,7 +198,7 @@
     },
     "governance-index.json": {
       "path": "90-infra/governance-index.json",
-      "sha256": "8e3ee0068799440401df17a659b9847771b4854aef1565cb6c91851738930338",
+      "sha256": "ca6350715535b4d0ea1d1289e80a6e94df88c5d0746f57f837c89f81e19ba18b",
       "hash_mode": "exclude_self",
       "required_tokens": [
         "precedence",
@@ -244,7 +244,7 @@
     },
     "SECURITY.md": {
       "path": "SECURITY.md",
-      "sha256": "6c54218e6cd5080d4b1076864f3f5d56fb168d4ab8b5ecb4ef1a3de71978322c",
+      "sha256": "c228dc5ebd6ab215110cc58f15796d6d18473dd24fe1862242494a2a3a7c2a7c",
       "required_tokens": [
         "Security Policy",
         "Standards & References",

@@ -12,6 +12,10 @@ For operational governance rules, see [AGENTS.md](AGENTS.md). For LLM-specific t
 - [Standards & References (Jan 2026)](#standards--references-jan-2026)
 - [Threat Model](#threat-model)
 - [Authentication & Authorization](#authentication--authorization)
+- [Data Governance & Privacy Operations](#data-governance--privacy-operations)
+- [Third-Party & Vendor Governance](#third-party--vendor-governance)
+- [Access Lifecycle & Privileged Access](#access-lifecycle--privileged-access)
+- [Business Continuity & Disaster Recovery](#business-continuity--disaster-recovery)
 - [Reporting a Vulnerability](#reporting-a-vulnerability)
 - [Response Timeline](#response-timeline)
 - [Continuous Security](#continuous-security)
@@ -200,6 +204,62 @@ memory.read    - Read from Local Memory
 memory.write   - Write to Local Memory
 memory.delete  - Delete from Local Memory
 ```
+
+---
+
+## Data Governance & Privacy Operations
+
+This governance pack treats data handling as a first-class security surface.
+
+**Minimum policy (all profiles):**
+
+- **Classification required** for data stored in logs, traces, datasets, prompts, and artifacts.
+- **Retention windows declared** for logs, traces, artifacts, and datasets (default: 180 days unless overridden).
+- **Erasure path documented** for DSAR/RTBF requests and incident clean-up.
+- **Residency documented** when data leaves its origin region or crosses a regulated boundary.
+
+**Evidence (release profile):**
+
+- Retention policy location (runbook or config) referenced in the run manifest.
+- Data classification tags present in Evidence Triplet metadata or task manifest.
+- Post-incident data review recorded in `ops/postmortem.md` (SEV ≤ 2+).
+
+---
+
+## Third-Party & Vendor Governance
+
+Any third-party service receiving source, data, prompts, logs, or artifacts must meet these requirements:
+
+- **License validation** documented (allowed/denied license list referenced in evidence).
+- **DPA/terms review** recorded when processing sensitive data.
+- **Security posture** documented (SOC2/ISO/attestations, or explicit risk acceptance).
+- **Exit plan** documented for critical dependencies.
+
+**Release requirement:** vendor entries must appear in the risk register with explicit owner and review date.
+
+---
+
+## Access Lifecycle & Privileged Access
+
+Access must be managed with explicit joiner/mover/leaver steps:
+
+- **Joiner:** least-priv roles; short-lived credentials; MFA enforced.
+- **Mover:** privileges re-evaluated and re-approved on role change.
+- **Leaver:** access revoked within 24 hours; tokens rotated.
+
+Privileged access is time-boxed and logged with service identity. Secrets rotate on role change and after incidents.
+
+---
+
+## Business Continuity & Disaster Recovery
+
+Systems governed by this pack must define continuity expectations:
+
+- **RTO/RPO targets** documented for critical services.
+- **Backup/restore policy** documented and tested at least quarterly.
+- **Recovery drills** recorded (date + outcomes) in runbook or audit logs.
+
+Release profile requires evidence of the most recent recovery drill or a waiver with expiry.
 
 ---
 

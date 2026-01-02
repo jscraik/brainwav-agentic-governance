@@ -13,6 +13,7 @@
 - [0. Document Metadata](#0-document-metadata)
 - [1. Purpose & Scope](#1-purpose--scope)
   - [1.1 Execution Modes (Creative vs Delivery)](#11-execution-modes-creative-vs-delivery)
+  - [1.2 Lifecycle Governance (Models, Prompts, Vendors)](#12-lifecycle-governance-models-prompts-vendors)
 - [2. Task Types & Canonical Flows](#2-task-types--canonical-flows)
 - [3. Standard Task Folder Layout](#3-standard-task-folder-layout)
 - [4. ArcTDD Gate Policy (G0–G10)](#4-arctdd-gate-policy-g0g10)
@@ -75,6 +76,16 @@
 **Creative mode (default for ideation/spikes):** no side-effecting actions, no deploys, no secrets; produce a short artifact (ADR/spike note/PoC) and explicit next steps.  
 **Delivery mode (required for merge/release):** full ArcTDD gates, Evidence Triplet, oversight, and security/a11y/supply-chain checks apply.  
 **CI rule:** Delivery mode is enforced regardless of local mode; Creative mode never overrides merge gates.
+
+---
+
+### 1.2 Lifecycle Governance (Models, Prompts, Vendors)
+
+When work changes **models, prompts, third-party services, or data boundaries**, the workflow must capture lifecycle evidence alongside code changes.
+
+- **Model/prompt changes** must include a versioned entry, evaluation summary, and rollback criteria.
+- **Third-party integrations** must include license/DPA posture and an exit/roll-back plan.
+- **Data boundary changes** (new datasets, new logging sinks, new retention policies) must be recorded in the task risk register.
 
 ---
 
