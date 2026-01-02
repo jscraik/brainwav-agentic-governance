@@ -175,6 +175,23 @@ function checkToolVersion(command, args, minVersion) {
 		if (fallback.status === 0) {
 			detected = extractVersion(`${fallback.stdout}\n${fallback.stderr}`) ?? 'unknown';
 		}
+		if (detected === 'unknown') {
+			const jsonFallback = spawnSync(command, ['version', '--format', 'json'], { encoding: 'utf8' });
+			if (jsonFallback.status === 0) {
+				try {
+					const payload = JSON.parse(jsonFallback.stdout || '{}');
+					const jsonVersion =
+						typeof payload.version === 'string'
+							? payload.version
+							: typeof payload.Version === 'string'
+								? payload.Version
+								: '';
+					detected = extractVersion(jsonVersion) ?? extractVersion(jsonFallback.stdout) ?? 'unknown';
+				} catch {
+					detected = extractVersion(jsonFallback.stdout) ?? 'unknown';
+				}
+			}
+		}
 		if (detected === 'unknown' && process.env.GITLEAKS_VERSION) {
 			detected = extractVersion(process.env.GITLEAKS_VERSION) ?? 'unknown';
 		}
