@@ -1,0 +1,8 @@
+AGENTS.md text eol=lf
+CODESTYLE.md text eol=lf
+SECURITY.md text eol=lf
+docs/GOVERNANCE.md text eol=lf
+
+.agentic-governance/*.json text eol=lf
+.agentic-governance/**/*.json text eol=lf
+.agentic-governance/reports/** text eol=lf

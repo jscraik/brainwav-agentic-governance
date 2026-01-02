@@ -1100,7 +1100,28 @@ function buildCleanupPlan(rootPath, pointer, indexPath) {
 	const localPackDir = path.join(pointerDir, 'packs');
 	const vendorDir = path.join(pointerDir, 'vendor');
 	const canonicalSegments = ['00-core', '10-flow', '20-checklists', '30-compliance', '90-infra'];
+	const canonicalRoots = ['brainwav/governance', 'brainwav/governance-pack'];
 	const stubPaths = new Set(['AGENTS.md', 'CODESTYLE.md', 'SECURITY.md', 'docs/GOVERNANCE.md']);
+	const scanExtensions = new Set(['.md', '.markdown', '.mdx', '.json', '.yaml', '.yml', '.txt']);
+	const scanSkipDirs = new Set([
+		'.agentic-governance',
+		'.git',
+		'.idea',
+		'.next',
+		'.pnpm',
+		'.swiftpm',
+		'.turbo',
+		'.vscode',
+		'Pods',
+		'DerivedData',
+		'build',
+		'coverage',
+		'dist',
+		'node_modules',
+		'out',
+		'.build',
+		'.cache'
+	]);
 
 	if (fs.existsSync(localPackDir)) {
 		actions.push({
@@ -1127,14 +1148,31 @@ function buildCleanupPlan(rootPath, pointer, indexPath) {
 			});
 		}
 	});
+	canonicalRoots.forEach((segment) => {
+		const target = path.join(rootPath, segment);
+		if (fs.existsSync(target)) {
+			actions.push({
+				action: 'delete',
+				path: path.relative(rootPath, target),
+				reason: 'pointer mode forbids canonical governance directories'
+			});
+		}
+	});
 
 	let canonicalDocPaths = [];
+	let canonicalDocNames = new Set();
 	try {
 		const index = JSON.parse(fs.readFileSync(indexPath, 'utf8'));
 		const prefixes = canonicalSegments.map((segment) => `${segment}/`);
 		canonicalDocPaths = Object.values(index.docs || {})
 			.map((entry) => entry.path)
 			.filter((docPath) => prefixes.some((prefix) => docPath.startsWith(prefix)));
+		canonicalDocPaths = canonicalDocPaths.concat(
+			canonicalDocPaths.map((docPath) => `brainwav/governance/${docPath}`)
+		);
+		canonicalDocNames = new Set(
+			Object.values(index.docs || {}).map((entry) => path.basename(entry.path))
+		);
 	} catch (error) {
 		warnings.push(`failed to read governance index: ${error.message}`);
 	}
@@ -1145,6 +1183,7 @@ function buildCleanupPlan(rootPath, pointer, indexPath) {
 		const entries = fs.readdirSync(dir, { withFileTypes: true });
 		entries.forEach((entry) => {
 			const entryPath = path.join(dir, entry.name);
+			if (scanSkipDirs.has(entry.name)) return;
 			if (entryPath.startsWith(pointerDir)) return;
 			if (entryPath.startsWith(overlayDir)) return;
 			if (entryPath.startsWith(nodeModulesDir)) return;
@@ -1152,10 +1191,13 @@ function buildCleanupPlan(rootPath, pointer, indexPath) {
 				visit(entryPath);
 				return;
 			}
+			if (!scanExtensions.has(path.extname(entry.name))) return;
 			const relPath = path.relative(rootPath, entryPath).replace(/\\/g, '/');
 			if (stubPaths.has(relPath)) return;
 			const matchesForbidden = forbiddenNamePatterns.some((pattern) => pattern.test(entry.name));
-			const matchesCanonical = canonicalDocPaths.includes(relPath);
+			const matchesCanonicalName = canonicalDocNames.has(entry.name);
+			if (!matchesForbidden && !matchesCanonicalName && !canonicalDocPaths.includes(relPath)) return;
+			const matchesCanonical = canonicalDocPaths.includes(relPath) || matchesCanonicalName;
 			if (!matchesForbidden && !matchesCanonical) return;
 			if (planned.has(relPath)) return;
 			planned.add(relPath);

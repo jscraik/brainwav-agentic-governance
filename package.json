@@ -68,6 +68,7 @@
     "task:validate": "node scripts/task-validate.mjs",
     "governance:validate": "node scripts/governance-cli.mjs validate",
     "governance:validate-standards": "node scripts/validate-standards.mjs",
+    "governance:validate-toolchain": "node scripts/validate-toolchain.mjs",
     "governance:check-nx": "node scripts/check-nx.mjs",
     "governance:validate-evidence": "node scripts/validate-task-evidence.mjs",
     "governance:bootstrap-consumer": "node scripts/bootstrap-consumer.mjs",

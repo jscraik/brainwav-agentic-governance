@@ -37,7 +37,8 @@ const ROOT_DOCS = new Set(['README.md', 'CODESTYLE.md', 'SECURITY.md', 'AGENTS.m
 const POINTER_STUB_FILES = new Map([
 	['AGENTS.md', 'AGENTS'],
 	['CODESTYLE.md', 'CODESTYLE'],
-	['SECURITY.md', 'SECURITY']
+	['SECURITY.md', 'SECURITY'],
+	['docs/GOVERNANCE.md', 'GOVERNANCE']
 ]);
 const CANONICAL_PATH_SEGMENTS = [
 	'00-core',
@@ -46,6 +47,38 @@ const CANONICAL_PATH_SEGMENTS = [
 	'30-compliance',
 	'90-infra'
 ];
+const CANONICAL_ROOTS = [
+	'brainwav/governance',
+	'brainwav/governance-pack'
+];
+const POINTER_SCAN_EXTENSIONS = new Set([
+	'.md',
+	'.markdown',
+	'.mdx',
+	'.json',
+	'.yaml',
+	'.yml',
+	'.txt'
+]);
+const POINTER_SCAN_SKIP_DIRS = new Set([
+	'.agentic-governance',
+	'.git',
+	'.idea',
+	'.next',
+	'.pnpm',
+	'.swiftpm',
+	'.turbo',
+	'.vscode',
+	'Pods',
+	'DerivedData',
+	'build',
+	'coverage',
+	'dist',
+	'node_modules',
+	'out',
+	'.build',
+	'.cache'
+]);
 
 /**
  * Resolve a governance doc path to disk.
@@ -193,6 +226,39 @@ function checkToolchainMentions(govRoot, rootPath) {
 }
 
 /**
+ * Ensure toolchain versions exist in compat.json.
+ * @param {string} govRoot - Governance root.
+ * @returns {string[]} Failure messages.
+ */
+function checkToolchainSource(govRoot) {
+	const failures = [];
+	const compatPath = path.join(govRoot, '90-infra', 'compat.json');
+	if (!fs.existsSync(compatPath)) {
+		failures.push('compat.json missing at brainwav/governance/90-infra/compat.json');
+		return failures;
+	}
+	let compat;
+	try {
+		compat = JSON.parse(read(compatPath));
+	} catch (error) {
+		failures.push(`compat.json parse error (${error.message})`);
+		return failures;
+	}
+	const toolVersions = compat?.gold_standard?.tool_versions ?? null;
+	if (!toolVersions || typeof toolVersions !== 'object') {
+		failures.push('compat.json missing gold_standard.tool_versions');
+		return failures;
+	}
+	if (!toolVersions.node) {
+		failures.push('compat.json missing gold_standard.tool_versions.node');
+	}
+	if (!toolVersions.pnpm) {
+		failures.push('compat.json missing gold_standard.tool_versions.pnpm');
+	}
+	return failures;
+}
+
+/**
  * Enforce pointer-mode stub validation and canonical-only constraints.
  * @param {Record<string, unknown>|null} pointer - Pointer metadata.
  * @param {string} targetRoot - Repository root.
@@ -254,8 +320,8 @@ function checkPointerStubs(pointer, targetRoot, indexPath) {
 		const rel = path.relative(targetRoot, stubPath).replace(/\\/g, '/');
 		const expected = expectedStubs.get(rel);
 		if (!expected) return;
-		const actual = read(stubPath).trimEnd();
-		const expectedNormalized = expected.trimEnd();
+		const actual = read(stubPath).replace(/\r\n/g, '\n').trimEnd();
+		const expectedNormalized = expected.replace(/\r\n/g, '\n').trimEnd();
 		if (!actual.includes(POINTER_STUB_MARKER)) {
 			failures.push(`pointer stub missing marker in ${rel}`);
 			return;
@@ -268,8 +334,8 @@ function checkPointerStubs(pointer, targetRoot, indexPath) {
 	if (!fs.existsSync(instructionsPath)) {
 		failures.push('pointer mode missing .agentic-governance/instructions.md');
 	} else {
-		const expectedInstructions = buildCliInstructions(pointerPayload).trimEnd();
-		const actualInstructions = read(instructionsPath).trimEnd();
+		const expectedInstructions = buildCliInstructions(pointerPayload).replace(/\r\n/g, '\n').trimEnd();
+		const actualInstructions = read(instructionsPath).replace(/\r\n/g, '\n').trimEnd();
 		if (actualInstructions !== expectedInstructions) {
 			failures.push('pointer instructions mismatch: .agentic-governance/instructions.md');
 		}
@@ -278,6 +344,9 @@ function checkPointerStubs(pointer, targetRoot, indexPath) {
 	const bannedRoots = CANONICAL_PATH_SEGMENTS.map((segment) =>
 		path.join(targetRoot, segment)
 	);
+	CANONICAL_ROOTS.forEach((segment) => {
+		bannedRoots.push(path.join(targetRoot, segment));
+	});
 	const bannedHits = [];
 	bannedRoots.forEach((bannedRoot) => {
 		if (fs.existsSync(bannedRoot)) {
@@ -305,10 +374,16 @@ function checkPointerStubs(pointer, targetRoot, indexPath) {
 	const canonicalDocPaths = Object.values(indexEntries.docs || {})
 		.map((entry) => entry.path)
 		.filter((docPath) => canonicalPrefixes.some((prefix) => docPath.startsWith(prefix)));
+	const canonicalDocPathsWithRoots = new Set([
+		...canonicalDocPaths,
+		...canonicalDocPaths.map((docPath) => `brainwav/governance/${docPath}`)
+	]);
+	const canonicalDocNames = new Set(canonicalDocPaths.map((docPath) => path.basename(docPath)));
 	const visit = (dir) => {
 		const entries = fs.readdirSync(dir, { withFileTypes: true });
 		entries.forEach((entry) => {
 			const entryPath = path.join(dir, entry.name);
+			if (POINTER_SCAN_SKIP_DIRS.has(entry.name)) return;
 			if (entryPath.startsWith(pointerDir)) return;
 			if (entryPath.startsWith(overlayDir)) return;
 			if (entryPath.startsWith(nodeModulesDir)) return;
@@ -316,15 +391,20 @@ function checkPointerStubs(pointer, targetRoot, indexPath) {
 				visit(entryPath);
 				return;
 			}
+			if (!POINTER_SCAN_EXTENSIONS.has(path.extname(entry.name))) return;
 			const relPath = path.relative(targetRoot, entryPath).replace(/\\/g, '/');
 			if (POINTER_STUB_FILES.has(relPath)) return;
 			const matchesForbidden = forbiddenNamePatterns.some((pattern) => pattern.test(entry.name));
+			const matchesCanonicalName = canonicalDocNames.has(entry.name);
+			if (!matchesForbidden && !matchesCanonicalName && !canonicalDocPathsWithRoots.has(relPath)) {
+				return;
+			}
 			if (matchesForbidden) {
 				failures.push(
 					`pointer mode forbids canonical doc copy at ${relPath} (delete it or move deltas to .agentic-governance/overlays/<name>.local.md)`
 				);
 			}
-			if (canonicalDocPaths.includes(relPath)) {
+			if (canonicalDocPathsWithRoots.has(relPath)) {
 				failures.push(
 					`pointer mode forbids canonical doc copy at ${relPath} (delete it or move deltas to .agentic-governance/overlays/<name>.local.md)`
 				);
@@ -449,6 +529,7 @@ export function runGovernanceValidation(targetRoot = repoRoot, configOverride = 
 	const failures = [
 		...checkIndexIntegrity(indexPath),
 		...checkTokens(indexPath, govRoot, targetRoot, packageRoot, allowRootDocs),
+		...checkToolchainSource(govRoot),
 		...(allowRootDocs ? checkToolchainMentions(govRoot, targetRoot) : []),
 		...checkTasks(targetRoot),
 		...checkConfig(resolvedConfigPath, govRoot, targetRoot),

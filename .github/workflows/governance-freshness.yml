@@ -26,3 +26,7 @@ jobs:
           STANDARDS_MAX_AGE_DAYS: "90"
           STANDARDS_STRICT_LINKS: "true"
         run: pnpm governance:validate-standards
+      - name: Validate toolchain freshness
+        env:
+          TOOLCHAIN_MAX_AGE_DAYS: "90"
+        run: pnpm governance:validate-toolchain

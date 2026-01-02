@@ -13,7 +13,6 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(__dirname, '..');
 const cliPath = path.join(repoRoot, 'scripts', 'governance-cli.mjs');
-const pnpmCommand = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm';
 
 /**
  * Resolve fixture directory path.
@@ -67,19 +66,14 @@ function runCli(args, cwd, allowedStatuses = [0], reportPath = null) {
  * @returns {void} No return value.
  */
 function installLocalGovernancePackage(repoRootPath) {
-	const result = spawnSync(
-		pnpmCommand,
-		['add', '-D', `file:${repoRoot}`, '--ignore-scripts', '--silent'],
-		{
-			cwd: repoRootPath,
-			encoding: 'utf8'
-		}
-	);
-	if ((result.status ?? 0) !== 0) {
-		throw new Error(
-			`pnpm add failed in ${repoRootPath}: ${result.status}\n${result.stdout}\n${result.stderr}`
-		);
+	const nodeModules = path.join(repoRootPath, 'node_modules');
+	const scopeDir = path.join(nodeModules, '@brainwav');
+	const target = path.join(scopeDir, 'brainwav-agentic-governance');
+	fs.mkdirSync(scopeDir, { recursive: true });
+	if (fs.existsSync(target)) {
+		fs.rmSync(target, { recursive: true, force: true });
 	}
+	fs.symlinkSync(repoRoot, target, 'dir');
 }
 
 /**
@@ -242,9 +236,146 @@ function runFixtureLifecycle(fixture) {
 		}
 
 		if (fixture.specInit !== false) {
+			const specRoot = fixture.specRoot ?? 'specs';
+			const compatArg = fixture.specCompat ? ['--compat', fixture.specCompat] : [];
+			const slug = fixture.specSlug ?? 'fixture-spec';
 			runCli(
-				['spec', 'init', '--root', tempRoot, '--slug', 'fixture-spec', '--no-input', '--yes'],
+				[
+					'spec',
+					'init',
+					'--root',
+					tempRoot,
+					'--slug',
+					slug,
+					'--spec-root',
+					specRoot,
+					...compatArg,
+					'--no-input',
+					'--yes'
+				],
 				repoRoot
+			);
+			if (fixture.specCommands) {
+				runCli(
+					[
+						'spec',
+						'validate',
+						'--root',
+						tempRoot,
+						'--spec-root',
+						specRoot,
+						...compatArg
+					],
+					repoRoot,
+					[0, 4]
+				);
+				runCli(
+					[
+						'spec',
+						'clarify',
+						'--root',
+						tempRoot,
+						'--spec-root',
+						specRoot,
+						...compatArg
+					],
+					repoRoot,
+					[0, 4]
+				);
+				runCli(
+					[
+						'spec',
+						'analyze',
+						'--root',
+						tempRoot,
+						'--spec-root',
+						specRoot,
+						...compatArg
+					],
+					repoRoot,
+					[0, 4]
+				);
+				runCli(
+					[
+						'spec',
+						'checklist',
+						'--root',
+						tempRoot,
+						'--spec-root',
+						specRoot,
+						...compatArg
+					],
+					repoRoot,
+					[0, 4]
+				);
+			}
+		}
+
+		if (fixture.pointerAfterFull) {
+			const pointerArgs = [...commonArgs];
+			const modeIndex = pointerArgs.indexOf('--mode');
+			if (modeIndex !== -1) {
+				pointerArgs[modeIndex + 1] = 'pointer';
+			}
+			const configPath = path.join(tempRoot, '.agentic-governance', 'config.json');
+			if (fs.existsSync(configPath)) {
+				const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+				config.mode = 'pointer';
+				fs.writeFileSync(configPath, `${JSON.stringify(config, null, 2)}\n`);
+			}
+			installLocalGovernancePackage(tempRoot);
+			runCli(['install', ...pointerArgs, '--no-install', '--force'], repoRoot);
+
+			const preCleanupReport = path.join(tempRoot, 'validate.pre-cleanup.report.json');
+			runCli(
+				[
+					'validate',
+					'--root',
+					tempRoot,
+					'--config',
+					'.agentic-governance/config.json',
+					'--report',
+					preCleanupReport,
+					'--plain'
+				],
+				repoRoot,
+				[3],
+				preCleanupReport
+			);
+
+			const cleanupReport = path.join(tempRoot, 'cleanup-plan.json');
+			runCli(
+				[
+					'cleanup-plan',
+					'--root',
+					tempRoot,
+					'--report',
+					cleanupReport,
+					'--apply',
+					'--force'
+				],
+				repoRoot,
+				[0],
+				cleanupReport
+			);
+
+			runCli(['install', ...pointerArgs, '--no-install'], repoRoot);
+
+			const postCleanupReport = path.join(tempRoot, 'validate.post-cleanup.report.json');
+			runCli(
+				[
+					'validate',
+					'--root',
+					tempRoot,
+					'--config',
+					'.agentic-governance/config.json',
+					'--report',
+					postCleanupReport,
+					'--plain'
+				],
+				repoRoot,
+				[0, 4],
+				postCleanupReport
 			);
 		}
 
@@ -302,7 +433,29 @@ function main() {
 			name: 'full-minimal',
 			packs: [],
 			mode: 'full',
-			profile: 'release'
+			profile: 'release',
+			specCompat: 'speckit',
+			specSlug: '001-fixture-spec',
+			specCommands: true,
+			packOptions: {
+				sdd: {
+					specRoot: '.specify/specs'
+				}
+			}
+		},
+		{
+			name: 'full-minimal',
+			packs: [],
+			mode: 'full',
+			profile: 'release',
+			specCompat: 'speckit',
+			specSlug: '001-pointer-after-full',
+			pointerAfterFull: true,
+			packOptions: {
+				sdd: {
+					specRoot: '.specify/specs'
+				}
+			}
 		},
 		{
 			name: 'vite-react-tailwind',
