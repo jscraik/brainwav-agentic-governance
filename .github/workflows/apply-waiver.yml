@@ -1,0 +1,61 @@
+name: Apply Waiver
+
+on:
+  workflow_dispatch:
+    inputs:
+      waiver_id:
+        description: "Waiver ID (e.g. WAIVER-2026-01-02-some-slug)"
+        required: true
+        type: string
+      waiver_path:
+        description: "Path to waiver file (default: brainwav/governance/audit/waivers/<waiver_id>.md)"
+        required: false
+        type: string
+      approver:
+        description: "Maintainer GitHub handle approving the waiver"
+        required: true
+        type: string
+      expiry:
+        description: "Expiry timestamp (ISO-8601)"
+        required: true
+        type: string
+      reason:
+        description: "Short reason for waiver approval"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  apply-waiver:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - name: Resolve waiver path
+        id: resolve
+        run: |
+          if [ -n "${{ inputs.waiver_path }}" ]; then
+            echo "waiver_path=${{ inputs.waiver_path }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "waiver_path=brainwav/governance/audit/waivers/${{ inputs.waiver_id }}.md" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Verify waiver file exists
+        run: |
+          if [ ! -f "${{ steps.resolve.outputs.waiver_path }}" ]; then
+            echo "Waiver file not found: ${{ steps.resolve.outputs.waiver_path }}"
+            exit 1
+          fi
+      - name: Record waiver approval summary
+        run: |
+          RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          {
+            echo "## Waiver approval recorded"
+            echo ""
+            echo "- Waiver ID: ${{ inputs.waiver_id }}"
+            echo "- Waiver file: ${{ steps.resolve.outputs.waiver_path }}"
+            echo "- Approver: ${{ inputs.approver }}"
+            echo "- Expiry: ${{ inputs.expiry }}"
+            echo "- Reason: ${{ inputs.reason }}"
+            echo "- Run URL: ${RUN_URL}"
+          } >> "$GITHUB_STEP_SUMMARY"
