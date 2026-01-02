@@ -26,7 +26,7 @@ const pkg = JSON.parse(fs.readFileSync(path.join(repoRoot, 'package.json'), 'utf
 const COMMANDS = new Set(['init', 'install', 'upgrade', 'validate', 'doctor', 'packs', 'task', 'cleanup-plan', 'spec']);
 const COMMON_FLAGS = new Set(['--mode', '--profile', '--packs', '--dry-run', '--yes', '--force', '--no-install']);
 const TASK_FLAGS = new Set(['--slug', '--tier', '--task-root', '--tasks-root']);
-const SPEC_FLAGS = new Set(['--slug', '--spec-root']);
+const SPEC_FLAGS = new Set(['--slug', '--spec-root', '--compat']);
 const GLOBAL_FLAGS = new Set([
 	'-h',
 	'--help',
@@ -119,8 +119,8 @@ Usage:
   brainwav-governance [global flags] <init|install|upgrade|validate|doctor|cleanup-plan|spec> [flags]
   brainwav-governance packs list [--json]
   brainwav-governance task init --slug <id> [--tier <feature|fix|refactor|research|update>] [--task-root <dir>]
-  brainwav-governance spec init --slug <id> [--spec-root <dir>]
-  brainwav-governance spec validate [--spec-root <dir>]
+  brainwav-governance spec init --slug <id> [--spec-root <dir>] [--compat speckit]
+  brainwav-governance spec validate [--spec-root <dir>] [--compat speckit]
   brainwav-governance cleanup-plan --root . [--report <path>] [--apply] [--force]
 `);
 }
@@ -164,7 +164,8 @@ function parseArgs(argv) {
 		taskRoot: 'tasks'
 	};
 	const specFlags = {
-		specRoot: 'specs'
+		specRoot: 'specs',
+		compat: null
 	};
 	const unknown = [];
 	let positionalOutput = null;
@@ -345,6 +346,13 @@ function parseArgs(argv) {
 					const value = takeValue(i);
 					if (!value) return { error: 'Missing value for --spec-root' };
 					specFlags.specRoot = value;
+					i++;
+					break;
+				}
+				case '--compat': {
+					const value = takeValue(i);
+					if (!value) return { error: 'Missing value for --compat' };
+					specFlags.compat = value;
 					i++;
 					break;
 				}
@@ -1718,14 +1726,15 @@ function detectSpecKitLayout(rootPath, specRootFlag) {
  * @param {string} specRootFlag - Optional spec root override.
  * @returns {{checks: Array<object>, specRoot: string|null, layout: string}} Check results.
  */
-function runSpecKitValidation(rootPath, specRootFlag) {
+function runSpecKitValidation(rootPath, specRootFlag, compat) {
 	const checks = [];
 	const addCheck = ({ id, status, message, severity = 'medium', category = 'spec' }) => {
 		checks.push({ id, status, message, severity, category });
 	};
+	const overrideFlag = compat === 'speckit' ? '.specify/specs' : specRootFlag;
 	const { layout, specRootPath, baseRoot, hasDotSpecify, hasRoot } = detectSpecKitLayout(
 		rootPath,
-		specRootFlag
+		overrideFlag
 	);
 	if (layout === 'missing') {
 		addCheck({
@@ -1954,12 +1963,60 @@ function runSpecKitValidation(rootPath, specRootFlag) {
  * @param {{rootPath: string, govRoot: string, specRoot: string, slug: string, force: boolean}} args - Inputs.
  * @returns {Array<object>} Actions performed.
  */
-function initSpec({ rootPath, govRoot, specRoot, slug, force }) {
+function initSpec({ rootPath, govRoot, specRoot, slug, force, compat }) {
 	const actions = [];
-	const baseRoot = path.join(rootPath, specRoot, slug);
+	const effectiveSpecRoot = compat === 'speckit' ? path.join('.specify', 'specs') : specRoot;
+	const baseRoot = path.join(rootPath, effectiveSpecRoot, slug);
 	ensureDir(baseRoot, actions);
 	const replaceSlug = (content) =>
 		content.replace(/<feature-slug>/g, slug).replace(/<slug>/g, slug);
+
+	if (compat === 'speckit') {
+		const compatRoot = path.join(rootPath, '.specify');
+		const templatesRoot = path.join(compatRoot, 'templates');
+		const memoryRoot = path.join(compatRoot, 'memory');
+		const scriptsRoot = path.join(compatRoot, 'scripts');
+		ensureDir(compatRoot, actions);
+		ensureDir(templatesRoot, actions);
+		ensureDir(memoryRoot, actions);
+		ensureDir(scriptsRoot, actions);
+		writeFile(
+			path.join(memoryRoot, 'constitution.md'),
+			'# Constitution (Pointer)\n\nCanonical governance lives under brainwav/governance/00-core/constitution.md.\n',
+			actions,
+			force
+		);
+		writeFile(
+			path.join(templatesRoot, 'spec-template.md'),
+			`${loadSpecTemplate(govRoot, 'spec').trimEnd()}\n`,
+			actions,
+			force
+		);
+		writeFile(
+			path.join(templatesRoot, 'plan-template.md'),
+			`${loadSpecTemplate(govRoot, 'plan').trimEnd()}\n`,
+			actions,
+			force
+		);
+		writeFile(
+			path.join(templatesRoot, 'tasks-template.md'),
+			`${loadSpecTemplate(govRoot, 'tasks').trimEnd()}\n`,
+			actions,
+			force
+		);
+		writeFile(
+			path.join(templatesRoot, 'claude-template.md'),
+			'# Claude Instructions Template\n\nUse AGENTS.md and brainwav-governance CLI instructions.\n',
+			actions,
+			force
+		);
+		writeFile(
+			path.join(scriptsRoot, 'README.md'),
+			'# Spec Scripts\n\nOptional helper scripts for spec workflow automation.\n',
+			actions,
+			force
+		);
+	}
 
 	const specContent = replaceSlug(loadSpecTemplate(govRoot, 'spec'));
 	const planContent = replaceSlug(loadSpecTemplate(govRoot, 'plan'));
@@ -1968,6 +2025,35 @@ function initSpec({ rootPath, govRoot, specRoot, slug, force }) {
 	writeFile(path.join(baseRoot, 'spec.md'), `${specContent.trimEnd()}\n`, actions, force);
 	writeFile(path.join(baseRoot, 'plan.md'), `${planContent.trimEnd()}\n`, actions, force);
 	writeFile(path.join(baseRoot, 'tasks.md'), `${tasksContent.trimEnd()}\n`, actions, force);
+
+	if (compat === 'speckit') {
+		const contractsRoot = path.join(baseRoot, 'contracts');
+		ensureDir(contractsRoot, actions);
+		writeFile(
+			path.join(baseRoot, 'data-model.md'),
+			'# Data Model\n\nTBD\n',
+			actions,
+			force
+		);
+		writeFile(
+			path.join(baseRoot, 'research.md'),
+			'# Research\n\nTBD\n',
+			actions,
+			force
+		);
+		writeFile(
+			path.join(baseRoot, 'quickstart.md'),
+			'# Quickstart\n\nTBD\n',
+			actions,
+			force
+		);
+		writeFile(
+			path.join(contractsRoot, 'README.md'),
+			'# Contracts\n\nTBD\n',
+			actions,
+			force
+		);
+	}
 
 	return actions;
 }
@@ -2227,22 +2313,24 @@ async function main() {
 		if (subcommand === 'validate') {
 			const report = {
 				schema: 'brainwav.governance.spec-validate.v1',
-				meta: buildMeta({
-					root: rootPath,
-					spec_root: specFlags.specRoot
-				}),
+			meta: buildMeta({
+				root: rootPath,
+				spec_root: specFlags.specRoot,
+				compat: specFlags.compat
+			}),
 				summary: '',
 				status: 'success',
 				data: {
 					repo_root: rootPath,
 					spec_root: specFlags.specRoot,
+					compat: specFlags.compat,
 					layout: 'unknown',
 					checks: []
 				},
 				errors: []
 			};
 			try {
-				const result = runSpecKitValidation(rootPath, specFlags.specRoot);
+				const result = runSpecKitValidation(rootPath, specFlags.specRoot, specFlags.compat);
 				report.data.layout = result.layout;
 				report.data.checks = normalizeChecks(result.checks);
 				const registryMisses = checkRegistry(report.data.checks);
@@ -2300,13 +2388,15 @@ async function main() {
 			meta: buildMeta({
 				root: rootPath,
 				spec_root: specFlags.specRoot,
-				slug: flags.taskSlug
+				slug: flags.taskSlug,
+				compat: specFlags.compat
 			}),
 			summary: '',
 			status: 'success',
 			data: {
 				repo_root: rootPath,
 				spec_root: specFlags.specRoot,
+				compat: specFlags.compat,
 				slug: flags.taskSlug,
 				actions: []
 			},
@@ -2318,7 +2408,8 @@ async function main() {
 				govRoot,
 				specRoot: specFlags.specRoot,
 				slug: flags.taskSlug,
-				force: flags.force
+				force: flags.force,
+				compat: specFlags.compat
 			});
 			report.data.actions = actions;
 			report.summary = `spec init completed (${actions.length} actions)`;
