@@ -102,6 +102,7 @@ For automated upgrades, see `.github/workflows/governance-upgrade.yml`.
 - `pnpm exec brainwav-governance validate --root .` should succeed.
 - `pnpm governance:sync-hashes:check` should report no drift.
 - `pnpm governance:validate-evidence` should pass once at least one task folder exists with evidence placeholders.
+- `pnpm exec brainwav-governance cleanup-plan --root . --report .agentic-governance/reports/cleanup-plan.json` emits a delete/move plan for pointer-mode repos.
 
 ### Packs catalog
 

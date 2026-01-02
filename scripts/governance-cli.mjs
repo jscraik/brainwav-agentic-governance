@@ -23,7 +23,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(__dirname, '..');
 const pkg = JSON.parse(fs.readFileSync(path.join(repoRoot, 'package.json'), 'utf8'));
 
-const COMMANDS = new Set(['init', 'install', 'upgrade', 'validate', 'doctor', 'packs', 'task']);
+const COMMANDS = new Set(['init', 'install', 'upgrade', 'validate', 'doctor', 'packs', 'task', 'cleanup-plan']);
 const COMMON_FLAGS = new Set(['--mode', '--profile', '--packs', '--dry-run', '--yes', '--force', '--no-install']);
 const TASK_FLAGS = new Set(['--slug', '--tier', '--task-root', '--tasks-root']);
 const GLOBAL_FLAGS = new Set([
@@ -104,7 +104,7 @@ function usage() {
 Initialize, install, upgrade, validate, diagnose, or scaffold Brainwav governance in a repo.
 
 Usage:
-  brainwav-governance [global flags] <init|install|upgrade|validate|doctor> [flags]
+  brainwav-governance [global flags] <init|install|upgrade|validate|doctor|cleanup-plan> [flags]
   brainwav-governance packs list [--json]
   brainwav-governance task init --slug <id> [--tier <feature|fix|refactor|research|update>] [--task-root <dir>]
 `);
@@ -996,6 +996,107 @@ function checkStandardsFreshness(govRoot) {
 	} catch (error) {
 		return { ok: false, ageDays: null, maxDays, message: `standards.versions.json parse error: ${error.message}` };
 	}
+}
+
+/**
+ * Build a cleanup plan for pointer-mode repos.
+ * @param {string} rootPath - Repo root.
+ * @param {Record<string, unknown>|null} pointer - Pointer metadata.
+ * @param {string} indexPath - Governance index path.
+ * @returns {{actions: Array<object>, warnings: string[]}} Cleanup plan data.
+ */
+function buildCleanupPlan(rootPath, pointer, indexPath) {
+	const actions = [];
+	const warnings = [];
+	if (!pointer || pointer.mode !== 'pointer') {
+		warnings.push('cleanup-plan requires pointer mode; no actions generated');
+		return { actions, warnings };
+	}
+	const pointerDir = path.join(rootPath, '.agentic-governance');
+	const overlayDir = path.join(pointerDir, 'overlays');
+	const nodeModulesDir = path.join(rootPath, 'node_modules');
+	const localPackDir = path.join(pointerDir, 'packs');
+	const vendorDir = path.join(pointerDir, 'vendor');
+	const canonicalSegments = ['00-core', '10-flow', '20-checklists', '30-compliance', '90-infra'];
+	const stubPaths = new Set(['AGENTS.md', 'CODESTYLE.md', 'SECURITY.md', 'docs/GOVERNANCE.md']);
+
+	if (fs.existsSync(localPackDir)) {
+		actions.push({
+			action: 'delete',
+			path: path.relative(rootPath, localPackDir),
+			reason: 'pointer mode forbids local pack manifests'
+		});
+	}
+	if (fs.existsSync(vendorDir)) {
+		actions.push({
+			action: 'delete',
+			path: path.relative(rootPath, vendorDir),
+			reason: 'pointer mode forbids vendored governance packs'
+		});
+	}
+
+	canonicalSegments.forEach((segment) => {
+		const target = path.join(rootPath, segment);
+		if (fs.existsSync(target)) {
+			actions.push({
+				action: 'delete',
+				path: path.relative(rootPath, target),
+				reason: 'pointer mode forbids canonical governance directories'
+			});
+		}
+	});
+
+	let canonicalDocPaths = [];
+	try {
+		const index = JSON.parse(fs.readFileSync(indexPath, 'utf8'));
+		const prefixes = canonicalSegments.map((segment) => `${segment}/`);
+		canonicalDocPaths = Object.values(index.docs || {})
+			.map((entry) => entry.path)
+			.filter((docPath) => prefixes.some((prefix) => docPath.startsWith(prefix)));
+	} catch (error) {
+		warnings.push(`failed to read governance index: ${error.message}`);
+	}
+
+	const forbiddenNamePatterns = [/constitution\.md$/i, /agentic-coding-workflow\.md$/i];
+	const planned = new Set();
+	const visit = (dir) => {
+		const entries = fs.readdirSync(dir, { withFileTypes: true });
+		entries.forEach((entry) => {
+			const entryPath = path.join(dir, entry.name);
+			if (entryPath.startsWith(pointerDir)) return;
+			if (entryPath.startsWith(overlayDir)) return;
+			if (entryPath.startsWith(nodeModulesDir)) return;
+			if (entry.isDirectory()) {
+				visit(entryPath);
+				return;
+			}
+			const relPath = path.relative(rootPath, entryPath).replace(/\\/g, '/');
+			if (stubPaths.has(relPath)) return;
+			const matchesForbidden = forbiddenNamePatterns.some((pattern) => pattern.test(entry.name));
+			const matchesCanonical = canonicalDocPaths.includes(relPath);
+			if (!matchesForbidden && !matchesCanonical) return;
+			if (planned.has(relPath)) return;
+			planned.add(relPath);
+			if (relPath.endsWith('.md')) {
+				const target = `.agentic-governance/overlays/${relPath}.local.md`;
+				actions.push({
+					action: 'move',
+					path: relPath,
+					target,
+					reason: 'canonical doc copy detected; move delta into overlays'
+				});
+			} else {
+				actions.push({
+					action: 'delete',
+					path: relPath,
+					reason: 'canonical doc copy detected in pointer mode'
+				});
+			}
+		});
+	};
+	visit(rootPath);
+
+	return { actions, warnings };
 }
 
 /**
@@ -2159,6 +2260,41 @@ async function main() {
 		writeReport(reportPath, report);
 		writeReport(outputPath, report);
 		enforceExitCode(report.status, warned, flags.strict, 3, 4);
+		return;
+	}
+
+	if (command === 'cleanup-plan') {
+		const { govRoot, indexPath, pointerPath } = resolveGovernancePaths(rootPath);
+		const pointer = pointerPath && fs.existsSync(pointerPath)
+			? JSON.parse(fs.readFileSync(pointerPath, 'utf8'))
+			: null;
+		if (!pointer || pointer.mode !== 'pointer') {
+			console.error('[brAInwav] cleanup-plan requires pointer mode (missing or non-pointer .agentic-governance/pointer.json).');
+			exitWithCode(2);
+			return;
+		}
+		const inputs = {
+			root: rootPath,
+			mode: pointer.mode,
+			profile: normalizedProfile
+		};
+		const plan = buildCleanupPlan(rootPath, pointer, indexPath);
+		const status = plan.actions.length > 0 ? 'warn' : 'success';
+		const report = {
+			schema: 'brainwav.governance.cleanup-plan.v1',
+			meta: buildMeta(inputs),
+			summary: `${status}: ${plan.actions.length} actions`,
+			status,
+			data: {
+				repo_root: rootPath,
+				actions: plan.actions,
+				warnings: plan.warnings
+			},
+			errors: []
+		};
+		outputReport(report, global);
+		writeReport(reportPath, report);
+		writeReport(outputPath, report);
 		return;
 	}
 }
