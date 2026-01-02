@@ -18,6 +18,11 @@ import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 import { resolvePackSourcePath, groupPacksByRunner, loadPackManifestFromPath, mergePermissions } from './pack-utils.mjs';
 import { formatJson } from './lib/json-format.mjs';
+import {
+	buildAgentsStub,
+	buildGovernanceIndexStub,
+	buildPointerStub
+} from './lib/pointer-stubs.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(__dirname, '..');
@@ -311,6 +316,7 @@ function writePointerFiles(destRoot, profile, { force, dryRun, actions }) {
 		mode: 'pointer',
 		profile,
 		package: '@brainwav/brainwav-agentic-governance',
+		version: packageJson.version,
 		packageRoot: 'node_modules/@brainwav/brainwav-agentic-governance',
 		governanceRoot: 'node_modules/@brainwav/brainwav-agentic-governance/brainwav/governance',
 		governanceIndexPath:
@@ -328,29 +334,13 @@ function writePointerFiles(destRoot, profile, { force, dryRun, actions }) {
 		recordAction(actions, 'write', null, pointerPath, 'skipped', 'exists');
 	}
 
-	const agentsPointer = `# AGENTS — Pointer (profile: ${profile})\n\n` +
-		`This repository consumes the brAInwav Agentic Governance pack via pointer mode.\n` +
-		`Canonical policies live in the pinned npm package release (lockfile-controlled).\n\n` +
-		`Canonical source (immutable via lockfile):\n` +
-		`- Package: @brainwav/brainwav-agentic-governance (pin exact version in package.json)\n` +
-		`- Path: node_modules/@brainwav/brainwav-agentic-governance/AGENTS.md\n` +
-		`- Hash index: node_modules/@brainwav/brainwav-agentic-governance/brainwav/governance/90-infra/governance-index.json\n\n` +
-		`Local overrides (tighten only):\n` +
-		`- Declare overlays in .agentic-governance/config.json and use AGENTS.local.md (optional).\n`;
-
-	const pointerStub = (title, canonicalPath) =>
-		`# ${title} — Pointer\n\n` +
-		`Canonical source (lockfile-pinned):\n` +
-		`- ${canonicalPath}\n\n` +
-		`Local overrides (tighten only):\n` +
-		`- Declare overlays in .agentic-governance/config.json and use ${title}.local.md (optional).\n`;
-
 	const agentPath = path.join(destRoot, 'AGENTS.md');
 	const codeStylePath = path.join(destRoot, 'CODESTYLE.md');
 	const securityPath = path.join(destRoot, 'SECURITY.md');
+	const governanceIndexPath = path.join(destRoot, 'docs', 'GOVERNANCE.md');
 
 	if (shouldWrite(agentPath, force)) {
-		if (!dryRun) fs.writeFileSync(agentPath, `${agentsPointer}\n`);
+		if (!dryRun) fs.writeFileSync(agentPath, `${buildAgentsStub(pointerPayload)}\n`);
 		recordAction(actions, 'write', null, agentPath, dryRun ? 'planned' : 'written', null);
 	} else {
 		recordAction(actions, 'write', null, agentPath, 'skipped', 'exists');
@@ -360,7 +350,11 @@ function writePointerFiles(destRoot, profile, { force, dryRun, actions }) {
 		if (!dryRun) {
 			fs.writeFileSync(
 				codeStylePath,
-				`${pointerStub('CODESTYLE', 'node_modules/@brainwav/brainwav-agentic-governance/CODESTYLE.md')}\n`
+				`${buildPointerStub(
+					'CODESTYLE',
+					'node_modules/@brainwav/brainwav-agentic-governance/CODESTYLE.md',
+					pointerPayload
+				)}\n`
 			);
 		}
 		recordAction(actions, 'write', null, codeStylePath, dryRun ? 'planned' : 'written', null);
@@ -372,12 +366,36 @@ function writePointerFiles(destRoot, profile, { force, dryRun, actions }) {
 		if (!dryRun) {
 			fs.writeFileSync(
 				securityPath,
-				`${pointerStub('SECURITY', 'node_modules/@brainwav/brainwav-agentic-governance/SECURITY.md')}\n`
+				`${buildPointerStub(
+					'SECURITY',
+					'node_modules/@brainwav/brainwav-agentic-governance/SECURITY.md',
+					pointerPayload
+				)}\n`
 			);
 		}
 		recordAction(actions, 'write', null, securityPath, dryRun ? 'planned' : 'written', null);
 	} else {
 		recordAction(actions, 'write', null, securityPath, 'skipped', 'exists');
+	}
+
+	if (shouldWrite(governanceIndexPath, force)) {
+		if (!dryRun) {
+			fs.mkdirSync(path.dirname(governanceIndexPath), { recursive: true });
+			fs.writeFileSync(
+				governanceIndexPath,
+				`${buildGovernanceIndexStub(pointerPayload)}\n`
+			);
+		}
+		recordAction(
+			actions,
+			'write',
+			null,
+			governanceIndexPath,
+			dryRun ? 'planned' : 'written',
+			null
+		);
+	} else {
+		recordAction(actions, 'write', null, governanceIndexPath, 'skipped', 'exists');
 	}
 }
 

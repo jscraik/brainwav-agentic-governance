@@ -10,6 +10,12 @@ import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 import { formatPointerHint, resolveGovernancePaths } from './governance-paths.mjs';
+import {
+	buildAgentsStub,
+	buildGovernanceIndexStub,
+	buildPointerStub,
+	POINTER_STUB_MARKER
+} from './lib/pointer-stubs.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(__dirname, '..');
@@ -26,21 +32,34 @@ function read(file) {
 	return fs.readFileSync(file, 'utf8');
 }
 
-const ROOT_DOCS = new Set(['README.md', 'CODESTYLE.md', 'SECURITY.md']);
+const ROOT_DOCS = new Set(['README.md', 'CODESTYLE.md', 'SECURITY.md', 'AGENTS.md']);
+const POINTER_STUB_FILES = new Map([
+	['AGENTS.md', 'AGENTS'],
+	['CODESTYLE.md', 'CODESTYLE'],
+	['SECURITY.md', 'SECURITY']
+]);
+const CANONICAL_PATH_SEGMENTS = [
+	'00-core',
+	'10-flow',
+	'20-checklists',
+	'30-compliance',
+	'90-infra'
+];
 
 /**
  * Resolve a governance doc path to disk.
  * @param {string} rel - Relative doc path.
  * @param {string} govRoot - Governance root.
  * @param {string} rootPath - Repository root.
+ * @param {boolean} allowRootDocs - Whether root docs can satisfy governance paths.
  * @returns {string|null} Resolved path or null.
  */
-function resolvePath(rel, govRoot, rootPath) {
+function resolvePath(rel, govRoot, rootPath, allowRootDocs) {
 	const rootDocPath = path.join(rootPath, rel);
-	if (ROOT_DOCS.has(rel) && fs.existsSync(rootDocPath)) return rootDocPath;
+	if (allowRootDocs && ROOT_DOCS.has(rel) && fs.existsSync(rootDocPath)) return rootDocPath;
 	const govPath = path.join(govRoot, rel);
 	if (fs.existsSync(govPath)) return govPath;
-	if (fs.existsSync(rootDocPath)) return rootDocPath;
+	if (allowRootDocs && fs.existsSync(rootDocPath)) return rootDocPath;
 	return null;
 }
 
@@ -49,9 +68,10 @@ function resolvePath(rel, govRoot, rootPath) {
  * @param {string} indexPath - Governance index path.
  * @param {string} govRoot - Governance root.
  * @param {string} rootPath - Repository root.
+ * @param {boolean} allowRootDocs - Whether root docs can satisfy governance paths.
  * @returns {string[]} Failure messages.
  */
-function checkTokens(indexPath, govRoot, rootPath) {
+function checkTokens(indexPath, govRoot, rootPath, allowRootDocs) {
 	const index = JSON.parse(read(indexPath));
 	const failures = [];
 	const docPaths = new Set(Object.values(index.docs || {}).map((entry) => entry.path));
@@ -66,7 +86,7 @@ function checkTokens(indexPath, govRoot, rootPath) {
 	});
 	Object.entries(index.docs).forEach(([key, entry]) => {
 		if (!entry.required_tokens) return;
-		const target = resolvePath(entry.path, govRoot, rootPath);
+		const target = resolvePath(entry.path, govRoot, rootPath, allowRootDocs);
 		if (!target) {
 			failures.push(`missing doc for ${key} at ${entry.path}`);
 			return;
@@ -100,6 +120,115 @@ function checkTasks(rootPath) {
 			failures.push(`task ${slug}: arcs length ${arcs.length} exceeds Step Budget <=7`);
 	}
 	});
+	return failures;
+}
+
+/**
+ * Enforce pointer-mode stub validation and canonical-only constraints.
+ * @param {Record<string, unknown>|null} pointer - Pointer metadata.
+ * @param {string} targetRoot - Repository root.
+ * @returns {string[]} Failure messages.
+ */
+function checkPointerStubs(pointer, targetRoot) {
+	if (!pointer || pointer.mode !== 'pointer') return [];
+	const failures = [];
+	const pointerDir = path.join(targetRoot, '.agentic-governance');
+	const overlayDir = path.join(pointerDir, 'overlays');
+	const stubPaths = [
+		path.join(targetRoot, 'AGENTS.md'),
+		path.join(targetRoot, 'CODESTYLE.md'),
+		path.join(targetRoot, 'SECURITY.md'),
+		path.join(targetRoot, 'docs', 'GOVERNANCE.md')
+	];
+
+	const canonicalVersion = pointer.version || 'unknown';
+	const canonicalPackage = pointer.package || '@brainwav/brainwav-agentic-governance';
+	const pointerPayload = {
+		...pointer,
+		package: canonicalPackage,
+		version: canonicalVersion,
+		profile: pointer.profile || 'unknown'
+	};
+
+	const expectedStubs = new Map([
+		['AGENTS.md', buildAgentsStub(pointerPayload)],
+		[
+			'CODESTYLE.md',
+			buildPointerStub(
+				'CODESTYLE',
+				'node_modules/@brainwav/brainwav-agentic-governance/CODESTYLE.md',
+				pointerPayload
+			)
+		],
+		[
+			'SECURITY.md',
+			buildPointerStub(
+				'SECURITY',
+				'node_modules/@brainwav/brainwav-agentic-governance/SECURITY.md',
+				pointerPayload
+			)
+		],
+		['docs/GOVERNANCE.md', buildGovernanceIndexStub(pointerPayload)]
+	]);
+
+	stubPaths.forEach((stubPath) => {
+		if (!fs.existsSync(stubPath)) {
+			const rel = path.relative(targetRoot, stubPath);
+			if (POINTER_STUB_FILES.has(rel)) {
+				failures.push(`pointer stub missing: ${rel}`);
+			}
+			return;
+		}
+		const rel = path.relative(targetRoot, stubPath).replace(/\\/g, '/');
+		const expected = expectedStubs.get(rel);
+		if (!expected) return;
+		const actual = read(stubPath).trimEnd();
+		const expectedNormalized = expected.trimEnd();
+		if (!actual.includes(POINTER_STUB_MARKER)) {
+			failures.push(`pointer stub missing marker in ${rel}`);
+			return;
+		}
+		if (actual !== expectedNormalized) {
+			failures.push(`pointer stub mismatch: ${rel}`);
+		}
+	});
+
+	const bannedRoots = CANONICAL_PATH_SEGMENTS.map((segment) =>
+		path.join(targetRoot, segment)
+	);
+	const bannedHits = [];
+	bannedRoots.forEach((bannedRoot) => {
+		if (fs.existsSync(bannedRoot)) {
+			bannedHits.push(path.relative(targetRoot, bannedRoot));
+		}
+	});
+	if (bannedHits.length > 0) {
+		failures.push(
+			`pointer mode forbids canonical governance directories: ${bannedHits.join(', ')}`
+		);
+	}
+
+	const forbiddenNamePatterns = [/constitution\.md$/i, /agentic-coding-workflow\.md$/i];
+	const visit = (dir) => {
+		const entries = fs.readdirSync(dir, { withFileTypes: true });
+		entries.forEach((entry) => {
+			const entryPath = path.join(dir, entry.name);
+			if (entryPath.startsWith(pointerDir)) return;
+			if (entryPath.startsWith(overlayDir)) return;
+			if (entry.isDirectory()) {
+				visit(entryPath);
+				return;
+			}
+			const relPath = path.relative(targetRoot, entryPath).replace(/\\/g, '/');
+			if (POINTER_STUB_FILES.has(relPath)) return;
+			const matchesForbidden = forbiddenNamePatterns.some((pattern) => pattern.test(entry.name));
+			if (matchesForbidden) {
+				failures.push(`pointer mode forbids canonical doc copy at ${relPath}`);
+			}
+		});
+	};
+	visit(targetRoot);
+
 	return failures;
 }
 
@@ -210,11 +339,14 @@ export function runGovernanceValidation(targetRoot = repoRoot, configOverride = 
 	const { govRoot, indexPath, pointerPath, packageRoot, configPath } =
 		resolveGovernancePaths(targetRoot);
 	const hint = formatPointerHint(pointerPath, packageRoot);
+	const pointer = pointerPath && fs.existsSync(pointerPath) ? JSON.parse(read(pointerPath)) : null;
+	const allowRootDocs = !pointer || pointer.mode !== 'pointer';
 	const resolvedConfigPath = configOverride ?? configPath;
 	const failures = [
-		...checkTokens(indexPath, govRoot, targetRoot),
+		...checkTokens(indexPath, govRoot, targetRoot, allowRootDocs),
 		...checkTasks(targetRoot),
-		...checkConfig(resolvedConfigPath, govRoot, targetRoot)
+		...checkConfig(resolvedConfigPath, govRoot, targetRoot),
+		...checkPointerStubs(pointer, targetRoot)
 	];
 	return { ok: failures.length === 0, failures, hint };
 }
