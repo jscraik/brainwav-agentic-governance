@@ -7,6 +7,7 @@ is synthesized from the manifest during install/upgrade.
 | Pack ID | Description | Depends on | Runner | Pack docs | Validate checks | Doctor checks |
 | --- | --- | --- | --- | --- | --- | --- |
 | a11y | Accessibility gates and reporting requirements. | - | ubuntu-latest | - | - | - |
+| agent-loop | Bounded agent loop harness with budgets, allowlist, and verification gates. | - | ubuntu-latest | AGENTS.pack.md | config-present, prompt-present, runner-present, budgets, verify-commands, allowlist, branch-guard, runner-script | - |
 | ai-risk | AI governance and safety controls beyond core defaults. | - | ubuntu-latest | - | - | - |
 | apple-release | Apple release evidence for codesign + notarization. | - | macos-latest | - | release-codesign, release-notarization | - |
 | cloudflare-workers | Cloudflare Workers runtime constraints and testing. | - | ubuntu-latest | - | - | - |
@@ -19,6 +20,7 @@ is synthesized from the manifest during install/upgrade.
 | react-next | React 19 + Next.js 16 (RSC/App Router) rules. | - | ubuntu-latest | - | - | - |
 | react-vite | React 19 + Vite UI conventions. | - | ubuntu-latest | - | - | - |
 | rust-cli | Rust CLI/TUI standards and toolchain policy. | - | ubuntu-latest | - | - | - |
+| sdd | Spec-driven development (spec -> plan -> tasks) with Brainwav evidence hooks. | - | ubuntu-latest | AGENTS.pack.md | spec-present, plan-present, tasks-present, traceability | - |
 | security-appsec | AppSec controls and verification gates for runtime systems. | - | ubuntu-latest | - | - | - |
 | storybook | Storybook setup and a11y/interaction policy. | - | ubuntu-latest | - | - | - |
 | supply-chain | SBOM, provenance, signing, and supply-chain posture gates. | - | ubuntu-latest | - | - | - |
