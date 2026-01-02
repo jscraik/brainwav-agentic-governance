@@ -1,0 +1,22 @@
+{
+  "$schema": "node_modules/brainwav-agentic-governance/brainwav/governance/90-infra/agentic-config.schema.json",
+  "version": "1.0",
+  "mode": "pointer",
+  "profile": "delivery",
+  "packs": [
+    "sdd",
+    "ts-base"
+  ],
+  "packOptions": {
+    "sdd": {
+      "specRoot": "specs"
+    },
+    "ts-base": {
+      "scripts": {
+        "test": "test",
+        "build": "build"
+      }
+    }
+  },
+  "overlays": []
+}
