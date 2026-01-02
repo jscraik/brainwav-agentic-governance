@@ -29,6 +29,12 @@ Skills governance is enforced across all skill lifecycle stages and CI gates.
 
 ## 0. Operative Guardrails (binding)
 
+### Canonical Governance Distribution
+
+- Canonical skills governance policy lives in the governance package.
+- Consumer repos must not duplicate canonical policy files; use `.agentic-governance/overlays/` for additive, repo-specific deltas.
+- In pointer mode, only root stubs + `.agentic-governance/**` are allowed in consumer repos.
+
 - **Structured Outputs (BLOCKER):** Any machine‑consumed output from a skill **must** conform to JSON‑Schema or tool/function calling. Free‑text is not a contract.
 - **Trace Context (BLOCKER):** Skill application events include W3C `traceparent` and structured logs with `service:"<service_name>"`, `trace_id` (32 lower‑hex); `brand` optional unless required by overlays.
 - **Academic Research & Licensing (BLOCKER):** New/major‑updated skills must cite research and pass license validation; only SAFE/REVIEW content allowed.
@@ -345,5 +351,5 @@ pnpm skills:security-scan --changed
 
 **Maintained by:** brAInwav Development Team
 **Version:** 1.2.0
-**Last Updated:** 2025-11-11
+**Last Updated:** 2025-12-03
 **Status:** Authoritative

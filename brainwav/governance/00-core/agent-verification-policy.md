@@ -21,6 +21,22 @@ Establish a cryptographically verifiable "Know Your Agent" (KYA) process for eve
 
 ---
 
+## Enforcement by Profile
+
+- **Creative:** missing KYA metadata is **WARN**; focus on capturing provenance for new agents.
+- **Delivery:** missing signatures/attestations are **WARN** or **FAIL** depending on risk classification.
+- **Release:** missing AgentFacts signature/attestation checks are **FAIL** unless explicitly waived with expiry.
+
+## Check IDs (stable)
+
+- `kya.agentfacts.present`
+- `kya.signature.valid`
+- `kya.attestation.present`
+- `kya.revocation.checked`
+- `kya.trustscore.history.linked`
+
+---
+
 ## 3. AgentFacts Metadata Requirements
 
 | Field | Description | Source |
@@ -75,19 +91,16 @@ Metadata is published as JSON under `governance/registry/agents/<agent_id>.json`
 
 ## 7. Tooling
 
-```bash
-# Generate AgentFacts skeleton
-pnpm agentfacts:init --agent-id <uuid>
+The governance pack defines the **expected artifacts** and validation checks. Generation tooling is implementation-specific and may be implemented by a repo-local script or a separate tool.
 
-# Validate + canonicalize metadata
-pnpm agentfacts:validate registry/agents/<agent_id>.json
+**Recommended artifact locations (consumer repo):**
+- `.agentic-governance/agents/<agent_id>/agentfacts.json`
+- `.agentic-governance/agents/<agent_id>/attestations/<timestamp>.bundle`
 
-# Sign metadata with authority key (1Password CLI injects keys)
-pnpm agentfacts:sign --agent-id <agent_id> --role security --key "$AGENTFACTS_SECURITY_KEY"
-
-# Publish + sync
-pnpm agentfacts:publish --agent-id <agent_id>
-```
+**Recommended workflow:**
+1) Create/update AgentFacts JSON.
+2) Create a detached signature/attestation bundle and store it under `attestations/`.
+3) Run `brainwav-governance validate --strict` to verify presence, signature requirements, and policy compliance.
 
 ---
 

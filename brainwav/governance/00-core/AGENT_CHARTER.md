@@ -78,7 +78,7 @@ All agents executing workstreams MUST obey these rules:
 
 ---
 
-### 5️⃣ **Recap in ≤ 500 Tokens** [AGENTS-RCP-005]
+### 5️⃣ **Recap in ≤ 500 Tokens (Recap in <= 500 Tokens)** [AGENTS-RCP-005]
 
 - Close each arc with structured recap:
   - Scope, decisions, tests, follow-ups
@@ -100,7 +100,7 @@ All agents executing workstreams MUST obey these rules:
   - `NORTH_STAR:GREEN_AFTER` once the acceptance turns green
 - First failing acceptance must log `marker:"NORTH_STAR:RED_FIRST"`; the passing acceptance must log `marker:"NORTH_STAR:GREEN_AFTER"`.
 - Emit `model_status:"MODELS:LIVE:OK"` **only** after live model health checks succeed.
-- **Enforcement**: Grep validation in CI; missing service identity tokens or trace context fails the build.
+- **Enforcement**: rg validation in CI; missing service identity tokens or trace context fails the build.
 
 **Rationale:** Ensures observability and traceability across distributed systems.
 
@@ -115,7 +115,7 @@ All agents executing workstreams MUST obey these rules:
   "marker": "NORTH_STAR:RED_FIRST",
   "latency_ms": 742,
   "model_status": "MODELS:LIVE:OK",
-  "trace_id": "c6f2b0d7a9124f6c",
+  "trace_id": "c6f2b0d7a9124f6c9c1d77cd2a4f6aa1",
   "traceparent": "00-c6f2b0d7a9124f6c9c1d77cd2a4f6aa1-1234567890abcdef-01",
   "message": "Acceptance failed as expected"
 }
@@ -398,7 +398,7 @@ Pointers MUST align with the manifest schema, artifact paths MUST remain accessi
 | Explain-While-Doing (#3) | `narrated-diff.ts` check | PR template requires | Request amendment |
 | Proof Required (#4) | CI Evidence Triplet check | Template scaffolds tests | Add retroactive proof |
 | Recap Rule (#5) | Token counter | Template auto-generates | Trim to ≤500 tokens |
-| Service Identity Logs (#6) | `grep -r '\"service\"'` | Logger wrapper | Patch log calls |
+| Service Identity Logs (#6) | `rg -n '\"service\"'` | Logger wrapper | Patch log calls |
 | Arc Protocol (#7) | `validate-run-manifest.ts` (arc structure, milestone test, contract snapshot) | Task scaffolding enforces arc template | Add missing arc artifacts |
 | North-Star Test (#8) | `validate-run-manifest.ts` (`north_star.acceptance_test_path` required) | `pnpm changelog:new` generates acceptance test scaffold | Write missing north-star test |
 | Preflight Guards (#9) | CI checks for `logs/vibe-check/*.json`, model health logs, trace context, SBOM | PR template checklist requires preflight evidence | Execute missing guards and attach logs |
@@ -553,7 +553,7 @@ remediation_plan:
 | AGENTS-EXP-003 | Explain-While-Doing                    | `narrated-diff`      | `scripts/governance/narrated-diff.ts`            |
 | AGENTS-PRF-004 | Proof Required (Evidence Triplet)      | `evidence-check`     | `scripts/governance/validate-evidence-triplet.ts`|
 | AGENTS-RCP-005 | Recap ≤ 500 tokens                     | `recap-guard`        | Token counter in `evidence/recaps.log`           |
-| AGENTS-BRD-006 | Service Identity Logs                  | `identity-guard`     | `grep -r '\"service\"'` in logs                  |
+| AGENTS-BRD-006 | Service Identity Logs                  | `identity-guard`     | `rg -n '\"service\"'` in logs                  |
 | AGENTS-ARC-007 | Arc Protocol                           | `validate-manifest`  | `validate-run-manifest.ts` (arc structure)       |
 | AGENTS-NST-008 | North-Star Test                        | `validate-manifest`  | `validate-run-manifest.ts` (north_star path)     |
 | AGENTS-PRV-009 | Preflight Guards                       | `preflight-check`    | Check for logs in `logs/vibe-check/`, SBOM, etc. |

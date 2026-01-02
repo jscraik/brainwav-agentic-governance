@@ -12,6 +12,14 @@
 - Map multiple IDs when a scenario spans more than one threat category.
 - Attach the **Evidence Hooks** below to your PR (paths, logs, screenshots).
 
+## Enforcement by Profile
+
+- **Creative:** missing mitigations produce **WARN**; focus on safe exploration and documenting risks.
+- **Delivery:** missing mitigations produce **WARN** or **FAIL** depending on severity (LLM-S0/S1 should fail).
+- **Release:** LLM-S0/S1/S2/S3 items are **FAIL** unless an explicit waiver exists with expiry and evidence.
+
+Use the control IDs in PR descriptions and evidence logs. Prefer automated evidence hooks where available.
+
 ---
 
 ## Control Catalog (with Evidence Hooks)
@@ -66,36 +74,9 @@
 
 ---
 
-<!-- PROJECT-SPECIFIC: START -->
 ## Project-Specific Threat Controls
 
-> **Instructions:** Edit this section to add project-specific threat controls and mitigations. This section is NOT overwritten when upgrading the governance pack.
-
-### Additional Project Controls
-
-| ID | Threat | Project Mitigation | Evidence |
-|----|--------|-------------------|----------|
-| _PRJ-01_ | _Description_ | _Mitigation steps_ | _Evidence location_ |
-
-### Project-Specific Data Classifications
-
-| Classification | Handling | Examples |
-|---------------|----------|----------|
-| _Internal_ | _Standard controls_ | _Internal docs_ |
-| _Confidential_ | _Encryption + access control_ | _User PII_ |
-| _Restricted_ | _Additional approval_ | _Financial data_ |
-
-### Project API/Model Inventory
-
-| Provider | Model | Use Case | Risk Level |
-|----------|-------|----------|------------|
-| _OpenAI_ | _GPT-4o_ | _Code generation_ | _Medium_ |
-
-### Project-Specific Blockers
-
-<!-- Add any additional BLOCKER controls specific to this project -->
-
-<!-- PROJECT-SPECIFIC: END -->
+Project-specific additions must be authored as **additive overlays** in consumer repos under `.agentic-governance/overlays/llm-threat-controls.local.md` (or equivalent). Canonical policy files are not edited in pointer mode.
 
 ---
 

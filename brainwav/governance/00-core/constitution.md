@@ -50,6 +50,20 @@ This constitution defines the **foundational principles** that govern all AI-ass
 
 **Domain Boundaries**: No cross-domain imports; interact via declared contracts (A2A topics, MCP tools/resources/prompts).
 
+### 1.1 Canonical Governance Distribution (Pointer Mode)
+
+**Canonical source of truth** for governance policy is the published governance package. Consumer repos must not copy or fork canonical governance docs.
+
+**Allowed in consumer repos (pointer mode):**
+- Root stubs: `AGENTS.md`, `CODESTYLE.md`, `SECURITY.md`, `docs/GOVERNANCE.md`
+- `.agentic-governance/**` (including `.agentic-governance/overlays/**`)
+
+**Forbidden in consumer repos (pointer mode):**
+- Any copied canonical governance trees (e.g., `00-core/`, `10-flow/`, `20-checklists/`, `30-compliance/`, `90-infra/`, or `brainwav/governance/**`)
+- Any duplicated canonical governance docs outside overlays
+
+**Repo-specific additions** must be additive overlays under `.agentic-governance/overlays/` (never edits to canonical policy text).
+
 ### 2. Test-Driven Development (MANDATORY)
 
 **Red–Green–Refactor**:
@@ -67,7 +81,9 @@ Semantic HTML/ARIA, keyboard complete, target ≥ 44×44 CSS px, screen-reader c
 
 ### 4. Monorepo Integrity
 
-Use affected-only **smart** targets (`pnpm *:smart`), respect Nx dependency graph, forbid circular deps. Follow repo structure rules and structure guard.
+Monorepo-specific rules are **pack-scoped**. Enable the appropriate monorepo pack (e.g., `pack:monorepo` / `pack:nx`) to enforce affected-only targets, dependency boundaries, and workspace rules.
+
+Core governance remains project-neutral; do not hardcode monorepo assumptions into core policy.
 
 ### 5. Agent-First Architecture
 
@@ -95,9 +111,15 @@ Use affected-only **smart** targets (`pnpm *:smart`), respect Nx dependency grap
 
 All reasoning anchored to harness "today"; convert relative dates to **ISO-8601**; treat "latest/current" as freshness checks. (See `10-flow/cortex-aegis.md` § Time Freshness Policy.)
 
-### 8. Hybrid Model Solution — **Live Only**
+### 8. Hybrid Model Solution — Live/Recorded Inputs (Profile-Driven)
 
-Embeddings, rerankers, generations must use **live** engines (Ollama or approved Frontier). **No stubs, recorded outputs, or "dry_run" modes.** Pre-merge evidence requires `pnpm models:health && pnpm models:smoke` logs (engine, model IDs, vector dims/norms, latency).
+**Release profile (required):** production embeddings/rerank/generation must use **live** engines *or* verifiably recorded, time-stamped inputs with explicit model/engine identifiers and time-freshness evidence.
+
+**Delivery profile (recommended):** prefer live; allow recorded inputs for deterministic CI/evals when explicitly documented and linked to evidence.
+
+**Creative profile (allowed):** prototyping may use recorded inputs, but must not claim production readiness until promoted through delivery/release checks with evidence.
+
+**Evidence:** attach `models:smoke` output (engine, model IDs, vector dims/norms, latency) and the time-freshness record when required.
 
 ### 9. Governance Hooks (AGENTS.md + Vibe-Check)
 

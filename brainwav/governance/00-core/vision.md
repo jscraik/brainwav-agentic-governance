@@ -47,7 +47,7 @@ This governance framework enables a self-contained, local-first **Agentic Develo
 
 **Auth modes**
 - **API key** by default (dev may allow `NO_AUTH=true`).  
-- **OAuth2 (Auth0)** optional; scopes must include: `search.read docs.write memory.read memory.write memory.delete` (RBAC + "Add Permissions in Access Token").
+- **OAuth2 (IdP)** optional; token scopes must follow least privilege and be documented per project.
 
 ---
 
@@ -59,9 +59,9 @@ This governance framework enables a self-contained, local-first **Agentic Develo
 - Emits structured telemetry (traces/metrics/logs) with `service:"<service_name>"`, run IDs, and phase transitions. Optional `brand` may be required by overlays.
 
 ### 3.2 MCP (Single Hub)
-- **FastMCP v3** server exposing `/mcp`, `/sse`, `/health`, `/metrics`.
+- **MCP** server exposing `/mcp`, `/sse`, `/health`, `/metrics`.
 - Loads registries for Tools/Resources/Prompts; no business logic in the server.
-- **Auth**: API-key or OAuth2; remote access via **Cloudflare Tunnel**.
+- **Auth**: API-key or OAuth2; remote access via **secure tunnel**.
 
 ### 3.3 A2A Hub
 - Central bus for topics/intents; policies for routing, retries/backoff, auditing.
@@ -102,8 +102,8 @@ This governance framework enables a self-contained, local-first **Agentic Develo
 > Names indicative — adapt to monorepo layout.
 
 ### 4.1 `packages/mcp-server`
-**Vision:** Minimal FastMCP v3 HTTP/SSE hub; loads registries; zero business logic.  
-**Done means:** `/health`, `/mcp`, `/sse`, `/metrics` green; API-key on; Cloudflare Tunnel tested; integration tests pass; **evidence tokens present** (`AGENTS_MD_SHA`, `aegis-vibe-check`, `service:`).
+**Vision:** Minimal MCP HTTP/SSE hub; loads registries; zero business logic.  
+**Done means:** `/health`, `/mcp`, `/sse`, `/metrics` green; API-key on; secure tunnel tested; integration tests pass; **evidence tokens present** (`AGENTS_MD_SHA`, `aegis-vibe-check`, `service:`).
 
 ### 4.2 `packages/mcp-core`
 **Vision:** Protocol utilities, schemas, adapters, error taxonomy.  

@@ -42,7 +42,7 @@
   "docs": {
     "constitution.md": {
       "path": "00-core/constitution.md",
-      "sha256": "630ea0d21dbc821652828e86e2aa683718234dbedbd2170ae02ece8306aedc13",
+      "sha256": "b36423b42c11f0649dba0bf4532820f7f1934bdddb64a2b9ad16e6aa804fd45c",
       "required_tokens": [
         "Constitution",
         "Core Principles"
@@ -53,7 +53,7 @@
     },
     "AGENT_CHARTER.md": {
       "path": "00-core/AGENT_CHARTER.md",
-      "sha256": "1d9d8b85efe619eec37486af7e57e54421f1b795d33bac972f42c44b3dc98b89",
+      "sha256": "5f22782138480c7fd5bd86186fa3c74ed2327e970f74316623b7e43bc80fa304",
       "required_tokens": [
         "Service Identity Logs",
         "MODELS:LIVE:OK",
@@ -65,7 +65,7 @@
     },
     "agent-verification-policy.md": {
       "path": "00-core/agent-verification-policy.md",
-      "sha256": "1a0ddb41b599fb886d7c30b5e1e8534795a548db2ee82544538f773eb8af9839",
+      "sha256": "2e7717b5901a56304b04d9a8a3652ab1b24e90a6d7654caec273b4d2920677dc",
       "required_tokens": [
         "AgentFacts",
         "trust score",
@@ -81,7 +81,7 @@
         "<!-- BEGIN CHARTER_FRAGMENT -->",
         "<!-- END CHARTER_FRAGMENT -->"
       ],
-      "sha256": "faf6254926f327ac182261de41f0f100b4c4ac24f2ca4700949c091a66cda13a",
+      "sha256": "9b6e14a2641d3a63cc5fe5e7bf033c13060481271dd40c8e3f05551f1fd7fde4",
       "required_tokens": [
         "Step Budget <= 7",
         "Ask-First <= 3",
@@ -100,7 +100,7 @@
     },
     "vision.md": {
       "path": "00-core/vision.md",
-      "sha256": "0c70ed2cffe1d6afbbcd1a4db014feb91959e9f08fcdce5d01b5d837682780d6",
+      "sha256": "823b176d123b2499d6b264c1635d81ec72cd8e7d823474ab87ce77104e7807ea",
       "required_tokens": [
         "Vision",
         "North Star"
@@ -111,7 +111,7 @@
     },
     "llm-threat-controls.md": {
       "path": "00-core/llm-threat-controls.md",
-      "sha256": "15f02176c91c83060a4e66dcecdb6e7cf68894ece31f2183f1d8e0307ded81be",
+      "sha256": "e92af0b06ad776153f500ae000b2ab1c1ffbb9b08ab70f572f11bfe85076ec79",
       "required_tokens": [
         "LLM01",
         "LLM06",
@@ -123,7 +123,7 @@
     },
     "skills-system-governance.md": {
       "path": "00-core/skills-system-governance.md",
-      "sha256": "00d3b5ce00f0f99b4356afe98681e4aec40d4a9715034fee6fe754f5479dcca7",
+      "sha256": "5fecc385b6a3a6af304abe4047a092a55d9ba58759842ac4a1730841cd146330",
       "required_tokens": [
         "Skills governance",
         "Structured outputs"
@@ -199,7 +199,7 @@
     },
     "governance-index.json": {
       "path": "90-infra/governance-index.json",
-      "sha256": "67690c7544470aeb1e9903cf54dcec8de79b994e946ed84925ad258d5f5629cb",
+      "sha256": "339f89b7a09a2d4bcb3472952050e74de9cd2c3bb61dd16f1244ad238db93822",
       "hash_mode": "exclude_self",
       "required_tokens": [
         "precedence",
