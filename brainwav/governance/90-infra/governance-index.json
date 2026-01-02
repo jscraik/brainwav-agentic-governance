@@ -133,7 +133,7 @@
     },
     "governance-quickstart.md": {
       "path": "10-flow/governance-quickstart.md",
-      "sha256": "701839e1a0645e65fc98412ee6a67fadc8c3469969c8c3a743a5c82235d29931",
+      "sha256": "a57ad12199e9c464d1fb30f508fe8804e0d202cca13b8351db2b896f5e3f2a4b",
       "required_tokens": [
         "governance quickstart",
         "workflow selection"
@@ -198,7 +198,7 @@
     },
     "governance-index.json": {
       "path": "90-infra/governance-index.json",
-      "sha256": "2ad9b4bc41421de6108ab4a6fdb53f3f5ecd4591acbcfc16470023ada405d3aa",
+      "sha256": "3c7d29f556545d7a8dad325e10faa7ad68cfac96370e05dd03f91a1c840b44a8",
       "hash_mode": "exclude_self",
       "required_tokens": [
         "precedence",

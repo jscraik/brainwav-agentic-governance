@@ -1,0 +1,42 @@
+pack:
+  id: agent-loop
+  version: 1.0.0
+  default: false
+  summary: "Bounded agent loop harness with budgets, allowlist, and verification gates."
+  checks:
+    validate:
+      - id: config-present
+        severity: medium
+        category: pack
+        message: "loop config must exist at .agentic-governance/loop/config.json"
+      - id: prompt-present
+        severity: medium
+        category: pack
+        message: "loop prompt must exist at .agentic-governance/loop/PROMPT.md"
+      - id: runner-present
+        severity: medium
+        category: pack
+        message: "runner command must be configured"
+      - id: budgets
+        severity: medium
+        category: pack
+        message: "loop budgets must be configured"
+      - id: verify-commands
+        severity: medium
+        category: pack
+        message: "verify.commands must be configured"
+      - id: allowlist
+        severity: medium
+        category: pack
+        message: "allowlist paths must be configured"
+      - id: branch-guard
+        severity: medium
+        category: pack
+        message: "branch guard must be enforced"
+      - id: runner-script
+        severity: medium
+        category: pack
+        message: "agent-loop runner script must exist"
+  standards:
+    - "Bounded agent loop with verification gates"
+  controlsRegistry: "brainwav/governance/90-infra/control-registry.core.yaml"

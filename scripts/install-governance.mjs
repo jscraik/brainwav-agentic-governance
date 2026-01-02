@@ -530,6 +530,49 @@ function renderDocsWithPacks({ destRoot, packs, force, dryRun, actions }) {
 }
 
 /**
+ * Render agent loop assets when agent-loop pack is selected.
+ * @param {{destRoot: string, packs: string[], force: boolean, dryRun: boolean, actions: Array<object>}} options - Render options.
+ * @returns {void} No return value.
+ */
+function renderAgentLoopAssets({ destRoot, packs, force, dryRun, actions }) {
+	if (!packs.includes('agent-loop')) return;
+	const loopRoot = path.join(destRoot, '.agentic-governance', 'loop');
+	const toolsRoot = path.join(destRoot, '.agentic-governance', 'tools');
+	const configSource = path.join(repoRoot, 'brainwav', 'governance', 'templates', 'agent-loop', 'config.json');
+	const promptSource = path.join(repoRoot, 'brainwav', 'governance', 'templates', 'agent-loop', 'PROMPT.md');
+	const runnerSource = path.join(repoRoot, 'brainwav', 'governance', 'tools', 'agent-loop.mjs');
+	const configTarget = path.join(loopRoot, 'config.json');
+	const promptTarget = path.join(loopRoot, 'PROMPT.md');
+	const runnerTarget = path.join(toolsRoot, 'agent-loop.mjs');
+
+	if (!dryRun) {
+		fs.mkdirSync(loopRoot, { recursive: true });
+		fs.mkdirSync(toolsRoot, { recursive: true });
+	}
+
+	if (shouldWrite(configTarget, force)) {
+		if (!dryRun) fs.writeFileSync(configTarget, fs.readFileSync(configSource, 'utf8'));
+		recordAction(actions, 'write', null, configTarget, dryRun ? 'planned' : 'written', null);
+	} else {
+		recordAction(actions, 'write', null, configTarget, 'skipped', 'exists');
+	}
+
+	if (shouldWrite(promptTarget, force)) {
+		if (!dryRun) fs.writeFileSync(promptTarget, fs.readFileSync(promptSource, 'utf8'));
+		recordAction(actions, 'write', null, promptTarget, dryRun ? 'planned' : 'written', null);
+	} else {
+		recordAction(actions, 'write', null, promptTarget, 'skipped', 'exists');
+	}
+
+	if (shouldWrite(runnerTarget, force)) {
+		if (!dryRun) fs.copyFileSync(runnerSource, runnerTarget);
+		recordAction(actions, 'write', null, runnerTarget, dryRun ? 'planned' : 'written', null);
+	} else {
+		recordAction(actions, 'write', null, runnerTarget, 'skipped', 'exists');
+	}
+}
+
+/**
  * Deep merge config values with simple array strategy.
  * @param {Record<string, unknown>} baseConfig - Base config.
  * @param {Record<string, unknown>} overrideConfig - Override config.
@@ -663,6 +706,14 @@ export function runGovernanceInstall({
 			recordAction(actions, 'write', null, instructionsPath, 'skipped', 'exists');
 		}
 	}
+
+	renderAgentLoopAssets({
+		destRoot,
+		packs: Array.isArray(mergedConfig.packs) ? mergedConfig.packs : packs,
+		force,
+		dryRun,
+		actions
+	});
 
 	// Ensure workflows folder + render CI configs
 	if (!dryRun) fs.mkdirSync(path.join(destRoot, '.github'), { recursive: true });

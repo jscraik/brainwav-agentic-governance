@@ -951,6 +951,20 @@ function readTextFile(filePath) {
 }
 
 /**
+ * Read JSON content from a path if present.
+ * @param {string|null} filePath - File path.
+ * @returns {Record<string, unknown>|null} JSON data or null.
+ */
+function readJsonFile(filePath) {
+	if (!filePath) return null;
+	try {
+		return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+	} catch {
+		return null;
+	}
+}
+
+/**
  * Evaluate pointer-mode dependency drift rules.
  * @param {string} rootPath - Repo root.
  * @param {Record<string, unknown>|null} pointer - Pointer metadata.
@@ -1319,6 +1333,73 @@ function evaluatePackCheck({ rootPath, manifest, entry, packOptions, profile }) 
 			};
 		}
 		return { status: 'pass', message: 'sdd traceability ok' };
+	}
+
+	if (packId === 'agent-loop') {
+		const loopRoot = path.join(rootPath, '.agentic-governance', 'loop');
+		const configPath = path.join(loopRoot, 'config.json');
+		const config = readJsonFile(configPath);
+		const runnerPath = path.join(rootPath, '.agentic-governance', 'tools', 'agent-loop.mjs');
+		const promptPath = config?.promptFile
+			? resolveRootPath(rootPath, config.promptFile)
+			: path.join(loopRoot, 'PROMPT.md');
+
+		if (checkId === 'config-present') {
+			if (config) return { status: 'pass', message: 'loop config present' };
+			return { status: statusFromProfile(profile), message: 'missing loop config.json' };
+		}
+		if (checkId === 'prompt-present') {
+			if (promptPath && fs.existsSync(promptPath)) {
+				return { status: 'pass', message: 'loop prompt present' };
+			}
+			return { status: statusFromProfile(profile), message: 'missing loop prompt' };
+		}
+		if (checkId === 'runner-present') {
+			if (typeof config?.runner?.command === 'string' && config.runner.command.trim()) {
+				return { status: 'pass', message: 'runner command configured' };
+			}
+			return { status: statusFromProfile(profile), message: 'runner command missing' };
+		}
+		if (checkId === 'budgets') {
+			const budgets = config?.budgets ?? {};
+			const maxIterations = Number(budgets.maxIterations);
+			const maxMinutes = Number(budgets.maxMinutes);
+			const maxFailures = Number(budgets.maxFailures);
+			const ok = maxIterations > 0 && maxMinutes > 0 && maxFailures > 0;
+			return {
+				status: ok ? 'pass' : statusFromProfile(profile),
+				message: ok ? 'budgets configured' : 'missing or invalid budget values'
+			};
+		}
+		if (checkId === 'verify-commands') {
+			const commands = Array.isArray(config?.verify?.commands) ? config.verify.commands : [];
+			return {
+				status: commands.length > 0 ? 'pass' : statusFromProfile(profile),
+				message: commands.length > 0 ? 'verify.commands configured' : 'verify.commands missing'
+			};
+		}
+		if (checkId === 'allowlist') {
+			const allowlist = Array.isArray(config?.allowlist) ? config.allowlist : [];
+			return {
+				status: allowlist.length > 0 ? 'pass' : statusFromProfile(profile),
+				message: allowlist.length > 0 ? 'allowlist configured' : 'allowlist missing'
+			};
+		}
+		if (checkId === 'branch-guard') {
+			const enforced = config?.branch?.enforced === true;
+			const prefix = config?.branch?.prefix;
+			const ok = enforced && typeof prefix === 'string' && prefix.startsWith('bw/loop/');
+			return {
+				status: ok ? 'pass' : statusFromProfile(profile),
+				message: ok ? 'branch guard enforced' : 'branch guard must enforce bw/loop/ prefix'
+			};
+		}
+		if (checkId === 'runner-script') {
+			if (fs.existsSync(runnerPath)) {
+				return { status: 'pass', message: 'agent-loop runner present' };
+			}
+			return { status: statusFromProfile(profile), message: 'agent-loop runner missing' };
+		}
 	}
 
 	if ((packId === 'swift-xcode' || packId === 'swift-appkit') && checkId === 'xcode-project') {

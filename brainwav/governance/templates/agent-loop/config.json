@@ -1,0 +1,51 @@
+{
+  "version": "1.0",
+  "runner": {
+    "command": "codex",
+    "args": []
+  },
+  "promptFile": ".agentic-governance/loop/PROMPT.md",
+  "reportDir": ".agentic-governance/reports/loop",
+  "stopFile": ".agentic-governance/STOP",
+  "branch": {
+    "enforced": true,
+    "prefix": "bw/loop/"
+  },
+  "budgets": {
+    "maxIterations": 12,
+    "maxMinutes": 45,
+    "maxFailures": 3
+  },
+  "allowlist": [
+    "apps/**",
+    "packages/**",
+    "src/**",
+    "lib/**",
+    "tests/**",
+    "test/**",
+    "__tests__/**",
+    "docs/**",
+    ".storybook/**",
+    "public/**",
+    "workers/**",
+    "worker/**",
+    "functions/**",
+    "wrangler.toml",
+    "package.json",
+    "pnpm-lock.yaml",
+    "tsconfig*.json",
+    "vite.config.*",
+    "tailwind.config.*",
+    "postcss.config.*",
+    ".agentic-governance/reports/**"
+  ],
+  "verify": {
+    "commands": [
+      "pnpm exec brainwav-governance validate --strict --report .agentic-governance/reports/",
+      "pnpm -s lint:ci",
+      "pnpm -s typecheck",
+      "pnpm -s test",
+      "pnpm -s build"
+    ]
+  }
+}

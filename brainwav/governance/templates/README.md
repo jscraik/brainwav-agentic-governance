@@ -1,6 +1,6 @@
 # Governance Templates
 
-This directory contains templates for the enhanced task management workflow combining governance standards with spec-kit-inspired best practices, including the `sdd` (spec -> plan -> tasks) templates.
+This directory contains templates for the enhanced task management workflow combining governance standards with spec-kit-inspired best practices, including the `sdd` (spec -> plan -> tasks) templates and the `agent-loop` runner assets.
 
 ## Templates
 
