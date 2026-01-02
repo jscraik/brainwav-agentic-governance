@@ -126,6 +126,28 @@ function resolveDocsList() {
 
 function validateDocs() {
   const failures = [];
+  const packageJsonPath = path.join(repoRoot, 'package.json');
+  if (fs.existsSync(packageJsonPath)) {
+    try {
+      const pkg = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+      const lintFix = pkg?.scripts?.['lint:fix'];
+      if (lintFix && lintFix !== 'eslint . --fix') {
+        failures.push('package.json: lint:fix must be "eslint . --fix"');
+      }
+    } catch (error) {
+      failures.push(`package.json: parse error (${error.message})`);
+    }
+  }
+
+  const installScriptPath = path.join(repoRoot, 'scripts', 'install-governance.mjs');
+  if (fs.existsSync(installScriptPath)) {
+    const content = read(installScriptPath);
+    const reportPattern = /--report\s+\.agentic-governance\/reports(?!\/)/g;
+    if (reportPattern.test(content)) {
+      failures.push('install-governance.mjs: workflow must use --report .agentic-governance/reports/');
+    }
+  }
+
   const docs = resolveDocsList();
   docs.forEach((doc) => {
     const docPath = path.join(repoRoot, doc);
