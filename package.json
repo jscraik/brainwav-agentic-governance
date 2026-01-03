@@ -1,6 +1,6 @@
 {
   "name": "@brainwav/brainwav-agentic-governance",
-  "version": "0.2.45",
+  "version": "0.2.46",
   "private": false,
   "type": "module",
   "description": "Governance automation scripts and MCP helpers",
@@ -12,7 +12,7 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jscraik/brainwav-agentic-governance"
+    "url": "git+https://github.com/jscraik/brainwav-agentic-governance.git"
   },
   "publishConfig": {
     "access": "restricted",
