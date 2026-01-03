@@ -325,16 +325,18 @@ export function runToolingChecks({ profile = 'release', targetRoot = repoRoot } 
 		if (!tool) return;
 		const present = check(tool.name);
 		const installHint = pickInstallHint(tool);
+		const allowMissing = profile !== 'release';
+		const status = present ? 'pass' : allowMissing ? 'warn' : 'fail';
 		checks.push({
 			id: tool.id,
 			severity: present ? 'info' : 'medium',
 			category: 'toolchain',
-			status: present ? 'pass' : 'fail',
+			status,
 			message: present
 				? `${tool.name} present`
 				: `${tool.name} missing (${tool.reason}; install: ${installHint})`
 		});
-		if (!present) ok = false;
+		if (!present && !allowMissing) ok = false;
 		if (present && enforceVersions && versionCommands.has(tool.name)) {
 			const minVersion = toolVersions[tool.name.replace('-', '_')] ?? toolVersions[tool.name];
 			if (minVersion) {

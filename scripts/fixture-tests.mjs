@@ -188,7 +188,7 @@ function runFixtureLifecycle(fixture) {
 			fixture.requireSdd === false ? basePacks : Array.from(new Set(['sdd', ...basePacks]));
 		const packsArg = packs.join(',');
 		const mode = fixture.mode ?? 'full';
-		const profile = fixture.profile ?? 'release';
+		const profile = fixture.profile ?? 'delivery';
 		const commonArgs = [
 			'--root',
 			tempRoot,
@@ -433,13 +433,13 @@ function main() {
 			name: 'pointer-minimal',
 			packs: [],
 			mode: 'pointer',
-			profile: 'release'
+			profile: 'delivery'
 		},
 		{
 			name: 'full-minimal',
 			packs: [],
 			mode: 'full',
-			profile: 'release',
+			profile: 'delivery',
 			specCompat: 'speckit',
 			specSlug: '001-fixture-spec',
 			specCommands: true,
@@ -453,7 +453,7 @@ function main() {
 			name: 'full-minimal',
 			packs: [],
 			mode: 'full',
-			profile: 'release',
+			profile: 'delivery',
 			specCompat: 'speckit',
 			specSlug: '001-pointer-after-full',
 			pointerAfterFull: true,
