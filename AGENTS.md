@@ -36,10 +36,14 @@ This writes `.agentic-governance/agent-context.json` with governance index point
 ## Spec-driven start (when SDD pack enabled)
 
 ```bash
-pnpm exec brainwav-governance spec init --slug 001-appkit-toolbar-refresh
+pnpm exec brainwav-governance spec init --slug 001-example
 ```
 
-Creates `specs/001-appkit-toolbar-refresh/{spec.md,plan.md,tasks.md}` and should precede task folder work.
+Creates `specs/001-example/{spec.md,plan.md,tasks.md}` and should precede task folder work.
+
+Example task folder:
+
+`tasks/001-example/…`
 
 ```bash
 pnpm exec brainwav-governance spec validate --spec-root specs --report .agentic-governance/reports/spec-validate.json
