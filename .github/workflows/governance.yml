@@ -123,10 +123,7 @@ jobs:
 
   oversight:
     runs-on: ubuntu-latest
-    if: ${{ secrets.CORTEX_AEGIS_HTTP_URL != '' }}
     needs: [readiness, hash-drift, dep-boundary, docs-validate, agents-integrity, governance-validate]
-    env:
-      CORTEX_AEGIS_HTTP_URL: ${{ secrets.CORTEX_AEGIS_HTTP_URL }}
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -137,7 +134,15 @@ jobs:
           node-version: '24.11.0'
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile=false
-      - run: pnpm oversight:aegis-check --goal "ci-governance-smoke" --plan "1) validate hashes 2) check governance files" --session "ci"
+      - name: Oversight (skip if no Aegis endpoint)
+        env:
+          CORTEX_AEGIS_HTTP_URL: ${{ secrets.CORTEX_AEGIS_HTTP_URL }}
+        run: |
+          if [ -z "$CORTEX_AEGIS_HTTP_URL" ]; then
+            echo "CORTEX_AEGIS_HTTP_URL not set; skipping oversight."
+            exit 0
+          fi
+          pnpm oversight:aegis-check --goal "ci-governance-smoke" --plan "1) validate hashes 2) check governance files" --session "ci"
 
   security:
     runs-on: ubuntu-latest
