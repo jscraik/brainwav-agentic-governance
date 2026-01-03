@@ -89,17 +89,17 @@ All UI components MUST meet WCAG 2.2 AA compliance:
 
 ### 6. Security by Default
 
-**Quality Gates**: All changes must pass:
+**Quality Gates**: All changes must pass repo-standard security scans (pack-provided commands):
 
-- `pnpm security:scan` - Semgrep OWASP rules
-- `pnpm security:scan:gitleaks` - Secret detection
-- `pnpm test:security` - Security-focused test scenarios
+- Semgrep OWASP rules
+- Secret detection
+- Security-focused test scenarios (if applicable)
 - Dependency vulnerability scanning
 
 **No Secrets in Code**: Never commit credentials, API keys, or sensitive data
 
 - Use environment variables via `.env` files
-- 1Password CLI integration for local development
+- Approved secret-manager CLI integration for local development
 - Secrets management via secure vaults
 
 ---

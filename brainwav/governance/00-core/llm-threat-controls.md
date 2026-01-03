@@ -7,7 +7,7 @@
 ---
 
 ## How to use this document
-- Reference control IDs (`LLM0x`) in oversight findings, vibe-check evidence, risk assessments, and PR discussions.
+- Reference control IDs (`LLM0x`) in oversight findings, Aegis evidence, risk assessments, and PR discussions.
 - If a required mitigation is missing, mark **[BLOCKER]** unless a Constitution waiver exists.
 - Map multiple IDs when a scenario spans more than one threat category.
 - Attach the **Evidence Hooks** below to your PR (paths, logs, screenshots).
@@ -26,8 +26,8 @@ Use the control IDs in PR descriptions and evidence logs. Prefer automated evide
 
 | ID | OWASP LLM Top 10 | Mitigations | Evidence Hooks to Attach in PR |
 |----|-------------------|-----------------------|--------------------------------|
-| **LLM01** | Prompt Injection | Strict input validation (Zod), tool allow-list & scoped capabilities, **structured outputs / function calling**, sandboxed tool execution, **vibe_check** before side-effects. | Schema files; tool registry entries; vibe_check JSON; failing→passing injection tests; blocked-call log/screenshot. |
-| **LLM02** | Data Leakage | Data minimization; observability redaction; secrets via **1Password CLI (`op`)**; access reviews; encrypted storage; PII scanners. | Redaction config; scanner report; `op` usage evidence; access review notes; encryption config. |
+| **LLM01** | Prompt Injection | Strict input validation (Zod), tool allow-list & scoped capabilities, **structured outputs / function calling**, sandboxed tool execution, **Aegis validation** before side-effects. | Schema files; tool registry entries; Aegis JSON; failing→passing injection tests; blocked-call log/screenshot. |
+| **LLM02** | Data Leakage | Data minimization; observability redaction; secrets via approved secret-manager CLI; access reviews; encrypted storage; PII scanners. | Redaction config; scanner report; secret-manager usage evidence; access review notes; encryption config. |
 | **LLM03** | Model Theft | Authenticated API gateways; rate limits; watermarking (where applicable); signed inference manifests. | Gateway policy; rate-limit config; watermark test; signed manifest sample. |
 | **LLM04** | Supply Chain | **SBOM CycloneDX 1.7**, dependency review, reproducible builds, **SLSA v1.2** provenance, **Cosign v3 bundle** verification, OSV scan. | SBOM file; SLSA attestation; cosign bundle verify log; OSV report. |
 | **LLM05** | Insecure Plugins | Plugin registry attestation; contract testing; minimal scopes; orchestration kill-switch toggles. | Registry entry; contract tests; scope diff; toggle docs. |
@@ -51,13 +51,13 @@ Use the control IDs in PR descriptions and evidence logs. Prefer automated evide
   _Evidence:_ semgrep/lint results, unit tests proving cancellation paths.
 
 - **LLM‑S2 — Academic Research & Licensing (BLOCKER)**  
-  Implementation plans enhanced via Wikidata/arXiv/Semantic Scholar/OpenAlex/Context7; licensing validated; only SAFE/REVIEW content included.  
+  Implementation plans enhanced via configured research connectors; licensing validated; only SAFE/REVIEW content included.  
   _Evidence:_ `logs/academic-research/findings.json`, license validation notes, references cited in plan.
 
 - **LLM‑S3 — Confession Protocol (BLOCKER at G5)**  
   Agents MUST produce a separate confession output channel at G5 (and optionally at other gates) that honestly self-assesses compliance with all explicit and implicit objectives. Confessions are evaluated ONLY for truthfulness, not for main work quality. Surfacing failures in confessions does not penalize main work — it enables human oversight.  
   _Evidence:_ `evidence/confession-report.json`, `CONFESSION:OK` token in logs, false negative rate tracking.  
-  _Rationale:_ Based on OpenAI "Confessions" research (2025) — decoupling honesty incentives from main task rewards reduces reward-hacking, sycophancy, and hidden failures.  
+  _Rationale:_ Based on published "Confessions" research (2025) — decoupling honesty incentives from main task rewards reduces reward-hacking, sycophancy, and hidden failures.  
   _Integration:_ Confession findings feed into Cortex-Aegis risk assessment, Critic Subagent output, and Session Retrospective.
 
 ---

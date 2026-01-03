@@ -2,7 +2,9 @@
 
 **Purpose**: Standard workflow for integrating academic research into planning and implementation cycles.
 
-**Status**: Mandatory for all implementation tasks (per assurance-system.md §3)
+**Status**: Mandatory when research/oversight packs are enabled and the active profile/change class requires academic research (see assurance-system.md).
+
+**Neutrality:** Connector endpoints, provider lists, and tooling are adapter/pack-scoped. This template defines the evidence artifacts and workflow only.
 
 ---
 
@@ -15,14 +17,11 @@
 mkdir -p ./tasks/<slug>/logs/academic-research
 mkdir -p ./tasks/<slug>/research/evidence
 
-# Verify all academic connectors are healthy
-curl -s ${WIKIDATA_MCP_URL:-http://127.0.0.1:3029}/health
-curl -s ${ARXIV_MCP_URL:-http://127.0.0.1:3041}/health
-curl -s ${SEMANTIC_SCHOLAR_API_URL:-https://api.semanticscholar.org/graph/v1}/paper/search?query=test
-curl -s ${OPENALEX_API_URL:-https://api.openalex.org/works}?search=test
+# Verify configured research connectors are healthy (adapter-defined)
+# Use pack-provided health check commands or endpoints and record results.
 
 # Store health check results
-echo "$(date): Academic connectors health check completed" >> ./tasks/<slug>/research/connectors-health.log
+echo "$(date): Research connectors health check completed" >> ./tasks/<slug>/research/connectors-health.log
 ```
 
 ### Step 2: Research Query Generation
@@ -43,37 +42,26 @@ const academicQueries = [
 
 ### Step 3: Multi-Source Academic Research with License Validation
 
-Execute parallel searches across all academic databases using MCP tools:
+Execute parallel searches across configured research connectors:
 
 ```typescript
-// Execute research using MCP tools
-const wikidataResults = await mcpClient.callTool('mcp_wikidata_vector_search', {
+// Execute research using adapter-defined MCP tools
+const primaryResults = await mcpClient.callTool('<research_connector_search>', {
   query: `${concepts.primary} patterns techniques`,
   limit: 20
 });
 
-const arxivResults = await mcpClient.callTool('mcp_arxiv_search', {
+const secondaryResults = await mcpClient.callTool('<research_connector_search>', {
   query: `${concepts.technology} optimization`,
-  maxResults: 15
+  limit: 15
 });
 
-// For non-MCP sources, use direct HTTP API calls
-const semanticScholarResponse = await fetch(
-  `${SEMANTIC_SCHOLAR_API_URL:-https://api.semanticscholar.org/graph/v1}/paper/search?query=${concepts.domain}%20best%20practices&limit=20&fields=title,abstract,authors,citationCount,url`
-);
-
-const openAlexResponse = await fetch(
-  `${OPENALEX_API_URL:-https://api.openalex.org/works}?search=${concepts.primary}&filter=publication_year:>2020&per-page=25`
-);
-
-// Store findings
+// Store findings (shape is connector-specific)
 fs.writeFileSync(
   './tasks/<slug>/logs/academic-research/findings.json',
   JSON.stringify({
-    wikidata: wikidataResults,
-    arxiv: arxivResults,
-    semanticScholar: await semanticScholarResponse.json(),
-    openAlex: await openAlexResponse.json()
+    primary: primaryResults,
+    secondary: secondaryResults
   }, null, 2)
 );
 ```
@@ -82,18 +70,13 @@ fs.writeFileSync(
 
 Validate academic content licenses and filter for compliance:
 
-```bash
-# Validate licenses for all research findings
-pnpm academic:validate-licenses \
-  --input ./tasks/<slug>/logs/academic-research/findings.json \
-  --output ./tasks/<slug>/logs/academic-research/license-validation.json \
-  --risk-threshold review
+Use pack-provided license validation tooling or a manual checklist and record results:
 
-# Filter findings to only include license-compliant content
-pnpm academic:filter-by-license \
+```bash
+# Example (adapter-defined)
+<license-validate-command> \
   --input ./tasks/<slug>/logs/academic-research/findings.json \
-  --license-validation ./tasks/<slug>/logs/academic-research/license-validation.json \
-  --output ./tasks/<slug>/logs/academic-research/compliant-findings.json
+  --output ./tasks/<slug>/logs/academic-research/license-validation.json
 ```
 
 ### Step 5: License-Compliant Research Synthesis and Plan Enhancement
@@ -106,10 +89,10 @@ const enhancedPlan = {
   originalSteps: plan,
   licenseValidation: licenseValidationResults,
   researchFindings: {
-    provenApproaches: extractHighlyCitedPapers(semanticScholarResults, 'SAFE'),
-    recentInnovations: extractRecentPapers(arxivResults, 'SAFE', 'REVIEW'),
-    knowledgeRelationships: extractWikidataRelationships(wikidataResults, 'SAFE'),
-    domainPatterns: extractResearchPatterns(openalexResults, 'SAFE', 'REVIEW')
+    provenApproaches: extractHighlyCitedPapers(primaryResults, 'SAFE'),
+    recentInnovations: extractRecentPapers(secondaryResults, 'SAFE', 'REVIEW'),
+    knowledgeRelationships: extractResearchRelationships(primaryResults, 'SAFE'),
+    domainPatterns: extractResearchPatterns(secondaryResults, 'SAFE', 'REVIEW')
   },
   enhancedSteps: plan.map((step, index) => ({
     ...step,
@@ -127,22 +110,22 @@ Format the plan with academic citations, evidence, and license compliance:
 
 ```
 Plan for: "<implementation goal>"
-1. Research and analyze <domain> patterns (License: CC BY, Research-backed: Semantic Scholar citations: 45, arXiv:2304.12345)
-2. Design solution using proven <technology> approaches (License: Open Access, Research-backed: Context7 domain knowledge via HTTP API, OpenAlex research consensus)
-3. Implement core functionality with wikidata-validated <concept> properties (License: CC0, Research-backed: Wikidata Q1860, vector similarity: 0.92)
-4. Add testing strategy based on peer-reviewed validation methods (License: CC BY-SA, Research-backed: Semantic Scholar highly-cited testing patterns)
-5. Create monitoring using academically-proven metrics collection (License: CC BY, Research-backed: arXiv:2305.67890, citation count: 89)
+1. Research and analyze <domain> patterns (License: SAFE/REVIEW, Research-backed: peer-reviewed citations)
+2. Design solution using proven <technology> approaches (License: SAFE/REVIEW, Research-backed: connector citations)
+3. Implement core functionality with research-validated <concept> properties (License: SAFE/REVIEW, Research-backed: evidence notes)
+4. Add testing strategy based on peer-reviewed validation methods (License: SAFE/REVIEW, Research-backed: testing citations)
+5. Create monitoring using academically-proven metrics collection (License: SAFE/REVIEW, Research-backed: metrics citations)
 6. Document implementation with academic references and proven methodologies (All sources license-compliant)
-7. Deploy with research-backed gradual rollout strategy (License: Open Access, Research-backed: OpenAlex deployment patterns, 2023-2024 consensus)
+7. Deploy with research-backed gradual rollout strategy (License: SAFE/REVIEW, Research-backed: deployment citations)
 ```
 
-### Step 7: Vibe Check with Research and License Integration
+### Step 7: Aegis Oversight with Research and License Integration
 
-Execute enhanced vibe check with academic research and license validation:
+Execute Aegis validation with academic research and license validation:
 
 ```typescript
-// Call vibe_check MCP tool with research-enhanced plan
-const response = await mcpClient.callTool('vibe_check', {
+// Call cortex_aegis_validate MCP tool with research-enhanced plan
+const response = await mcpClient.callTool('cortex_aegis_validate', {
   goal: '<task summary>',
   plan: '<license-compliant-research-enhanced-steps>',
   sessionId: '<session-id>'
@@ -150,7 +133,7 @@ const response = await mcpClient.callTool('vibe_check', {
 
 // Save response with research and license evidence
 fs.writeFileSync(
-  './tasks/<slug>/logs/vibe-check/initial.json',
+  './tasks/<slug>/logs/aegis/initial.json',
   JSON.stringify({
     ...response,
     research: {
@@ -170,15 +153,15 @@ Store all research evidence for governance compliance:
 cat ./tasks/<slug>/logs/academic-research/compliant-findings.json \
   > ./tasks/<slug>/logs/academic-research/final-findings.json
 
-# Local memory parity with license compliance
+# Memory Adapter parity with license compliance
 echo "## License-Compliant Academic Research Findings for <task>" >> ~/.github/instructions/memories.instructions.md
 echo "- Date: $(date)" >> ~/.github/instructions/memories.instructions.md
-echo "- Research sources: Wikidata, arXiv, Semantic Scholar, OpenAlex, Context7" >> ~/.github/instructions/memories.instructions.md
+echo "- Research sources: adapter-defined connectors" >> ~/.github/instructions/memories.instructions.md
 echo "- License validation: $(jq -r '.compliance_score' ./tasks/<slug>/logs/academic-research/license-validation.json)% compliant" >> ~/.github/instructions/memories.instructions.md
 echo "- Key findings: $(jq -r '.summary' ./tasks/<slug>/logs/academic-research/final-findings.json)" >> ~/.github/instructions/memories.instructions.md
 
 # Store memory IDs for reference including license validation
-echo '{"academicResearchMemoryId": "'$(memory-store --type academic-research --path ./tasks/<slug>/logs/academic-research/final-findings.json)'", "licenseValidationMemoryId": "'$(memory-store --type license-validation --path ./tasks/<slug>/logs/academic-research/license-validation.json)'"}' \
+echo '{"academicResearchMemoryId": "'$(<memory-store-command> --type academic-research --path ./tasks/<slug>/logs/academic-research/final-findings.json)'", "licenseValidationMemoryId": "'$(<memory-store-command> --type license-validation --path ./tasks/<slug>/logs/academic-research/license-validation.json)'"}' \
   > ./tasks/<slug>/json/memory-ids.json
 ```
 
@@ -196,15 +179,14 @@ echo '{"academicResearchMemoryId": "'$(memory-store --type academic-research --p
 │   │   ├── license-validation.json          # License compliance results
 │   │   ├── compliant-findings.json          # Filtered license-compliant research
 │   │   └── final-findings.json              # Final research evidence for implementation
-│   └── vibe-check/
-│       └── initial.json                     # Enhanced vibe check with research & license evidence
+│   └── aegis/
+│       └── initial.json                     # Aegis validation with research & license evidence
 ├── research/
 │   ├── connectors-health.log                # Academic connector health status
 │   └── evidence/
-│       ├── wikidata-items.json              # Wikidata vector search results
-│       ├── arxiv-search.json                # arXiv semantic search results
-│       ├── semantic-scholar.json            # Semantic Scholar proven approaches
-│       └── openalex.json                    # OpenAlex research patterns
+│       ├── connector-primary.json           # Connector search results (primary)
+│       ├── connector-secondary.json         # Connector search results (secondary)
+│       └── connector-notes.json             # Connector notes/metadata
 └── json/
     └── memory-ids.json                      # Local memory parity IDs
 ```
@@ -256,19 +238,19 @@ PLAN=$3
 mkdir -p ./tasks/$SLUG/logs/academic-research
 mkdir -p ./tasks/$SLUG/research/evidence
 
-# Execute research workflow
-pnpm oversight:academic-research \
+# Execute research workflow (adapter-defined)
+<research-integration-command> \
   --goal "$GOAL" \
   --plan "$PLAN" \
   --session "$(date +%Y%m%d-%H%M%S)-$SLUG" \
   --save ./tasks/$SLUG/logs/academic-research/findings.json
 
-# Run enhanced vibe check
-pnpm oversight:vibe-check \
+# Run Aegis validation
+pnpm oversight:aegis-check \
   --goal "$GOAL" \
   --plan "$(cat ./tasks/$SLUG/logs/academic-research/enhanced-plan.txt)" \
   --session "$(date +%Y%m%d-%H%M%S)-$SLUG" \
-  --save ./tasks/$SLUG/logs/vibe-check/initial.json \
+  --save ./tasks/$SLUG/logs/aegis/initial.json \
   --with-academic-research
 
 echo "Academic research integration complete for task: $SLUG"

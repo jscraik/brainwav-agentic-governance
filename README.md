@@ -27,10 +27,10 @@ The brAInwav framework packages policies, workflows, templates, and automation f
 
 - **ArcTDD + Phase Machine** – Standardized G0–G10 workflow (R→G→F→REVIEW) with ≤7-step plans, failing-first tests, and evidence capture at every gate.
 - **Evidence Triplet & Run Manifests** – Mandatory pointers to (1) milestone test red→green proof, (2) contract snapshot, (3) reviewer disposition JSON.
-- **Cortex-Aegis Oversight** – Live MCP/CLI gate that enforces academic research, license validation, and vibe checks before any side-effecting work.
+- **Cortex-Aegis Oversight** – Adapter-driven oversight gate that enforces research, license validation, and preflight checks before any side-effecting work.
 - **Security & Compliance** – Standards are pinned in `brainwav/governance/90-infra/standards.versions.json` (Jan 2026 baseline) and include OWASP Top 10:2025, ASVS 5.0.0, OWASP LLM Top 10 (2025 v1.1), NIST SSDF 1.1, NIST AI RMF + GenAI Profile, WCAG 2.2, SLSA v1.2, CycloneDX 1.7, SPDX 3.0.1, Sigstore Cosign, and OpenSSF Scorecard (see `SECURITY.md`).
 - **Governance Integrity** – `brainwav/governance/90-infra/governance-index.json` pins SHA-256 hashes for every normative doc; CI blocks mismatches.
-- **MCP-First Tooling** – RepoPrompt, Context7, Local Memory, and Cortex-Aegis MCP servers with run-manifest logging, plus Local Memory parity rules.
+- **MCP-First Tooling** – MCP adapters for documentation, memory, oversight, and research connectors with run-manifest logging and parity rules.
 - **Modular Control Framework** – Core + capability packs + GitHub Actions adapters, with controls-as-data for auditability and external defensibility.
 
 ---
@@ -41,7 +41,7 @@ The brAInwav framework packages policies, workflows, templates, and automation f
 
 - Node.js 24.11.x + pnpm 10.26.x (pinned via `package.json` engines and CI workflow).
 - Security toolchain installed locally and in CI: `semgrep`, `gitleaks`, `trivy`, `cosign`, `cyclonedx`, plus OSV/pnpm audit support (`pnpm audit`, `osv-scanner`).
-- MCP clients (VS Code, Claude Desktop, RepoPrompt CLI) with access to Context7, Local Memory, and Cortex-Aegis servers.
+- MCP clients (VS Code, Claude Desktop, CLI) with access to adapter-configured documentation, memory, and oversight connectors.
 
 ### Bootstrap Steps (pack maintainers)
 
@@ -56,8 +56,8 @@ pnpm ensure:tools        # installs repo-required CLIs (Semgrep, Gitleaks, etc.)
 # 3. Run governance bootstrap (discover hashes, MCP config, governance index)
 pnpm cortex:governance-bootstrap
 
-# 4. (Optional) Validate MCP health + oversight
-pnpm oversight:vibe-check --goal "<task>" --plan "<≤7 steps>" --session "demo"
+# 4. (Optional) Validate oversight adapter
+pnpm oversight:aegis-check --goal "<task>" --plan "<≤7 steps>" --session "demo"  # legacy: oversight:vibe-check
 
 # 5. Verify required tooling and governance files
 pnpm readiness:check
@@ -139,7 +139,7 @@ For automated upgrades, see `.github/workflows/governance-upgrade.yml`.
 
 - `pnpm ensure:tools` — checks required CLIs (rg, fd, jq, semgrep, gitleaks, trivy, cosign, osv-scanner, markdownlint-cli2) and engine versions.
 - `pnpm cortex:governance-bootstrap` — writes `.agentic-governance/agent-context.json` with AGENTS.md hash and workflow pointers.
-- `pnpm oversight:vibe-check --goal "..." --plan "..." [--session <id>] [--slug <task>]` — posts to the Cortex Aegis HTTP endpoint (default `http://127.0.0.1:2091/vibe_check`) and logs JSON under the task.
+- `pnpm oversight:aegis-check --goal "..." --plan "..." [--session <id>] [--slug <task>]` — posts to the adapter-configured oversight endpoint and logs JSON under the task (legacy: `oversight:vibe-check`).
 - `pnpm readiness:check` — confirms core governance files exist and required tools are present.
 - `brainwav-governance install --root <path>` — copy governance pack + CI workflow into another repo.
 - `brainwav-governance validate --root <path>` — verify required tokens and Step Budget <=7 across tasks.
@@ -170,7 +170,7 @@ For automated upgrades, see `.github/workflows/governance-upgrade.yml`.
 
 Customize `AGENTS.md`, `brainwav/governance/00-core/constitution.md`, and templates under `brainwav/governance/templates/` with your maintainers, escalation paths, and brand wording. Use `.agentic-governance/config.json` for profile selection and overlays (local tightenings only). Update `.agentic-governance/mcp.runtime.json` in consumer repos if you add or relocate MCP transports.
 
-### Documentation quality checklist (OpenAI Cookbook aligned)
+### Documentation quality checklist (Industry-aligned)
 - State prerequisites up front (here: Node 24.11.x, pnpm 10.26.x, security toolchain).
 - Provide a minimal happy path (see “Install & Verify in a consumer project”).
 - Include verification commands (`governance:validate`, `governance:sync-hashes:check`) so readers can confirm success.
@@ -244,7 +244,7 @@ Local profile selection (creative/delivery/release) lives in `.agentic-governanc
 The framework ships executable commands under `brainwav/governance/commands/`. Run them with Node.js:
 
 ```bash
-# Recall context from Local Memory MCP
+# Recall context from Memory Adapter
 TASK_SLUG=my-task node brainwav/governance/commands/recall.mjs "governance workflow" --limit=5
 
 # Store task context to memory
@@ -259,7 +259,7 @@ INCIDENT_ID=INC-742 node brainwav/governance/commands/incident-review.mjs
 
 | Command | Markdown Spec | Executable | Purpose |
 |---------|---------------|------------|---------|
-| `/memorize` | `memorize.md` | `memorize.mjs` | Store governance context to Local Memory |
+| `/memorize` | `memorize.md` | `memorize.mjs` | Store governance context to Memory Adapter |
 | `/recall` | `recall.md` | `recall.mjs` | Retrieve context via semantic search |
 | `/daily-summary` | `daily-summary.md` | `daily-summary.mjs` | Generate standup summary with git status |
 | `/incident-review` | `incident-review.md` | `incident-review.mjs` | Prepare structured post-incident review |
@@ -308,7 +308,7 @@ tasks/<slug>/
 ├── plan/ (PLAN.md, risk register, tdd-plan)
 ├── work/implementation-log.md
 ├── evidence/ (tests.md, critic-review.json, confession-report.json, aegis-report.json)
-├── logs/vibe-check/*.json
+├── logs/aegis/*.json
 ├── logs/academic-research/*.json
 ├── json/run-manifest.json + memory-ids.json
 └── SUMMARY.md + session-retrospective
@@ -316,9 +316,9 @@ tasks/<slug>/
 
 ### Oversight & Academic Research
 
-- Cortex-Aegis MCP server (`@brainwav/cortex-aegis-mcp`, default port 2091) runs `vibe_check`, `connector_health`, `license_validate`, and `time_freshness` tools.
-- Agents must run research via Wikidata MCP (3029), arXiv MCP (3041), Semantic Scholar/OpenAlex APIs, and Context7 before calling Aegis.
-- Oversight gates: G2 (always) and G5 (when risk ≥ medium). Responses live in `logs/vibe-check/*.json` and `evidence/aegis-report.json`.
+- Cortex-Aegis oversight is adapter-provided; endpoints and transports are defined by packs/adapters.
+- Academic research connectors are pack-scoped; record citations + license notes before oversight when required by profile/change class.
+- Oversight gates: G2 (always) and G5 (when risk ≥ medium). Responses live in `logs/aegis/*.json` (legacy `logs/vibe-check/*.json` allowed via adapters) and `evidence/aegis-report.json`.
 
 ### Security & Compliance
 
@@ -326,11 +326,10 @@ tasks/<slug>/
 - CI gates: Semgrep (block on policy rules), Gitleaks (`ANY=block`), OSV/pnpm audit (block on high/critical runtime deps), Trivy (vuln/misconfig/secret/license), CycloneDX SBOM, Sigstore Cosign v3 attestation.
 - Evidence of each scanner runs during G5, and waivers must be recorded + time-boxed per `AGENTS.md` §27.
 
-### MCP & Local Memory Integration
+### MCP & Memory Adapter Integration
 
-- RepoPrompt handles context building, planning, and minimal diffs.
-- Context7 supplies up-to-date third-party documentation before each API touch.
-- Local Memory MCP enforces memory parity between `.github/instructions/memories.instructions.md` and the Qdrant-backed service.
+- MCP adapters handle context building, planning, and documentation retrieval.
+- Memory adapters enforce parity between local instructions and the configured memory backend.
 - Run manifests log every MCP session (server, transport, endpoint, evidence anchors).
 
 ---
@@ -339,7 +338,7 @@ tasks/<slug>/
 
 - Wire `pnpm cortex:governance-bootstrap` into repo attach to refresh governance hashes.
 - Enforce `brainwav/governance/90-infra/governance-index.json` verification in CI (already included in `agents-guard`).
-- Run `pnpm readiness:check`, `pnpm lint:smart`, `pnpm test:smart`, `pnpm typecheck:smart`, and security gates before merging.
+- Run `pnpm readiness:check`, repo-standard lint/test/typecheck commands, and security gates before merging.
 - Attach Evidence Triplet artifacts to every pull request and require the unified checklist from `brainwav/governance/20-checklists/checklists.md`.
 
 ---

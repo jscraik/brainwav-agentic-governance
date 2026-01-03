@@ -24,7 +24,8 @@ const runManifestPath = path.join(taskDir, 'json', 'run-manifest.json');
 const memoryIdsPath = path.join(taskDir, 'json', 'memory-ids.json');
 const evidenceSummaryPath = path.join(taskDir, 'evidence', 'summary.md');
 const planPath = path.join(taskDir, 'plan', 'PLAN.md');
-const vibeDir = path.join(taskDir, 'logs', 'vibe-check');
+const aegisDir = path.join(taskDir, 'logs', 'aegis');
+const legacyVibeDir = path.join(taskDir, 'logs', 'vibe-check');
 
 function exists(filePath) {
 	return fs.existsSync(filePath);
@@ -50,8 +51,10 @@ const snapshot = {
 	warnings: [],
 };
 
-if (exists(vibeDir)) {
-	snapshot.oversightLogs = fs.readdirSync(vibeDir).filter((file) => file.endsWith('.json'));
+if (exists(aegisDir)) {
+	snapshot.oversightLogs = fs.readdirSync(aegisDir).filter((file) => file.endsWith('.json'));
+} else if (exists(legacyVibeDir)) {
+	snapshot.oversightLogs = fs.readdirSync(legacyVibeDir).filter((file) => file.endsWith('.json'));
 }
 
 const manifest = snapshot.files.runManifest ? readJson(runManifestPath) : null;

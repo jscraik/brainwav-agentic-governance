@@ -9,7 +9,7 @@
 
 ## Purpose
 
-This document defines session continuity requirements for agents executing multi-session tasks. Based on Anthropic's research on effective harnesses for long-running agents, it establishes patterns for session bridging, checkpoint management, and recovery from interruptions.
+This document defines session continuity requirements for agents executing multi-session tasks. Based on published research on effective harnesses for long-running agents, it establishes patterns for session bridging, checkpoint management, and recovery from interruptions.
 
 > **Upstream Reference**: This protocol operates within the task folder structure defined in `10-flow/agentic-coding-workflow.md` §3. All checkpoint and session artefacts live under `tasks/<slug>/json/`.
 
@@ -67,7 +67,7 @@ startup_sequence:
   0_recall_context:
     action: "Run /recall command"
     command: "/recall <task-slug>"
-    purpose: "Retrieve prior session context from Local Memory"
+    purpose: "Retrieve prior session context from Memory Adapter"
     reference: "commands/recall.md"
     
   1_read_progress:
@@ -163,7 +163,7 @@ If health check fails at session start:
 
 Checkpoints stored in:
 - **Primary**: `tasks/<slug>/json/checkpoints/<checkpoint_id>.json`
-- **Mirror**: Local Memory MCP (for semantic search)
+- **Mirror**: Memory Adapter (for semantic search)
 - **Index**: `tasks/<slug>/json/checkpoint-index.json`
 
 ---
@@ -198,7 +198,7 @@ shutdown_sequence:
   3b_memorize:
     action: "Run /memorize command"
     command: "/memorize update <task-slug>"
-    purpose: "Persist session decisions to Local Memory"
+    purpose: "Persist session decisions to Memory Adapter"
     reference: "commands/memorize.md"
     
   4_update_status:
@@ -356,7 +356,7 @@ Long-context agents experience refusal drift and degraded task performance well 
 
 ## References
 
-- Anthropic: "Effective harnesses for long-running agents" (2025)
+- Published research: "Effective harnesses for long-running agents" (2025)
 - arXiv:2512.02445 — *When Refusals Fail: Unstable Safety Mechanisms in Long-Context LLM Agents*
 - `10-flow/agentic-coding-workflow.md` - Gate definitions
 - `00-core/AGENT_CHARTER.md` - Agent guardrails

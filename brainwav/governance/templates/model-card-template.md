@@ -17,7 +17,7 @@
 | **Model Name** | [Name] |
 | **Model Version** | [Semantic version] |
 | **Model Type** | [e.g., LLM, Embedding, Classifier] |
-| **Provider** | [e.g., OpenAI, Anthropic, Ollama, Local] |
+| **Provider** | [e.g., Local, Hosted, Adapter-defined] |
 | **Model ID** | [Provider's model identifier] |
 | **Date Added** | [YYYY-MM-DD] |
 | **Last Evaluated** | [YYYY-MM-DD] |

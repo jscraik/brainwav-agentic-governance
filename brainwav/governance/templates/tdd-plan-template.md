@@ -12,7 +12,7 @@
 
 [2-3 sentences describing what will be implemented and the primary goal]
 
-Example: "Implement OAuth 2.1 PKCE authentication for Local Memory REST endpoints while maintaining local-first guarantees and full observability through OpenTelemetry instrumentation."
+Example: "Implement OAuth 2.1 PKCE authentication for Memory Adapter endpoints while maintaining local-first guarantees and full observability through OpenTelemetry instrumentation."
 
 ---
 
@@ -432,7 +432,7 @@ pnpm install
   - [ ] Check service identity/branding throughout
   - [ ] Ensure all functions ≤40 lines
 
-- [ ] **Local Memory Documentation**
+- [ ] **Memory Adapter Documentation**
   - [ ] Store implementation insights in local-memory
   - [ ] Document key decisions and rationale
   - [ ] Tag with relevant context for future work

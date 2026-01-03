@@ -11,27 +11,27 @@ alwaysApply: true
 This governance framework enables a self-contained, local-first **Agentic Development Runtime** that:
 
 1) orchestrates agent workflows with strict phase gates,  
-2) persists knowledge via a **Memory System** with MCP/REST **parity**,  
-3) exposes **only** controlled surfaces — **MCP**, **A2A**, **REST**, and **frontier adapters** — guarded by policy, and  
+2) persists knowledge via a **Memory Adapter** with adapter-defined parity,  
+3) exposes **only** controlled surfaces — **MCP**, **A2A**, **REST**, and **external model adapters** — guarded by policy, and  
 4) ships an **A11y-first Ops Dashboard** for health, logs, metrics, traces, and manual controls, and  
 5) applies uniformly across **every adopting project** so agents and developers share one contract regardless of repository.
 
-> **Governance is code.** The runtime acknowledges the nearest `AGENTS.md`, emits evidence tokens, runs a Vibe Check before acting, treats **time freshness** as a first-class constraint, and assumes every adopting codebase follows the same playbook.
+> **Governance is code.** The runtime acknowledges the nearest `AGENTS.md`, emits evidence tokens, runs Aegis oversight before acting, treats **time freshness** as a first-class constraint, and assumes every adopting codebase follows the same playbook.
 
 ---
 
 ## 1) Core Principles
 
-- **Local-first, vendor-neutral.** Ollama preferred; frontier APIs optional behind policy.
+- **Local-first, vendor-neutral.** No provider preference; external APIs only via policy-guarded adapters.
 - **Project-neutral governance.** Every adopting codebase inherits the same baseline contract; package `AGENTS.md` files may tighten rules but never fork process intent.
 - **Deterministic & evidence-backed.** Reproducible runs; artifacted logs, traces, SBOM/provenance.
 - **Single integration hub.** Exactly one MCP server; Tools/Resources/Prompts are **registered** (not embedded).
 - **Tight domain boundaries.** No cross-domain imports; communicate via A2A topics or declared contracts/schemas.
-- **Security, A11y, Observability by default.** API-key/OAuth, WCAG 2.2 AA, structured logs + OTel; secrets retrieved on-demand via the 1Password CLI (`op`) with no long-lived copies.
+- **Security, A11y, Observability by default.** API-key/OAuth, WCAG 2.2 AA, structured logs + OTel; secrets retrieved on-demand via approved secret-manager CLI with no long-lived copies.
 - **Small, shippable steps.** Quality gates: coverage/mutation, a11y, security, structure guard.
 - **Time Freshness Guard.** All dates anchored to harness "today"; ISO-8601 surfaced to users.
-- **Hybrid Model — Live Only.** Embeddings/rerankers/generation must hit **live** Ollama/frontier engines (no stubs/recordings/dry-runs).
-- **AGENTS.md + Vibe Check.** Load nearest `AGENTS.md` (persist SHA); call `vibe_check` before file writes/network calls/long runs.
+- **Hybrid Model — Profile-driven.** Live engines required for release; delivery allows recorded inputs with evidence; creative allows prototyping only.
+- **AGENTS.md + Aegis Oversight.** Load nearest `AGENTS.md` (persist SHA); call `cortex_aegis_validate` before file writes/network calls/long runs.
 
 ---
 
@@ -41,12 +41,12 @@ This governance framework enables a self-contained, local-first **Agentic Develo
   Paths: `/mcp`, `/sse`, `/health`, `/metrics`
 - **A2A** (Agent-to-Agent hub) for intra-runtime messaging (topics, intents, envelopes)
 - **REST API** for programmatic control & integrations
-- **Frontier Adapters**: OpenAI/Anthropic/Google, ChatGPT Connectors/Apps SDK, Perplexity SSE — all policy-guarded
+- **External Adapters**: model and connector surfaces are adapter-defined and policy-guarded
 
-> **Default ports (must match `.well-known/mcp.json`)**: `3024` MCP, `3026` Local Memory MCP, `3002` Memory API, `39300` Pieces OS.
+> **No hardcoded ports in core governance.** Adapter packs define endpoint/port defaults and `.well-known/mcp.json`.
 
 **Auth modes**
-- **API key** by default (dev may allow `NO_AUTH=true`).  
+- **API key** by default (dev may allow no-auth only when explicitly configured in adapters).  
 - **OAuth2 (IdP)** optional; token scopes must follow least privilege and be documented per project.
 
 ---
@@ -67,22 +67,21 @@ This governance framework enables a self-contained, local-first **Agentic Develo
 - Central bus for topics/intents; policies for routing, retries/backoff, auditing.
 - **No direct cross-domain imports**; use envelopes/contracts only.
 
-### 3.4 Memory Core
+### 3.4 Memory Adapter
 - Single source of truth for memories (facts, episodes, embeddings, artifacts).
 - CRUD + search APIs; retention/expiry; export/import.
-- **Parity rule**: every write available via **MCP & REST**. Evidence persisted to `.github/instructions/memories.instructions.md`.
+- **Parity rule**: every write available via adapter-defined surfaces. Evidence persisted to `.github/instructions/memories.instructions.md`.
 
 ### 3.5 RAG Pipeline
-- Ingestion → chunking → **live** embedding → indexing → retrieval → post-processing (rerankers are **live** only).
+- Ingestion → chunking → embedding → indexing → retrieval → post-processing (live/recorded per profile and evidence policy).
 - Deterministic pipelines with versioned configs, replayable jobs, and batch evaluation hooks.
 
 ### 3.6 Agents
 - Role-scoped (builder/reviewer/guardian) with explicit contracts and **evidence pointers**.
 - Obey **phase machine** and **HITL at REVIEW only**; blocked otherwise.
 
-### 3.7 Connectors & Frontier Surfaces
-- **ChatGPT Connectors / Apps SDK** for bounded operation of governance framework inside ChatGPT (OAuth protected-resource discovery, dynamic client registration).
-- **Perplexity SSE** via streaming adapter.
+### 3.7 Connectors & External Surfaces
+- Adapter-defined connectors for bounded operation of governance framework in external runtimes.
 - Rate-limits, audit, and error taxonomy standardized.
 
 ### 3.8 Ops Dashboard (React)
@@ -103,7 +102,7 @@ This governance framework enables a self-contained, local-first **Agentic Develo
 
 ### 4.1 `packages/mcp-server`
 **Vision:** Minimal MCP HTTP/SSE hub; loads registries; zero business logic.  
-**Done means:** `/health`, `/mcp`, `/sse`, `/metrics` green; API-key on; secure tunnel tested; integration tests pass; **evidence tokens present** (`AGENTS_MD_SHA`, `aegis-vibe-check`, `service:`).
+**Done means:** `/health`, `/mcp`, `/sse`, `/metrics` green; API-key on; secure tunnel tested; integration tests pass; **evidence tokens present** (`AGENTS_MD_SHA`, `AEGIS_VALIDATE:OK`, `service:`).
 
 ### 4.2 `packages/mcp-core`
 **Vision:** Protocol utilities, schemas, adapters, error taxonomy.  
@@ -123,7 +122,7 @@ This governance framework enables a self-contained, local-first **Agentic Develo
 
 ### 4.6 `packages/rag`
 **Vision:** Deterministic ingestion/index/retrieval with **live** models.  
-**Done means:** Config-driven jobs; snapshotable outputs; retrieval quality smoke; perf budget; **models:health/smoke logs** attached (model IDs, dims/norms, latency).
+**Done means:** Config-driven jobs; snapshotable outputs; retrieval quality smoke; perf budget; **model health logs** attached when required (model IDs, dims/norms, latency).
 
 ### 4.7 `packages/agents`
 **Vision:** Role-scoped agents with policy gates; evidence-backed outputs.  
@@ -134,8 +133,8 @@ This governance framework enables a self-contained, local-first **Agentic Develo
 **Done means:** Golden path (ingest→index→query) and incident path; replayable runs; determinism checks; **HITL blocked pre-REVIEW**.
 
 ### 4.9 `packages/connectors`
-**Vision:** Adapters for ChatGPT Apps SDK, Perplexity SSE, frontier APIs.  
-**Done means:** Sample ChatGPT config; SSE demo; rate-limit & auth guards; 403 playbook; protected-resource metadata publishing OAuth scopes.
+**Vision:** Adapters for external model/connectors (runtime-specific packs).  
+**Done means:** Sample adapter config; rate-limit & auth guards; 403 playbook; protected-resource metadata publishing OAuth scopes.
 
 ### 4.10 Platform Runtime Surfaces (scope note)
 This vision doc is governance-focused. Runtime host/app specifics (e.g., dashboards, ASBR hosts) live in system architecture/runbook docs. Keep this section scoped to governance expectations; see platform docs for implementation targets.
@@ -145,7 +144,7 @@ This vision doc is governance-focused. Runtime host/app specifics (e.g., dashboa
 ## 5) Non-Goals
 
 - Multiple MCP servers per package (duplication)  
-- Interfaces beyond MCP/A2A/REST/frontier adapters  
+- Interfaces beyond MCP/A2A/REST/external adapters  
 - Opaque AI actions without evidence/logs
 
 ---
@@ -157,17 +156,17 @@ This vision doc is governance-focused. Runtime host/app specifics (e.g., dashboa
 - **Security:** All external calls authenticated; happy-path free of 403s; no secrets logged.  
 - **A11y/UX:** Full keyboard coverage; no color-only indicators; screen-reader labels pass axe/jest-axe.  
 - **Governance Evidence:** PRs contain:
-  - `AGENTS_MD_SHA:<sha>`, `aegis-vibe-check`, `PHASE_TRANSITION:*`, `service:*`  
-  - `MODELS:LIVE:OK engine=<ollama|frontier>` with model IDs and dims/norms  
-  - Top-level Code Review Checklist link to `governance/rules/code-review-checklist.md`
+  - `AGENTS_MD_SHA:<sha>`, `AEGIS_VALIDATE:OK`, `PHASE_TRANSITION:*`, `service:*`  
+  - `MODELS:LIVE:OK engine=<id>` with model IDs and dims/norms  
+  - Top-level Code Review Checklist link to `20-checklists/checklists.md`
 
 ---
 
 ## 7) Phase Machine & HITL Gating (Runtime Policy)
 
 - **R (Red):** Write failing tests; plan minimal pass → auto-advance to **G** when failing → passing committed.  
-- **G (Green):** Implement to pass; coverage gates → **F** when 90/95% thresholds met.  
-- **F (Finished):** Refactor/docs/a11y/security/structure-guard + **live model** evidence → **REVIEW**.  
+- **G (Green):** Implement to pass; profile/change-class quality gates → **F**.  
+- **F (Finished):** Refactor/docs/a11y/security/structure-guard + model health evidence when required → **REVIEW**.  
 - **REVIEW:** HITL permitted; Code Review Checklist must PASS all BLOCKERs.
 
 > Any `human_input` before REVIEW is a policy violation.
@@ -176,9 +175,9 @@ This vision doc is governance-focused. Runtime host/app specifics (e.g., dashboa
 
 ## 8) Evidence Protocol (Emitted & Verified)
 
-- **AGENTS Acknowledgement:** `AGENTS_MD_SHA:<sha>` persisted in `governance/run.yaml` and first vibe-check log.
-- **Vibe Check:** `"aegis-vibe-check"` log required before act phases.
-- **Live-Only Models:** `pnpm models:health && pnpm models:smoke` output includes engine, model IDs, vector dims/norms, latency, and `MODELS:LIVE:OK`.
+- **AGENTS Acknowledgement:** `AGENTS_MD_SHA:<sha>` persisted in `governance/run.yaml` and first Aegis log.
+- **Aegis Oversight:** `AEGIS_VALIDATE:OK` log required before act phases when profile/change class requires it.
+- **Model Evidence:** model health output includes engine, model IDs, vector dims/norms, latency, and `MODELS:LIVE:OK` when live usage is required.
 - **Time Freshness:** All surfaced dates are ISO-8601; relative terms normalized.
 
 ---
@@ -189,12 +188,12 @@ This vision doc is governance-focused. Runtime host/app specifics (e.g., dashboa
 
 1. **Bootstrap governance context** – Run `pnpm cortex:governance-bootstrap`, record hashes from `brainwav/governance/90-infra/governance-index.json`, and confirm the nearest `AGENTS.md` + package overrides. (Docs: `governance-quickstart.md`, `AGENT_CHARTER.md`).
 2. **Classify the work item** – Select task type (Feature/Research/Fix/Refactor/Review) and tier per `agentic-coding-workflow.md` §2. Capture metadata in `tasks/<slug>/meta/task.json` before touching code.
-3. **Create the task folder + context** – Populate the canonical structure from `agentic-coding-workflow.md` §3, run Repo Prompt Context Builder, and log connector health + academic research in `context/research.md`.
-4. **Plan and register risks** – Draft `plan/PLAN.md` (≤7 steps) + `plan/tdd-plan.md`, enumerate reuse candidates, and run Cortex-Aegis / Oversight (`logs/vibe-check/*.json`) prior to implementation.
+3. **Create the task folder + context** – Populate the canonical structure from `agentic-coding-workflow.md` §3, run Context Builder, and log connector health + academic research in `context/research.md`.
+4. **Plan and register risks** – Draft `plan/PLAN.md` (≤7 steps) + `plan/tdd-plan.md`, enumerate reuse candidates, and run Cortex-Aegis (`logs/aegis/*.json`, legacy `logs/vibe-check/*.json` allowed via adapters) prior to implementation.
 5. **Scaffold then implement** – Establish failing milestone tests, wire OpenFeature flags, then execute micro-TDD loops (G3→G4) while emitting phase tokens (`PHASE_TRANSITION:R->G`, etc.) and updating `work/implementation-log.md`.
 6. **Verify & evidence** – Run coverage/mutation/a11y/security suites (G5), attach SBOM + SLSA artifacts, capture contract snapshots, and update `evidence/tests.md` + `verification/*` outputs.
 7. **Review & document** – Execute AI + HITL reviews (G6/G7), complete the Code Review Checklist, refresh READMEs/runbooks, and ensure `implementation-plan.md#reuse-ledger` + `SUMMARY.md` are current.
-8. **Ship, monitor, archive** – Roll out per `ops/rollout-plan.md`, watch telemetry, finalize `archive.json`, sync Local Memory parity, and close the task with Evidence Triplet pointers recorded in the run manifest.
+8. **Ship, monitor, archive** – Roll out per `ops/rollout-plan.md`, watch telemetry, finalize `archive.json`, sync Memory Adapter parity, and close the task with Evidence Triplet pointers recorded in the run manifest.
 
 Every step emits the mandated tokens in §8 and inherits the phase machine rules in §7, ensuring teams in any adopting project progress identically.
 

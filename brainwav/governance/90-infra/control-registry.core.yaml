@@ -149,7 +149,7 @@ controls:
     scope: ["delivery", "release"]
     gates: ["G2", "G5"]
     evidence_required:
-      - "tasks/<slug>/logs/vibe-check/"
+      - "tasks/<slug>/logs/aegis/"
     exceptions:
       waiver_format: "brainwav/governance/audit/waivers/<waiver_id>.md"
       max_ttl_days: 30

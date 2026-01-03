@@ -29,7 +29,7 @@ Example: "Research modern authentication patterns for MCP REST endpoints to ensu
 ### Project-Specific Context
 - **MCP Integration**: [How this relates to existing MCP tools/contracts]
 - **A2A Events**: [Relevant event flows or communication patterns]
-- **Local Memory**: [How local memory is involved, if applicable]
+- **Memory Adapter**: [How memory is involved, if applicable]
 - **Existing Patterns**: [Similar implementations in the codebase]
 
 ---
@@ -331,6 +331,6 @@ export const createFeature = async (
 
 **Status**: [Mark as Complete when ready for planning phase]
 
-**Stored in Local Memory**: [Yes/No - Document key findings in local-memory for agent context]
+**Stored in Memory Adapter**: [Yes/No - Document key findings in memory adapter for agent context]
 
 Co-authored-by: <Org> Development Team

@@ -43,7 +43,7 @@ Skills governance is enforced across all skill lifecycle stages and CI gates.
 - **Identity & Supply Chain:** CI uses OIDC/WIF; skills tooling/artifacts use CycloneDX 1.7 SBOM + SLSA v1.2 provenance; Cosign v3 bundle verify logs attached.
 
 **Evidence Tokens (CI‑scanned across PR/logs):**  
-`STRUCTURED_OUTPUTS:OK` · `TRACE_CONTEXT:OK` · `SUPPLY_CHAIN:OK sbom=cyclonedx@1.7 slsa=1.2 cosign=bundle` · `A11Y_REPORT:OK` · `aegis-vibe-check` · `AGENTS_MD_SHA:*` · `service:*`
+`STRUCTURED_OUTPUTS:OK` · `TRACE_CONTEXT:OK` · `SUPPLY_CHAIN:OK sbom=cyclonedx@1.7 slsa=1.2 cosign=bundle` · `A11Y_REPORT:OK` · `AEGIS_VALIDATE:OK` · `AGENTS_MD_SHA:*` · `service:*`
 
 ---
 
@@ -53,7 +53,7 @@ Skills governance is enforced across all skill lifecycle stages and CI gates.
 
 The Skills System provides structured reference knowledge that:
 
-- Complements Local Memory (experiential)
+- Complements Memory Adapter (experiential)
 - Increases compliance with best practices
 - Accelerates agent proficiency
 - Ensures consistency across implementations
@@ -80,7 +80,7 @@ The Skills System provides structured reference knowledge that:
 **Creation Requirements (all MUST):**
 
 1. **Research Phase:** Summarize sources; record license checks.
-2. **Validation Phase:** ≥ 5 successful applications (Local Memory evidence).
+2. **Validation Phase:** ≥ 5 successful applications (Memory Adapter evidence).
 3. **Documentation Phase:** Fill template (frontmatter + structured sections).
 4. **Review Phase:** Peer review for accuracy, ethics, security, a11y.
 5. **Testing Phase:** Schema + content checks; security scanners clean.
@@ -88,7 +88,7 @@ The Skills System provides structured reference knowledge that:
 
 **Required Evidence:**
 
-- Local Memory entries (≥ 5) with outcomes and links
+- Memory Adapter entries (≥ 5) with outcomes and links
 - Effectiveness rate ≥ 80% (initial), computed from application records
 - Clear problem statement, solution approach, examples, and acceptance checks
 - Research citations and license validation summary
@@ -162,7 +162,7 @@ skill_get(args: { id: string })
 skill_apply(args: { id: string; context: object }) -> returns { planSteps: string[]; outputs: object } // structured
 ```
 
-**RAG Surface:** index skills; semantic search (Qdrant or equivalent); store vector config in repo.
+**RAG Surface:** index skills; semantic search (adapter-defined vector store); store vector config in repo.
 
 ### 2.5 Application
 
@@ -188,7 +188,7 @@ skill_apply(args: { id: string; context: object }) -> returns { planSteps: strin
 }
 ```
 
-**Local Memory Write (example):**
+**Memory Adapter Write (example):**
 
 ```javascript
 memoryStore({
@@ -299,7 +299,7 @@ pnpm skills:security-scan --changed
 
 ### 6.3 PR Requirements
 
-1. Evidence links (Local Memory outcomes, ≥5 for new skills)
+1. Evidence links (Memory Adapter outcomes, ≥5 for new skills)
 2. Peer review approval
 3. Validator/scanner logs attached
 4. README updates (if needed)

@@ -200,9 +200,9 @@ Systems implementing brAInwav governance should follow these patterns:
 ```
 search.read    - Read access to search tools
 docs.write     - Write access to documentation
-memory.read    - Read from Local Memory
-memory.write   - Write to Local Memory
-memory.delete  - Delete from Local Memory
+memory.read    - Read from Memory Adapter
+memory.write   - Write to Memory Adapter
+memory.delete  - Delete from Memory Adapter
 ```
 
 ---

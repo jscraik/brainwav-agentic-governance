@@ -31,8 +31,8 @@ const mode = process.env.MEM_MODE ?? (hasId ? 'update' : 'new');
 const tag = `topic_context_${new Date().getUTCFullYear()}`;
 
 // Memory API configuration
-const MEMORY_API_BASE = process.env.LOCAL_MEMORY_BASE_URL || 'http://localhost:3002/api/v1';
-const MEMORY_API_KEY = process.env.LOCAL_MEMORY_API_KEY;
+const MEMORY_API_BASE = process.env.MEMORY_ADAPTER_BASE_URL || process.env.LOCAL_MEMORY_BASE_URL;
+const MEMORY_API_KEY = process.env.MEMORY_ADAPTER_API_KEY || process.env.LOCAL_MEMORY_API_KEY;
 
 function now() {
 	return new Date().toISOString().replace(/\.\d+Z$/, 'Z');
@@ -116,13 +116,17 @@ async function recallMemories(query, limit = 5) {
 }
 
 async function main() {
+	if (!MEMORY_API_BASE) {
+		throw new Error('Memory adapter base URL is not configured. Set MEMORY_ADAPTER_BASE_URL (preferred) or LOCAL_MEMORY_BASE_URL (legacy).');
+	}
+
 	let retrieval;
 	const ids = hasId ? JSON.parse(fs.readFileSync(idsPath, 'utf8')) : {};
 
 	// Recall relevant governance memories before storing/updating
 	// Note: For advanced recall capabilities, use the dedicated /recall command (see brainwav/governance/commands/recall.md)
 	console.log(`[brAInwav] Recalling governance memories for task: ${slug}`);
-	const recalledMemories = await recallMemories(`task governance ${slug} vibe-check decision`, 3);
+	const recalledMemories = await recallMemories(`task governance ${slug} aegis decision`, 3);
 	const contextMemories = await recallMemories('governance workflow pattern decision', 2);
 
 	const allRecalledMemories = [...recalledMemories, ...contextMemories];

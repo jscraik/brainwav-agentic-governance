@@ -254,7 +254,7 @@ export const featureToolSchema = z.object({
 - `[package-name]@[version]` - [Why needed, license verification required]
 
 ### Service Dependencies
-- Local Memory API (http://localhost:3002)
+- Memory Adapter API (adapter-defined endpoint)
 - [Other services]
 
 ---

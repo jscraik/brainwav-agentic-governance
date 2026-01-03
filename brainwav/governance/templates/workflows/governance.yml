@@ -98,7 +98,7 @@ jobs:
           node-version: '24.11.0'
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile=false
-      - run: pnpm oversight:vibe-check --goal "ci-governance-smoke" --plan "1) validate hashes 2) check governance files" --session "ci"
+      - run: pnpm oversight:aegis-check --goal "ci-governance-smoke" --plan "1) validate hashes 2) check governance files" --session "ci"
 
   security:
     runs-on: ubuntu-latest

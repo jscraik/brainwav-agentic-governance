@@ -52,7 +52,7 @@
   - Agentic workflows for: Feature implementation, Research/Spike, Fix (bug/incident), Refactor/Cleanup, and Code Review.  
   - ArcTDD gates **G0–G10**.  
   - Mandatory evidence (task folders, Assurance logs, Evidence Triplet, SBOM/provenance data).  
-  - Tooling hooks (vibe check → Assurance System, Local Memory parity, knowledge connectors, MCP usage, OpenFeature requirement).
+  - Tooling hooks (Aegis oversight, Memory Adapter parity, knowledge connectors, MCP usage, OpenFeature requirement).
 
 - **Out of Scope**  
   - People management, HR, or roadmap governance (see `00-core/vision.md`).  
@@ -184,18 +184,18 @@ tasks/<task-slug>/
     rollback-plan.md         # triggers + procedures
     postmortem.md            # required for Fix/incident flows
   logs/
-    vibe-check/              # Oversight/Aegis vibe check logs
+    aegis/                   # Oversight/Aegis logs (legacy logs/vibe-check allowed via adapters)
     long-context/            # Long-context safety logs (if applicable)
   json/
     run-manifest.json        # Arc manifest with evidence pointers
     task-status.json         # Current gate, blockers, next steps
-    memory-ids.json          # Local Memory entry IDs
+    memory-ids.json          # Memory Adapter entry IDs
     checkpoints/             # Session checkpoint snapshots
     checkpoint-index.json    # Index of all checkpoints for task
 ```
 
-> **Governance hooks**: `research/connectors-health.log`, `logs/vibe-check/*.json`, and `run-manifest.json` MUST be present whenever connectors, vibe check, or Arc manifests are invoked.
-> **MCP session tracking**: After each MCP connection (RepoPrompt, Cortex-Aegis, academic connectors), append an entry to `run-manifest.json.mcp_sessions` via `just mcp-session-manifest <slug> <server> <transport> <endpoint> <session_log> <evidence_log>`.
+> **Governance hooks**: `research/connectors-health.log`, `logs/aegis/*.json` (legacy `logs/vibe-check/*.json` permitted via adapters), and `run-manifest.json` MUST be present whenever connectors, Aegis, or Arc manifests are invoked.
+> **MCP session tracking**: After each MCP connection (Context Builder, Cortex-Aegis, research connectors), append an entry to `run-manifest.json.mcp_sessions` (use pack-provided helpers or record manually).
 
 ### 3.3 Minimum Required Artefacts by Flow
 
@@ -215,7 +215,7 @@ tasks/<task-slug>/
 | Gate | Artefacts Created |
 |------|-------------------|
 | **G0 – Initialize** | Create `tasks/<task-slug>/` directory. No files yet—just the folder structure. |
-| **G1 – Discover** | `context/research.md` (RAID analysis, feasibility, technical spikes, PoC results, academic research synthesis from Wikidata/arXiv/Semantic Scholar/OpenAlex/Context7, security + a11y requirements, existing patterns). |
+| **G1 – Discover** | `context/research.md` (RAID analysis, feasibility, technical spikes, PoC results, academic research synthesis from configured research connectors, security + a11y requirements, existing patterns). |
 | **G2 – Plan** | `plan/PLAN.md` (≤7-step arc plan, reuse candidates), `plan/risk-register.md`, `plan/tdd-plan.md` (BDD scenarios, test coverage goals), `analysis/reuse-evaluation.md` (from template). Optional: `context/design/` for diagrams. |
 | **G3 – Scaffold** | Initial failing tests created; contracts and feature flags wired; `meta/task.json` and `meta/tags.json` populated. |
 | **G4 – Implement** | `work/implementation-log.md` (real-time progress, decisions, deviations), `work/patches/` (optional diff bundles), `evidence/test-results/` (as tests pass). |
@@ -295,7 +295,7 @@ tasks/dashboard-metrics-widget/
 │   └── validation/
 │       └── deployment-prod.log
 ├── logs/
-│   └── vibe-check/
+│   └── aegis/
 │       └── initial.json
 ├── json/
 │   ├── task-status.json
@@ -322,7 +322,7 @@ tasks/dashboard-metrics-widget/
 #### During Task Execution
 
 - Update files as you progress through gates.
-- Fetch API keys, SSH keys, and tokens on-demand with the 1Password CLI (`op`); never embed secrets in task artefacts.
+- Fetch API keys, SSH keys, and tokens on-demand with an approved secret-manager CLI; never embed secrets in task artefacts.
 - Keep `work/implementation-log.md` current with real-time notes.
 - Create subdirectories before adding files to them.
 - Mark checklist items in `plan/PLAN.md` as completed.
@@ -332,7 +332,7 @@ tasks/dashboard-metrics-widget/
 - Ensure all required artefacts exist and are complete.
 - Create comprehensive `SUMMARY.md`.
 - Verify all subdirectories contain relevant artefacts.
-- Flag task folder as archived in Local Memory.
+- Flag task folder as archived in Memory Adapter.
 
 ### 3.7 Common Mistakes
 
@@ -352,7 +352,7 @@ tasks/dashboard-metrics-widget/
 - Use descriptive folder names (kebab-case slugs).
 - Keep folder structure organized per §3.2.
 - Document everything for reproducibility.
-- Persist key decisions to Local Memory MCP/REST and reference `LocalMemoryEntryId` in relevant task files.
+- Persist key decisions to Memory Adapter MCP/REST and reference `LocalMemoryEntryId` in relevant task files.
 
 ---
 
@@ -360,36 +360,27 @@ tasks/dashboard-metrics-widget/
 
 > Every gate defines objectives, inputs, required artefacts, and exit criteria. Automation inspects `run-manifest.json`, `quality-report.json`, and the task folder to confirm compliance.
 
-### 4.0 Repo Prompt Integration
+### 4.0 Context Builder Integration (Adapter)
 
-**Repo Prompt** is the default repo-aware MCP server for context building, planning, and minimal edits in governance framework. It provides:
-
-- **Context Builder**: Assembles bounded context with codemaps and API overviews
-- **Plan Preset**: Generates architectural plans grounded in existing code
-- **Pro Edit (XML)**: Produces minimal, reviewable diffs for targeted changes
-- **MCP Pair**: Orchestrates multi-step implementations with repo awareness
+The **Context Builder** adapter is the default repo-aware MCP capability for context building, planning, and minimal edits in the governance framework. Packs/adapters provide concrete implementations.
 
 **MCP Configuration** (pack-scoped):
 
-MCP client configuration is adapter-specific. Do not hardcode editor paths or vendor-specific config files in core governance. Enable `pack:mcp-repoprompt` (or equivalent) to install client templates and adapter docs.
+MCP client configuration is adapter-specific. Do not hardcode editor paths or vendor-specific config files in core governance. Enable the relevant packs (repo context, docs connector, memory, oversight) to install client templates and adapter docs.
 
-> Adapter templates (examples, optional) must be provided by packs:
-> - `pack:mcp-repoprompt` (Repo-aware context builder)
-> - `pack:mcp-context7` (library docs)
-> - `pack:mcp-local-memory` (memory parity)
-> - `pack:mcp-aegis` (oversight)
+> Adapter templates (examples, optional) must be provided by packs (repo context, docs connectors, memory parity, oversight).
 
 **Integration Points by Gate**:
 
 - **G1 (Discover)**: MUST use Context Builder for tasks above size threshold to assemble repo context
 - **G2 (Plan)**: SHOULD use Plan preset for medium+ tasks to produce PLAN.md grounded in existing code
 - **G3-G4 (Scaffold/Implement)**: SHOULD use Pro Edit for small/medium changes; MCP Pair for complex multi-step work
-- **G5 (Verify)**: MAY use Repo Prompt to find additional test coverage gaps via codemaps
+- **G5 (Verify)**: MAY use Context Builder to find additional test coverage gaps via codemaps
 - **G6 (Review)**: MAY use Context Builder to provide reviewers with architectural context
 
 **Division of Responsibility**:
 
-- **Repo Prompt**: Repo-local context engine and edit applier (stays within codebase boundaries)
+- **Context Builder adapter**: Repo-local context engine and edit applier (stays within codebase boundaries)
 - **Cortex-Aegis**: Governance + external evidence + risk assessment (validates against policies and freshness)
 
 ### 4.1 MCP Tool Integration Matrix
@@ -400,155 +391,36 @@ MCP client configuration is adapter-specific. Do not hardcode editor paths or ve
 
 | Tool | Package/CLI | Purpose | Evidence Location |
 |------|-------------|---------|-------------------|
-| **RepoPrompt** | pack-provided | Repo-aware context building, planning, minimal edits | `context/research.md`, `plan/PLAN.md`, `work/implementation-log.md` |
-| **Local Memory** | pack-provided | Cross-session decision persistence, semantic search | `json/memory-ids.json`, configured mirror path |
-| **Cortex-Aegis** | pack-provided | Governance validation, risk assessment, time freshness | `evidence/aegis-report.json`, `logs/vibe-check/*.json` (legacy-compatible) |
-| **Library Docs MCP** | pack-provided | Up-to-date library docs, version-specific examples | `context/research.md`, `plan/PLAN.md` (cited sources) |
+| **Context Builder** | pack-provided | Repo-aware context building, planning, minimal edits | `context/research.md`, `plan/PLAN.md`, `work/implementation-log.md` |
+| **Memory Adapter** | pack-provided | Cross-session decision persistence, semantic search | `json/memory-ids.json`, configured mirror path |
+| **Cortex-Aegis** | pack-provided | Governance validation, risk assessment, time freshness | `evidence/aegis-report.json`, `logs/aegis/*.json` (legacy-compatible) |
+| **Docs Connector** | pack-provided | Up-to-date library docs, version-specific examples | `context/research.md`, `plan/PLAN.md` (cited sources) |
 
 > **Security Tooling (MANDATORY)** – Toolchain versions and install guidance are defined by `compat.json` and the generated CI workflow. Do not embed OS-specific install commands (brew/apt/winget) in this canonical workflow doc. Use `brainwav-governance doctor` to verify tool presence; CI enforces required versions.
 
 #### Gate-by-Gate Tool Usage
 
-| Gate | RepoPrompt | Local Memory | Cortex-Aegis | Library Docs MCP |
-|------|------------|--------------|--------------|----------|
-| **G0 – Initialize** | — | `search` (recall prior work) | — | — |
-| **G1 – Discover** | **Context Builder** (MUST for medium+) | `search` (architectural decisions) | — | `resolve-library-id` + `get-library-docs` (for external libs) |
-| **G2 – Plan** | **Plan preset** (SHOULD for medium+) | `store_memory` (key decisions) | **vibe_check** (MANDATORY) | `get-library-docs` (validate approaches) |
+| Gate | Context Builder | Memory Adapter | Cortex-Aegis | Docs Connector |
+|------|-----------------|---------------|--------------|----------------|
+| **G0 – Initialize** | — | recall prior work | — | — |
+| **G1 – Discover** | **Context Builder** (MUST for medium+) | recall key decisions | — | resolve docs for external libs |
+| **G2 – Plan** | **Plan preset** (SHOULD for medium+) | record key decisions | **Aegis validate** (MANDATORY) | validate approaches |
 | **G3 – Scaffold** | Codemaps + search | — | — | — |
-| **G4 – Implement** | **Pro Edit** or **MCP Pair** | `store_memory` (deviations) | — | **`get-library-docs` (MANDATORY per API call)** |
-| **G5 – Verify** | Context Builder (gap analysis) | — | **vibe_check** (MANDATORY if risk ≥ medium) | — |
+| **G4 – Implement** | **Pro Edit** or **MCP Pair** | record deviations | — | docs lookups when external APIs are touched |
+| **G5 – Verify** | Context Builder (gap analysis) | — | **Aegis validate** (MANDATORY if risk ≥ medium) | — |
 | **G6 – Review** | Context Builder (reviewer context) | — | — | — |
-| **G7 – Document** | — | `store_memory` (lessons) | — | — |
+| **G7 – Document** | — | record lessons learned | — | — |
 | **G8 – Ship** | — | — | — | — |
-| **G9 – Monitor** | — | `store_memory` (operational notes) | — | — |
-| **G10 – Archive** | — | `store_memory` (final summary) | — | — |
+| **G9 – Monitor** | — | record operational notes | — | — |
+| **G10 – Archive** | — | record final summary | — | — |
 
 #### Tool Call Patterns
 
-**RepoPrompt Tools** (14 available):
-
-```text
-# Context Building (G1, G5, G6)
-manage_selection     → Curate file selection for bounded context
-discover_context     → Semantic discovery of related files
-workspace_context    → Snapshot workspace state with codemaps
-get_code_structure   → Generate AST-based codemaps
-file_search          → Pattern/regex search across repo
-
-# Planning (G2)
-chat_send            → Plan preset generates PLAN.md from context
-prompt               → Get/set shared prompt for planning session
-
-# Implementation (G3, G4)
-apply_edits          → Pro Edit XML for minimal diffs
-file_actions         → Create/delete/move files
-get_file_tree        → Directory structure for scaffolding
-
-# Session Management
-manage_workspaces    → Switch between RepoPrompt windows
-chats                → List/access chat history
-list_models          → Available model presets
-```
-
-**Local Memory Tools** (4 available):
-
-```text
-# Store (G2, G4, G7, G9, G10)
-local-memory:store_memory → {content, importance: 1-5, tags: [], domain: string}
-
-# Update (when decisions evolve)
-local-memory:update_memory → {memory_id, content, importance?, tags?}
-
-# Recall (G0, G1)
-local-memory:search → {query, limit: 5, threshold: 0.70, semantic: true}
-local-memory:get_memory_by_id → {memory_id}
-```
-
-**Cortex-Aegis** (1 primary endpoint):
-
-```text
-# Governance Validation (G2 MANDATORY, G5 conditional)
-vibe_check → {
-  goal: string,
-  plan: string (≤7 steps),
-  session: string,
-  save: "tasks/<slug>/logs/vibe-check/*.json",
-  with-academic-research: boolean,
-  validate-licenses: boolean
-}
-
-# Response: { verdict: "pass|warn|block", required_followups: [], evidence_refs: [] }
-```
-
-**Context7 Tools** (2 available):
-
-```text
-# Library Resolution (G1)
-resolve-library-id → {libraryName: string}
-# Returns: Context7-compatible ID (e.g., /vercel/next.js), trust score, snippet count
-
-# Documentation Fetch (G1, G2, G4)
-get-library-docs → {
-  context7CompatibleLibraryID: string,
-  topic?: string,
-  tokens?: number (default: 10000)
-}
-# Returns: Up-to-date, version-specific documentation with code examples
-```
+Tool catalogs and parameter schemas are adapter-specific. Refer to the active pack docs for available tools and required parameters, and record all tool calls in `run-manifest.json.mcp_sessions`.
 
 #### MCP Configuration (Unified)
 
-Add to your MCP client config (e.g., `~/.config/Code/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json`):
-
-```json
-{
-  "mcpServers": {
-    "RepoPrompt": {
-      "command": "/path/to/repoprompt_cli",
-      "args": [],
-      "env": {},
-      "toolOutputTokenLimit": 25000,
-      "toolTimeoutSec": 1000
-    },
-    "local-memory": {
-      "command": "npx",
-      "args": ["-y", "local-memory-mcp@latest"],
-      "env": {}
-    },
-    "cortex-aegis": {
-      "command": "npx",
-      "args": ["-y", "@brainwav/cortex-aegis-mcp@latest"],
-      "env": {}
-    },
-    "context7": {
-      "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp", "--api-key", "${CONTEXT7_API_KEY}"],
-      "env": {}
-    }
-  }
-}
-```
-
-For VS Code settings.json:
-
-```json
-{
-  "mcp": {
-    "servers": {
-      "context7": {
-        "type": "stdio",
-        "command": "npx",
-        "args": ["-y", "@upstash/context7-mcp", "--api-key", "${CONTEXT7_API_KEY}"]
-      },
-      "local-memory": {
-        "type": "stdio",
-        "command": "npx",
-        "args": ["-y", "local-memory-mcp@latest"]
-      }
-    }
-  }
-}
-```
+MCP client configuration is adapter-scoped. Use pack-provided templates and set adapter-specific endpoints and credentials in the consumer repo.
 
 #### Evidence Logging Requirements
 
@@ -558,39 +430,36 @@ Each MCP session MUST be logged in `run-manifest.json`:
 {
   "mcp_sessions": [
     {
-      "server": "context7",
+      "server": "docs-connector",
       "transport": "stdio",
-      "endpoint": "resolve-library-id",
+      "endpoint": "resolve-docs-id",
       "timestamp": "2025-01-15T10:30:00Z",
       "gate": "G1",
-      "evidence_log": "context/research.md#context7-sources"
+      "evidence_log": "context/research.md#docs-sources"
     },
     {
       "server": "cortex-aegis",
       "transport": "stdio",
-      "endpoint": "vibe_check",
+      "endpoint": "cortex_aegis_validate",
       "timestamp": "2025-01-15T11:00:00Z",
       "gate": "G2",
-      "evidence_log": "logs/vibe-check/initial.json"
+      "evidence_log": "logs/aegis/initial.json"
     }
   ]
 }
 ```
 
-Use the helper command:
-```bash
-just mcp-session-manifest <slug> <server> <transport> <endpoint> <session_log> <evidence_log>
-```
+Use pack-provided helpers if available; otherwise record entries manually.
 
 #### Division of Responsibility
 
 | Concern | Primary Tool | Fallback |
 |---------|--------------|----------|
-| Repo context & codemaps | RepoPrompt | Manual file reads |
-| External library docs | Context7 | Fetch from source |
+| Repo context & codemaps | Context Builder | Manual file reads |
+| External library docs | Docs Connector | Fetch from source |
 | Governance validation | Cortex-Aegis | Manual checklist |
-| Decision persistence | Local Memory | `.github/instructions/memories.instructions.md` |
-| Academic research | MCP connectors (Wikidata, arXiv) | Direct API calls |
+| Decision persistence | Memory Adapter | `.github/instructions/memories.instructions.md` |
+| Academic research | Research connectors | Direct API calls |
 
 ### 4.2 Gate Overview
 
@@ -620,60 +489,60 @@ just mcp-session-manifest <slug> <server> <transport> <endpoint> <session_log> <
 
 #### G1 – Discover / Research
 
-- **Objective** – Build context through repo scans, Local Memory recall, and academic sources.  
-- **Repo Prompt Usage** – For tasks above size threshold, MUST run **Context Builder** to:
+- **Objective** – Build context through repo scans, Memory Adapter recall, and academic sources.  
+- **Context Builder Usage** – For tasks above size threshold, MUST run **Context Builder** to:
   - Identify relevant files, symbols, and modules
   - Generate **codemaps** for key areas (APIs, types, call graphs)
   - Produce **handoff prompt** summarizing repo-aware context
   - Save Context Builder output summary to `context/research.md`
-- **Required artefacts** – `context/research.md` (including Repo Prompt context summary), `research/connectors-health.log`, `analysis/reuse-evaluation.md` (if reuse study already started).  
-- **Checks** – Agents call `/recall` to retrieve prior work context, then run `/gather` to structure discovery questions for stakeholders. Verify Wikidata + arXiv MCP endpoints, fetch academic research via MCP connectors, log license status, run Repo Prompt Context Builder for non-trivial tasks.  
+- **Required artefacts** – `context/research.md` (including Context Builder context summary), `research/connectors-health.log`, `analysis/reuse-evaluation.md` (if reuse study already started).  
+- **Checks** – Agents call `/recall` to retrieve prior work context, then run `/gather` to structure discovery questions for stakeholders. Verify research connector health endpoints, fetch academic research via configured connectors, log license status, run Context Builder for non-trivial tasks.  
 - **Exit criteria** – RAID + feasibility documented; North-Star acceptance test path recorded; reuse candidates enumerated; repo context available for G2.
 - **Commands** – `/recall` (prior context), `/gather` (structured questions). See `commands/recall.md`, `commands/gather.md`.
 
 #### G2 – Plan / Design
 
 - **Objective** – Produce executable plan ≤7 steps per Arc; define tests, contracts, mitigations.  
-- **Repo Prompt Usage** – For medium+ complexity tasks, SHOULD use **Plan preset** to:
+- **Context Builder Usage** – For medium+ complexity tasks, SHOULD use **Plan preset** to:
   - Generate plan using Context Builder handoff from G1
   - Propose architecture changes and touchpoints grounded in existing code
   - Outline test strategy and risk areas with repo awareness
-  - Save Repo Prompt-generated plan to `plan/PLAN.md`
-- **Required artefacts** – `plan/PLAN.md` (Repo Prompt Plan or equivalent), `plan/tdd-plan.md`, `plan/risk-register.md`, updated `run-manifest.json`.  
-- **Cortex-Aegis usage** – Mandatory for Feature, Fix, and any Refactor touching contracts or security-critical code. Provide plan summary (including Repo Prompt context), research citations, risk tags, and tool health evidence.  
-- **Checks** – Run `/reframe` to confirm understanding with stakeholders before Aegis vibe check. Plan references reuse candidates; connectors health still green; Cortex-Aegis JSON stored in `evidence/aegis-report.json`; Repo Prompt plan artifacts present.  
+  - Save Context Builder-generated plan to `plan/PLAN.md`
+- **Required artefacts** – `plan/PLAN.md` (Context Builder Plan or equivalent), `plan/tdd-plan.md`, `plan/risk-register.md`, updated `run-manifest.json`.  
+- **Cortex-Aegis usage** – Mandatory for Feature, Fix, and any Refactor touching contracts or security-critical code. Provide plan summary (including Context Builder context), research citations, risk tags, and tool health evidence.  
+- **Checks** – Run `/reframe` to confirm understanding with stakeholders before Aegis validation. Plan references reuse candidates; connectors health still green; Cortex-Aegis JSON stored in `evidence/aegis-report.json`; Context Builder plan artifacts present.  
 - **Exit criteria** – Plan approved (no Aegis `block`), tests identified, quality gates defined, plan grounded in repo realities.
 - **Commands** – `/reframe` (understanding confirmation), `/truth` (evidence-based responses). See `commands/reframe.md`, `commands/truth.md`.
 
 #### G3 – Scaffold
 
 - **Objective** – Create failing milestone tests, feature flags (OpenFeature only), wiring, and contract snapshots.  
-- **Repo Prompt Usage** – SHOULD use **Codemaps + search** to:
+- **Context Builder Usage** – SHOULD use **Codemaps + search** to:
   - Confirm where scaffolding should attach (entrypoints, DI boundaries)
   - Verify new modules integrate with existing types and call graphs
   - Validate wiring against architectural patterns shown in codemaps
 - **Required artefacts** – Failing tests recorded in `run-manifest.json.reuseEvidence.failingTest`, `design/contracts/<timestamp>-before.json`.  
-- **Checks** – No placeholder adapters; scaffolds compile; cancellation tokens wired for HTTP/tooling; Repo Prompt codemap confirms proper integration.  
+- **Checks** – No placeholder adapters; scaffolds compile; cancellation tokens wired for HTTP/tooling; Context Builder codemap confirms proper integration.  
 - **Exit criteria** – Repo builds; failing tests prove gap; feature flag default = off; scaffolding properly wired.
 
 #### G4 – Implement
 
 - **Objective** – Execute micro TDD loops (≤20 min) to satisfy plan.
 - **Just-in-Time Docs (MANDATORY)** – Fetch library documentation at point of use, not just during planning:
-  1. **Before each API call**: Query Context7 for current method signatures and examples
+  1. **Before each API call**: Query Docs Connector for current method signatures and examples
   2. **On error/unexpected behavior**: Immediately fetch updated docs to verify assumptions
   3. **When using unfamiliar patterns**: Pull version-specific examples before implementing
-  4. Log Context7 calls in `run-manifest.json.mcp_sessions` with gate `G4`
+  4. Log Docs Connector calls in `run-manifest.json.mcp_sessions` with gate `G4`
   5. Cite doc sources in `work/implementation-log.md` inline with implementation decisions
-- **Repo Prompt Usage**:
+- **Context Builder Usage**:
   - **For small/medium changes**: SHOULD use **Pro Edit (XML)** workflow to generate minimal diffs per file
   - **For complex multi-step changes**: SHOULD use **MCP Pair** workflow where:
     - Orchestrating agent steps through PLAN.md
-    - Delegates repo edits to Repo Prompt via MCP
+    - Delegates repo edits to Context Builder via MCP
     - Maintains repo context across implementation steps
-  - Reference Repo Prompt sessions in `work/implementation-log.md` where useful
-- **Required artefacts** – Code + tests, `work/implementation-log.md` (including Repo Prompt session references), `logs/models/*` for live model usage, named exports only.  
-- **Checks** – Named exports, ≤40-line functions, typed boundaries, no `Math.random()`, no TODO/FIXME/HACK, cancellation enforced, `OpenFeature` for flags, connectors logged, Local Memory updates appended.  
+  - Reference Context Builder sessions in `work/implementation-log.md` where useful
+- **Required artefacts** – Code + tests, `work/implementation-log.md` (including Context Builder session references), `logs/models/*` when live model usage is required by profile/change class, named exports only.  
+- **Checks** – Named exports, ≤40-line functions, typed boundaries, no `Math.random()`, no TODO/FIXME/HACK, cancellation enforced, `OpenFeature` for flags, connectors logged, Memory Adapter updates appended.  
 - **Exit criteria** – Tests now pass locally; Evidence Triplet outline captured (test path, contract snapshot, reviewer pointer); implementation matches plan or deviations documented.
 
 #### G5 – Verify
@@ -694,7 +563,7 @@ just mcp-session-manifest <slug> <server> <transport> <endpoint> <session_log> <
   7. Address critic findings AND confession admissions before proceeding
 - **Confession Principle**: The confession channel is judged ONLY for honesty, not for the quality of the main work. Admitting failures in the confession does NOT penalize the main work — it surfaces issues for human review.
 - **Required artefacts** – `evidence/tests.md`, `evidence/test-results/*`, `evidence/critic-review.json`, `evidence/confession-report.json`, `verification/coverage-results.json`, `verification/mutation-results.json`, `evidence/aegis-report.json` (if rerun), `implementation-plan.md#reuse-ledger`.  
-- **Checks** – Coverage ≥ 90% global / 95% changed; mutation ≥ 90%; Semgrep/gitleaks/OSV clean; structure + Axe/jest-axe for UI/CLI; SBOM (CycloneDX 1.7) + SLSA v1.2 provenance + Cosign v3 bundle; model health logs; Evidence Triplet complete.  
+- **Checks** – Coverage/mutation thresholds per profile + change class; security/a11y/supply-chain checks per profile + change class; model health logs when required; Evidence Triplet complete.  
 - **Exit criteria** – All gates satisfied; `run-manifest.json.reuseEvidence` populated (`plan`, `failingTest`, `passingTest`, `reviewComment`).
 
 #### G6 – Review
@@ -724,16 +593,16 @@ just mcp-session-manifest <slug> <server> <transport> <endpoint> <session_log> <
 
 #### G10 – Archive
 
-- **Objective** – Close the loop; persist artefacts for audits and Local Memory.
+- **Objective** – Close the loop; persist artefacts for audits and Memory Adapter.
 - **Session Retrospective (MANDATORY)** – Before archiving, conduct a structured retrospective:
   1. **Process Evaluation**: What worked well? What caused friction?
   2. **Harness Improvements**: Propose specific changes to prompts, templates, or workflows
   3. **Pattern Extraction**: Identify reusable patterns for future tasks
   4. **Anti-Pattern Documentation**: Log mistakes to avoid in similar work
   5. Store retrospective in `evidence/session-retrospective.md`
-  6. Commit actionable improvements to Local Memory with tag `retrospective`
+  6. Commit actionable improvements to Memory Adapter with tag `retrospective`
   7. Update `SUMMARY.md` with retrospective insights
-- **Required artefacts** – `SUMMARY.md`, `evidence/session-retrospective.md`, `archive.json`, review checklist snapshot in `governance/audit/reviews/<PR>-<sha>.md`, Local Memory entry IDs recorded in `json/memory-ids.json`.  
+- **Required artefacts** – `SUMMARY.md`, `evidence/session-retrospective.md`, `archive.json`, review checklist snapshot in `governance/audit/reviews/<PR>-<sha>.md`, Memory Adapter entry IDs recorded in `json/memory-ids.json`.  
 - **Exit criteria** – Task folder archived; Evidence Triplet + TDD plan reuse ledger indexed; `.github/instructions/memories.instructions.md` updated.
 
 ### 4.4 Phase Machine (R→G→F→REVIEW)
@@ -756,9 +625,9 @@ The phase machine maps onto ArcTDD gates as follows:
 
 - Planning & test authoring; minimal scaffold code
 - Time Freshness Guard normalization
-- Academic research enhancement via MCP/HTTP connectors
-- Vibe Check (Oversight) after research, before any writes/long runs
-- Local Memory parity updates
+- Academic research enhancement via configured research connectors
+- Aegis validation (Oversight) after research, before any writes/long runs
+- Memory Adapter parity updates
 
 **Forbidden**
 
@@ -769,14 +638,14 @@ The phase machine maps onto ArcTDD gates as follows:
 
 - New acceptance/unit tests **fail first**, then **pass** on the next commit
 - `TIME_FRESHNESS:OK tz=<IANA> today=<YYYY-MM-DD>` token present
-- Oversight log (`aegis-vibe-check`) stored in `logs/vibe-check/`
+- Aegis validation log stored in `logs/aegis/` (legacy `logs/vibe-check/` allowed via adapters)
 
 #### G (Green) — implement to pass
 
 **Allowed**
 
 - Code to satisfy tests; refactor strictly to green
-- Live model probes: `pnpm models:health && pnpm models:smoke` (Frontier/Ollama)
+- Model health probes when required by profile/change class (adapter-provided commands)
 - Security scanners (Semgrep, OSV) and secret scans (gitleaks)
 - **Structured outputs required** for any machine-consumed LLM result (JSON-Schema or tool/function calling)
 
@@ -787,18 +656,17 @@ The phase machine maps onto ArcTDD gates as follows:
 **Auto-advance → F when**
 
 - `pnpm test` **passes**
-- Coverage ≥ **90%** global & **95%** changed lines
-- Mutation ≥ **90%** (where enabled)
-- Latest model-health log includes engine, model IDs, vector dims/norms, P95 latency
+- Coverage/mutation meet profile + change class requirements
+- Model health evidence attached when required by profile/change class
 
 #### F (Finished) — refactor, docs, a11y, supply-chain, structure
 
 **Allowed**
 
 - Non-behavioral refactors; documentation
-- A11y audits (axe/jest-axe/Playwright)
-- SBOM & provenance: **CycloneDX 1.7** + **SLSA v1.2**; **Cosign v3 bundle** verify
-- Structure/contract guard, Observability checks
+- A11y audits (adapter tooling)
+- SBOM & provenance when required (release requires CycloneDX + SLSA + Cosign bundle verification)
+- Structure/contract guard, observability checks
 
 **Forbidden**
 
@@ -806,11 +674,11 @@ The phase machine maps onto ArcTDD gates as follows:
 
 **Auto-advance → REVIEW when**
 
-- A11y reports attached
-- Security scanners: Semgrep (blockers), OSV clean, gitleaks zero secrets
-- `pnpm structure:validate` **passes**
-- `pnpm models:health && pnpm models:smoke` evidence attached (**live** only)
-- Local Memory parity entry appended (decisions/refactors)
+- A11y reports attached (when required)
+- Security scanner evidence attached (when required)
+- Structure guard validation passes (pack-scoped command)
+- Model health evidence attached when required
+- Memory Adapter parity entry appended (decisions/refactors)
 
 #### REVIEW — human-in-the-loop only here
 
@@ -823,7 +691,7 @@ The phase machine maps onto ArcTDD gates as follows:
 
 - Evidence Triplet (milestone red→green proof, contract snapshot, reviewer JSON pointer)
 - Trace Context proof (every governed log has `traceparent` + 32-hex `trace_id`)
-- SBOM (CycloneDX 1.7), SLSA v1.2 provenance, Cosign v3 **bundle** verify logs
+- SBOM (CycloneDX) + provenance (SLSA) + signing evidence (Cosign bundle) when required by profile/change class
 - A11y/security artifacts
 - Reuse Ledger pointer
 
@@ -847,7 +715,7 @@ The phase machine maps onto ArcTDD gates as follows:
   6. Run verification suite, SBOM/provenance, Aegis follow-up.  
   7. Perform AI + human review (checklist + Evidence Triplet).  
   8. Update docs/runbooks/changelog, then ship & monitor if applicable.
-- **Mandatory Artefacts** – All items listed in §3.3 for Feature plus `implementation-plan.md#reuse-ledger`, `logs/vibe-check/*.json`, `research/connectors-health.log` entries.
+- **Mandatory Artefacts** – All items listed in §3.3 for Feature plus `implementation-plan.md#reuse-ledger`, `logs/aegis/*.json` (legacy `logs/vibe-check/*.json` allowed via adapters), `research/connectors-health.log` entries.
 
 ### 5.2 Research / Spike Flow
 
@@ -900,7 +768,7 @@ The phase machine maps onto ArcTDD gates as follows:
 3. **Structured outputs required.** Any model output that drives tools/files/network **must** be function/tool-calling or conform to a JSON-Schema, with validation on receipt.
 4. **Observability.** All charter-governed logs carry `[<service>]`, `service:"<service_name>"`, ISO-8601 timestamp, `trace_id` (32 lower-hex), and **HTTP `traceparent`** for correlation. `brand:"<org>"` is optional and may be required by overlays. Missing fields fail gates.
 5. **Supply-chain.** Generate **CycloneDX 1.7** SBOM; produce **SLSA v1.2** provenance; sign/verify with **Cosign bundle v3** (or newer pinned in `standards.versions.json`).
-6. **Identity & secrets.** CI authenticates to cloud via **OIDC/WIF** only. Secrets are fetched at runtime using the **1Password CLI** (`op`); never persisted.
+6. **Identity & secrets.** CI authenticates to cloud via **OIDC/WIF** only. Secrets are fetched at runtime using an approved secret-manager CLI; never persisted.  
 7. **Hybrid models — profile-driven.** Release requires live (or verifiably recorded with time-freshness evidence) per Constitution. Delivery warns unless explicitly documented. Creative allows prototypes but cannot claim production readiness.
 8. **A11y baseline.** WCAG 2.2 AA (ISO/IEC 40500:2025).
 
@@ -926,7 +794,7 @@ Context accumulation degrades agent performance. Agents MUST actively prune stal
 - Current gate requirements and exit criteria
 - Active failing tests and error messages
 - Relevant codemaps and type signatures
-- Decisions logged in Local Memory
+- Decisions logged in Memory Adapter
 - Evidence Triplet components
 
 **SUMMARIZE (reduce tokens):**
@@ -950,9 +818,9 @@ CONTEXT_PRUNE:OK gate=G4 removed=<n>KB retained=<n>KB timestamp=<ISO-8601>
 CONTEXT_SUMMARY:OK sections=["research","plan"] summary_tokens=<n>
 ```
 
-#### RepoPrompt Integration
+#### Context Builder Integration
 
-Use RepoPrompt's `manage_selection` with mode transitions:
+Use Context Builder's `manage_selection` with mode transitions:
 - `mode="full"` → `mode="codemap_only"` for completed components
 - `op="demote"` to reduce full files to codemaps
 - `op="remove"` for abandoned approaches
@@ -972,13 +840,13 @@ Use RepoPrompt's `manage_selection` with mode transitions:
 |-------|---------|
 | `AGENTS_MD_SHA:<sha>` | Verifies governance doc integrity |
 | `PHASE_TRANSITION:<from>-><to>` | Logs phase machine progression |
-| `aegis-vibe-check` | Confirms Oversight/Aegis was invoked |
+| `AEGIS_VALIDATE:OK` | Confirms Oversight/Aegis was invoked |
 | `TIME_FRESHNESS:OK tz=<tz> today=<yyyy-mm-dd>` | Anchors temporal context |
-| `MODELS:LIVE:OK engine=<ollama\|frontier> model=<id> dims=<n> norm≈<v> latency_ms=<n>` | Proves live model usage |
+| `MODELS:LIVE:OK engine=<id> model=<id> dims=<n> norm≈<v> latency_ms=<n>` | Proves live model usage |
 | `A11Y_REPORT:OK` | Accessibility audit attached |
 | `STRUCTURE_GUARD:OK` | Structure validation passed |
 | `COVERAGE:OK CHANGED_LINES:OK MUTATION:OK` | Test quality gates met |
-| `MEMORY_PARITY:OK` | Local Memory sync confirmed |
+| `MEMORY_PARITY:OK` | Memory Adapter sync confirmed |
 | `TRACE_CONTEXT:OK` | Trace propagation verified |
 | `SUPPLY_CHAIN:OK sbom=cyclonedx@1.7 slsa=1.2 cosign=bundle.v3` | Supply-chain artefacts present |
 | `CONTEXT_PRUNE:OK gate=<Gn> removed=<n>KB retained=<n>KB` | Context pruning executed |
@@ -1057,7 +925,7 @@ SUBAGENT_RETURN:type=<type> status=<complete|partial|timeout|error>
 2. **Summarize**: Reduce subagent reasoning trace to actionable result
 3. **Prune Context**: Discard subagent's intermediate context (see §6.2)
 4. **Log Session**: Record subagent invocation in `run-manifest.json.subagent_sessions`
-5. **Memory Sync**: If subagent produced key decisions, parent stores to Local Memory
+5. **Memory Sync**: If subagent produced key decisions, parent stores to Memory Adapter
 
 #### Evidence Logging
 
@@ -1089,7 +957,7 @@ SUBAGENT_RETURN:type=<type> status=<complete|partial|timeout|error>
 
 ### 6.5 Confession Protocol
 
-> **Research basis:** OpenAI "Confessions" research (2025) — a separate output channel optimized solely for honest self-assessment of whether the model followed instructions or "cheated."
+> **Research basis:** Published "Confessions" research (2025) — a separate output channel optimized solely for honest self-assessment of whether the model followed instructions or "cheated."
 
 The Confession Protocol provides a second, decoupled output channel where agents self-report compliance, shortcuts, and uncertainties. Unlike the main work output (which balances many objectives), confessions are judged ONLY for truthfulness and completeness of self-assessment.
 
@@ -1199,7 +1067,7 @@ The confession is evaluated SEPARATELY from main work:
 
 #### Failure Modes
 
-Based on OpenAI's research, confession failures are categorized as:
+Based on published research, confession failures are categorized as:
 
 | Failure Type | Cause | Governance Response |
 |--------------|-------|---------------------|
@@ -1218,7 +1086,7 @@ Research shows ~4.4% false negative rate; most failures are confusion-based, not
 | **Cortex-Aegis** | Confession inputs feed risk assessment |
 | **Evidence Triplet** | Confession becomes 4th element when required |
 | **Session Retrospective** | Aggregate confessions inform retrospective |
-| **Local Memory** | Store confession patterns for learning |
+| **Memory Adapter** | Store confession patterns for learning |
 
 #### Evidence Tokens
 
@@ -1271,7 +1139,7 @@ Output as JSON per the confession-report.json schema.
 - **Inputs** – Task summary, ≤7-step plan, research citations (with license status), connector health logs, risk tags, tier, and time-freshness anchor.  
 - **Outputs** – JSON verdict (`pass|warn|block`), required follow-ups, evidence references. Store raw output in `evidence/aegis-report.json` and link inside `run-manifest.json`.  
 - **Policy** – `block` halts the gate until addressed; `warn` requires documented mitigation + reviewer acknowledgement. Missing logs = automatic CI failure.  
-- **Toolchain** – Use the `vibe_check` MCP endpoint per `cortex-aegis.md`, keeping plan step budget ≤7 and logging responses under `logs/vibe-check/`.
+- **Toolchain** – Use the `cortex_aegis_validate` MCP endpoint per `cortex-aegis.md`, keeping plan step budget ≤7 and logging responses under `logs/aegis/` (legacy `logs/vibe-check/` allowed via adapters).
 
 ---
 

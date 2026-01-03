@@ -18,6 +18,11 @@ argument-hint: [memory-id | tag | natural language]
   3) Restored memory body (8 sections)
   4) **VerificationSummary** (2–5 bullets)
 
+## Configuration
+
+- **Endpoint**: set `MEMORY_ADAPTER_BASE_URL` (preferred) or `LOCAL_MEMORY_BASE_URL` (legacy)
+- **Auth**: set `MEMORY_ADAPTER_API_KEY` (preferred) or `LOCAL_MEMORY_API_KEY` (legacy) if required by the adapter
+
 ## Identifier Processing
 
 - **UUID** (`[0-9a-f-]{36}`) → `get_memory_by_id` (direct).  

@@ -24,6 +24,6 @@ jobs:
           node-version: '24.11.0'
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile=false
-      - run: pnpm models:health
-      - run: pnpm models:smoke
-      - run: pnpm oversight:vibe-check --goal "ai-risk-pack" --plan "1) model health 2) threat controls" --session "ci"
+      - run: <model-health-command> # adapter-defined
+      - run: <model-smoke-command>  # adapter-defined
+      - run: pnpm oversight:aegis-check --goal "ai-risk-pack" --plan "1) model health 2) threat controls" --session "ci"

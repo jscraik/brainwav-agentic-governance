@@ -56,7 +56,7 @@
   "docs": {
     "constitution.md": {
       "path": "00-core/constitution.md",
-      "sha256": "91cfd25ccf6955b280482dc20d3610604c4496f5a35c1a459286fe81af468607",
+      "sha256": "33ac43bdc0e678045c51f9373b1dcebe1c7ea43f4fcdcb2a12e5c67382b87d9b",
       "required_tokens": [
         "Constitution",
         "Core Principles"
@@ -67,7 +67,7 @@
     },
     "AGENT_CHARTER.md": {
       "path": "00-core/AGENT_CHARTER.md",
-      "sha256": "1a2e834463f9a6506f50abe33b7023a0cfdfaa6f51ed045c6653e31fdeff5250",
+      "sha256": "807e59093696d78180fbe975c6cf9679c0e4bc6a4f366cf408c428e159c0354b",
       "required_tokens": [
         "Service Identity Logs",
         "MODELS:LIVE:OK",
@@ -114,7 +114,7 @@
     },
     "vision.md": {
       "path": "00-core/vision.md",
-      "sha256": "b678a737657e96fc80360201c2b7a966f733958226f4bc18146b1031fbaa4887",
+      "sha256": "d178116e5a5e582bcb4d5d4e52aedcc2530e80f4e73f11276b89d6be3aef704b",
       "required_tokens": [
         "Vision",
         "North Star"
@@ -125,7 +125,7 @@
     },
     "llm-threat-controls.md": {
       "path": "00-core/llm-threat-controls.md",
-      "sha256": "5ec324dbb146e40d4b9c47d248eea10327a8f66cc48e113990e712c38fe27e51",
+      "sha256": "0bc9cc843da4619b28309bda6bf4d8da3991cd4fbf5b5b99dc82001eeb9d608a",
       "required_tokens": [
         "LLM01",
         "LLM06",
@@ -137,7 +137,7 @@
     },
     "skills-system-governance.md": {
       "path": "00-core/skills-system-governance.md",
-      "sha256": "2d558c3b9ebdd0e32393d10392464204435fc3bbd6d4137c4b8960ea239f47ab",
+      "sha256": "75113346157760bc69611c4e23b5c421b01dd5c416ac5f391c036465573815ac",
       "required_tokens": [
         "Skills governance",
         "Structured outputs"
@@ -159,7 +159,7 @@
     },
     "agentic-coding-workflow.md": {
       "path": "10-flow/agentic-coding-workflow.md",
-      "sha256": "e718ffce2f10a3b6af3e1c3726b7b8197b578f96471d656ea62bb2c25b6bfffe",
+      "sha256": "b4718a27cc27da4d38011a58431836145a7d58c908b409c99a16b1eb8b7741ec",
       "required_tokens": [
         "G0 Initialize",
         "Evidence Triplet",
@@ -180,7 +180,7 @@
     },
     "assurance-system.md": {
       "path": "10-flow/assurance-system.md",
-      "sha256": "49b255eefb857008cd85c02a3343a34fbc21030665feb725548730d45e80be3e",
+      "sha256": "9d4c7fed5a3f663e94e0965ea6e29e80ab7163adcb91e44a637e70b702df0bdc",
       "required_tokens": [
         "Assurance System",
         "Time Freshness"
@@ -191,7 +191,7 @@
     },
     "checklists.md": {
       "path": "20-checklists/checklists.md",
-      "sha256": "96ecdc1a70dc62fb7b685a475f409302e81c631b69bae50e92c8cdf8b35d9099",
+      "sha256": "91b6510f1bc4ad22d280873baf8fd15e4a0b0602bb7a795da591ca641cc5e096",
       "required_tokens": [
         "checklist",
         "quality gates"
@@ -213,7 +213,7 @@
     },
     "governance-index.json": {
       "path": "90-infra/governance-index.json",
-      "sha256": "fa23069db257357553b0e6a53a547b1a23cf28d4b2a1b049144f734d690a857a",
+      "sha256": "b7ed90a5fcfe5990c87c3eac8fa644014cf90be99ae5ed59b042672b7fb4e40a",
       "hash_mode": "exclude_self",
       "required_tokens": [
         "precedence",
@@ -270,7 +270,7 @@
     },
     "SECURITY.md": {
       "path": "SECURITY.md",
-      "sha256": "c228dc5ebd6ab215110cc58f15796d6d18473dd24fe1862242494a2a3a7c2a7c",
+      "sha256": "a01db279af10d3cf91949d4ab904b18d25588598d34ea9c47b39cb6708713b1e",
       "required_tokens": [
         "Security Policy",
         "Standards & References",
@@ -305,7 +305,7 @@
     },
     "README.md": {
       "path": "README.md",
-      "sha256": "b0f3a6d29706a993c9bb264c56e97fd744bc7743cff715bf1644e912bf277c6c",
+      "sha256": "58fbc254019f2d64dc7e204f6e44d46146fe687e64a0574fe6247af2bdeebe43",
       "required_tokens": [
         "governance",
         "structure"
@@ -328,7 +328,7 @@
     },
     "session-continuity.md": {
       "path": "10-flow/session-continuity.md",
-      "sha256": "719645a191ae65917ad22c0ccdd3a8f365d3e1f2f1f10b65c46b501a352ca058",
+      "sha256": "60804a895aedec4ec27d06ae2d4045fc0484caa0597822e1e56dcfad5169ed0d",
       "required_tokens": [
         "session",
         "checkpoint",
@@ -340,7 +340,7 @@
     },
     "memory-governance.md": {
       "path": "10-flow/memory-governance.md",
-      "sha256": "f25826b1364e7a55a18a69daf552cfd1fb5f4b8154edb894d401203b682288a4",
+      "sha256": "16ab48a3189c11158e09f31298beb0afd3693b2d823dd876a675610afbd1d9f1",
       "required_tokens": [
         "memory",
         "retention",
@@ -400,7 +400,7 @@
     },
     "control-registry.core.yaml": {
       "path": "90-infra/control-registry.core.yaml",
-      "sha256": "ef8936356721de4b392cc9548365e5ed61ab1263ae7fee797e281025357b735f",
+      "sha256": "df44f4debd181f4a66216e8f69711317424984bf4b14cfad4083ad359f642571",
       "required_tokens": [
         "BW-GOV-001",
         "controls"

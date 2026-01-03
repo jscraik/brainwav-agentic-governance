@@ -30,7 +30,7 @@ Treat dates before this as past and after this as future. When asked for "latest
 
 ### 2.2 Secret Handling
 
-Retrieve all API keys, SSH credentials, and tokens at runtime via the 1Password CLI (`op`) and never cache them in files or long-lived environment variables.
+Retrieve all API keys, SSH credentials, and tokens at runtime via an approved secret-manager CLI and never cache them in files or long-lived environment variables.
 
 ### 2.3 Freshness Validation
 
@@ -143,7 +143,7 @@ fs.writeFileSync(
 }
 ```
 
-**Audit Logs** (`logs/vibe-check/*.json`):
+**Audit Logs** (`logs/aegis/*.json`, legacy `logs/vibe-check/*.json` allowed):
 
 - Detailed validation traces for compliance auditing
 - Evidence collection and verification logs  
@@ -155,20 +155,20 @@ fs.writeFileSync(
 
 ### 5.1 Server Configuration
 
-**Default Endpoint**: `${CORTEX_AEGIS_HTTP_URL:-http://127.0.0.1:2001}`
+**Endpoint**: adapter-defined (no hardcoded ports in core governance)
 
 **Required Environment Variables**:
 
-- `CORTEX_AEGIS_HTTP_URL`: Aegis service endpoint
-- `ACADEMIC_RESEARCH_ENABLED`: Enable/disable research integration
-- `AEGIS_COMPLIANCE_FRAMEWORKS`: Active compliance frameworks
+- `CORTEX_AEGIS_HTTP_URL`: Aegis service endpoint (if adapter uses env vars)
+- `ACADEMIC_RESEARCH_ENABLED`: Enable/disable research integration (adapter-defined)
+- `AEGIS_COMPLIANCE_FRAMEWORKS`: Active compliance frameworks (adapter-defined)
 
 ### 5.2 Task Integration Points
 
 **Required Files**:
 
 - `evidence/aegis-report.json`: Primary validation results
-- `logs/vibe-check/*.json`: Audit trail (legacy naming for compatibility)
+- `logs/aegis/*.json`: Audit trail (legacy naming for compatibility)
 - `run-manifest.json.evidence.aegisReport`: Relative path reference
 
 **Gate Dependencies**:
@@ -217,9 +217,9 @@ fs.writeFileSync(
 
 - [Governance Quickstart](../10-flow/governance-quickstart.md) - Overview and flow mapping
 - [Agentic Workflow](../10-flow/agentic-coding-workflow.md) - Detailed gate specifications
-- [Unified Checklists](../20-checklists/checklistsgovernance-os.md) - Section 7 Aegis requirements
+- [Unified Checklists](../20-checklists/checklists.md) - Section 7 Aegis requirements
 
-- When any academic MCP connector is unavailable, check connector health via adapter-defined `/health` endpoints and record the evidence path.
+- When any research connector is unavailable, check connector health via adapter-defined `/health` endpoints and record the evidence path.
 - Document the outage in a waiver JSON at `logs/academic-research/<slug>-<timestamp>-waiver.json` with service identity (`[<service>]`) metadata
 - Record the waiver pointer in `run-manifest.json` and schedule a follow-up check within 72 hours
 - Plans submitted to Oversight must surface outstanding uncertainties (e.g., connector uptime, attestation tooling) so reviewers can challenge mitigations early
@@ -228,11 +228,11 @@ fs.writeFileSync(
 
 ```
 Plan for: "Implement API rate limiting"
-1. Research rate limiting patterns and best practices (Research-backed: arXiv:2301.12345, Semantic Scholar citations: 156)
-2. Design token bucket algorithm based on academic standards (Research-backed: Context7 patterns)
-3. Implement Redis-based rate limiter with wikidata-validated algorithm properties (Research-backed: Wikidata Q1860)
-4. Add comprehensive testing based on peer-reviewed validation methods (Research-backed: OpenAlex research patterns)
-5. Create monitoring dashboards using academically-proven metrics (Research-backed: Semantic Scholar highly-cited approaches)
+1. Research rate limiting patterns and best practices (Research-backed: peer-reviewed citations)
+2. Design token bucket algorithm based on academic standards (Research-backed: methodology citations)
+3. Implement Redis-based rate limiter with research-validated algorithm properties (Research-backed: evidence notes)
+4. Add comprehensive testing based on peer-reviewed validation methods (Research-backed: testing citations)
+5. Create monitoring dashboards using academically-proven metrics (Research-backed: metrics citations)
 6. Document with academic references and proven methodologies
 7. Deploy with gradual rollout based on research-backed deployment strategies
 ```
@@ -262,7 +262,7 @@ POST to the adapter-configured MCP endpoint (e.g., `${CORTEX_AEGIS_HTTP_URL}/mcp
   "id": "<uuid>",
   "method": "tools/call",
   "params": {
-    "name": "vibe_check",
+    "name": "cortex_aegis_validate",
     "arguments": {
       "goal": "<task summary>",
       "plan": "1. Step one. 2. Step two.",
@@ -273,7 +273,7 @@ POST to the adapter-configured MCP endpoint (e.g., `${CORTEX_AEGIS_HTTP_URL}/mcp
 ```
 
 - Include headers: `Content-Type: application/json` and `Accept: application/json, text/event-stream`.
-- Save the raw response to `logs/vibe-check/<slug>.json` (pretty or compact JSON allowed).
+- Save the raw response to `logs/aegis/<slug>.json` (legacy `logs/vibe-check/` allowed via adapters).
 
 ---
 
@@ -281,10 +281,10 @@ POST to the adapter-configured MCP endpoint (e.g., `${CORTEX_AEGIS_HTTP_URL}/mcp
 
 To satisfy CI and review:
 
-1. Commit the JSON response at `logs/vibe-check/<slug>.json` inside the task folder.
+1. Commit the JSON response at `logs/aegis/<slug>.json` inside the task folder (legacy `logs/vibe-check/` allowed via adapters).
 2. Record the command (or HTTP POST) with timestamp and session ID in `~/tasks/<slug>/notes.md` or `decisions.md`.
 3. Reference the artifact in the PR description and attach the same path in review evidence (Code Review Checklist).
-4. Map each finding or mitigation to the applicable OWASP LLM Top 10 control ID(s) listed in `governance/rules/llm-threat-controls.md`; include the mapping in the PR evidence comment.
+4. Map each finding or mitigation to the applicable OWASP LLM Top 10 control ID(s) listed in `00-core/llm-threat-controls.md`; include the mapping in the PR evidence comment.
 5. Capture the proposed edit envelope: directories, allowed file globs, max files, and max total LOC. Store alongside the JSON response (e.g., `edit-envelope.json`) so CI can enforce the declared patch budget.
 6. Ensure all oversight-related logs contain `[<service>]` and `service:"<service_name>"` for audit search; `brand` is optional unless required by overlays.
 

@@ -78,7 +78,7 @@ Use this when the change is docs‑only, a small fix, or a low‑risk refactor:
 - [ ] Every new/changed code path has at least one automated test.
 - [ ] Breaking contracts (API/event/schema) documented in `context/requirements.md` and target docs/ADR.
 - [ ] Feature flags/config defaults are safe/off by default and described in `ops/rollout-plan.md`.
-- [ ] Secrets pulled via `op` (1Password CLI); no secrets committed or persisted.
+- [ ] Secrets pulled via an approved secret-manager CLI; no secrets committed or persisted.
 
 ---
 
@@ -103,7 +103,7 @@ Use this when the change is docs‑only, a small fix, or a low‑risk refactor:
 #### Feature
 
 - [ ] `meta/task.json`, `context/requirements.md` (North-Star), `context/research.md`, `plan/PLAN.md`, `plan/tdd-plan.md`, `work/implementation-log.md`.
-- [ ] `evidence/aegis-report.json` uploaded when required by profile/change class (Cortex-Aegis G2/G5 verdicts). Legacy `logs/vibe-check/*.json` allowed via adapters.
+- [ ] `evidence/aegis-report.json` uploaded when required by profile/change class (Cortex-Aegis G2/G5 verdicts). `logs/aegis/*.json` required; legacy `logs/vibe-check/*.json` allowed via adapters.
 - [ ] `implementation-plan.md#reuse-ledger` updated; `run-manifest.json.reuseEvidence.*` filled.
 
 #### Research / Spike
@@ -166,7 +166,7 @@ Use this when the change is docs‑only, a small fix, or a low‑risk refactor:
 
 ### 4.4 Security & Privacy
 
-- [ ] No secrets or keys committed; 1Password CLI usage documented.
+- [ ] No secrets or keys committed; secret-manager CLI usage documented.
 - [ ] New inputs validated; outputs encoded; threat model touched if risk tags include security/privacy.
 - [ ] Semgrep, gitleaks, OSV, `pnpm security:scan`, SBOM (CycloneDX 1.7), and SLSA v1.2 attestations referenced.
 - [ ] Data classification + retention windows documented for any new logs, traces, datasets, or prompt stores.
@@ -217,14 +217,14 @@ CI jobs must fail closed; waivers recorded in `governance/waivers/` with expiry 
 
 ### G1 – Discover / Research (No hardcoded connectors)
 
-- [ ] Repo/project scan + Local Memory `/recall` executed; findings logged in `context/research.md`.
+- [ ] Repo/project scan + Memory Adapter `/recall` executed; findings logged in `context/research.md`.
 - [ ] `/gather` run to structure discovery questions; responses captured in `context/requirements.md`.
 - [ ] Connector selection/ports are adapter-specific. Do not hardcode ports/providers in core checklists. If enabled, record connector health evidence under `research/connectors-health.log`.
 - [ ] RAIDs/assumptions documented; North-Star acceptance test path recorded.
 
 ### G2 – Plan / Design
 
-- [ ] `/reframe` run to confirm understanding before Aegis vibe check; confirmation logged in `work/implementation-log.md`.
+- [ ] `/reframe` run to confirm understanding before Aegis validation; confirmation logged in `work/implementation-log.md`.
 - [ ] `plan/PLAN.md`, `plan/tdd-plan.md`, `plan/risk-register.md` updated (≤7 steps per arc).
 - [ ] Cortex-Aegis executed when required (see §7); `evidence/aegis-report.json` stored.
 - [ ] Feature flags + quality gates defined; reuse ledger entries planned.
@@ -271,8 +271,8 @@ CI jobs must fail closed; waivers recorded in `governance/waivers/` with expiry 
 
 ### G10 – Archive
 
-- [ ] Run `/memorize` to persist session context to Local Memory; verify entry IDs in `json/memory-ids.json`.
-- [ ] `SUMMARY.md`, `lessons-learned.md`, `archive.json` completed; Local Memory entries recorded (`json/memory-ids.json`).
+- [ ] Run `/memorize` to persist session context to Memory Adapter; verify entry IDs in `json/memory-ids.json`.
+- [ ] `SUMMARY.md`, `lessons-learned.md`, `archive.json` completed; Memory Adapter entries recorded (`json/memory-ids.json`).
 - [ ] Review checklist snapshot mirrored to `governance/audit/reviews/<PR>-<sha>.md`.
 
 ---
@@ -299,7 +299,7 @@ CI jobs must fail closed; waivers recorded in `governance/waivers/` with expiry 
 
 ### 7.3 Outputs & Policy
 
-- [ ] Raw response saved to `evidence/aegis-report.json`; `logs/vibe-check/*.json` for audit.
+- [ ] Raw response saved to `evidence/aegis-report.json`; `logs/aegis/*.json` for audit (legacy `logs/vibe-check/*.json` allowed via adapters).
 - [ ] `block` verdict halts the gate until resolved; attach mitigation evidence before retrying.
 - [ ] `warn` verdict requires human disposition in `evidence/review-notes.md`.
 - [ ] `run-manifest.json.evidence.aegisReport` pointer added (relative path).

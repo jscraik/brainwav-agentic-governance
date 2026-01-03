@@ -198,20 +198,19 @@ Never claim "production-ready/complete/operational" if any prod path contains:
 
 - Use shared loader (`scripts/utils/dotenv-loader.mjs` or `@governance/utils`)
 - **Never call `dotenv.config()` directly**
-- No hardcoded secrets; env/secret managers only; retrieve API keys, SSH keys, and tokens via the 1Password CLI (`op`) at runtime
+- No hardcoded secrets; env/secret managers only; retrieve API keys, SSH keys, and tokens via an approved secret-manager CLI at runtime
 
-### Hybrid Model Solution — Live-Only (CONSTITUTIONAL)
+### Hybrid Model Solution — Profile-Driven (CONSTITUTIONAL)
 
-**Hard rule**: Embeddings, rerankers, generations must use **live** engines:
+**Release profile**: embeddings/rerankers/generation must use **live** engines *or* verifiably recorded inputs with explicit model identifiers and time-freshness evidence.  
+**Delivery profile**: prefer live; recorded inputs allowed for deterministic CI/evals when documented.  
+**Creative profile**: recorded inputs allowed for prototyping; no production readiness claims.
 
-- **Ollama** (local server)  
-- **Frontier APIs** (OpenAI/Anthropic/Google/etc.)
+**Forbidden**: Unverified stubs/recordings for production claims; cached "golden" vectors without provenance.
 
-**Forbidden**: Stubs/recordings/`dry_run` for models. No cached "golden" vectors. No echo rerankers.
+**Evidence before merge**: attach model health logs when required (engine, model IDs, vector norms/shape, latency).
 
-**Evidence before merge**: `pnpm models:health && pnpm models:smoke`; attach logs (engine, model IDs, vector norms/shape, latency).
-
-**Fallback chain**: Ollama → Frontier (if live). If unavailable, mark task **blocked**; escalate per Constitution.
+**Fallback**: if required live engines are unavailable, mark task **blocked** and escalate per Constitution.
 
 ### Performance Standards (Constitutional)
 
@@ -322,18 +321,18 @@ Detection relies on CI Conftest failures, observability counters tracking `NORTH
 ### 9️⃣ **Preflight Guards** [AGENTS-PRV-009]
 
 - Before any file writes, network calls, or long executions, agents MUST execute **preflight guards**:
-  1. **Cortex Aegis (Oversight)** – `pnpm oversight:vibe-check` or JSON-RPC to `${CORTEX_AEGIS_HTTP_URL:-http://127.0.0.1:2091}`
+  1. **Cortex Aegis (Oversight)** – `pnpm oversight:aegis-check` or JSON-RPC to the adapter-configured endpoint (legacy `oversight:vibe-check` allowed)
      - Required headers: `Accept: application/json, text/event-stream`
-     - Log saved to `logs/vibe-check/<task>.json`
-  2. **Hybrid Model Health** – `pnpm models:health && pnpm models:smoke` with live Ollama/Frontier engines (no stubs)
-  3. **Knowledge Connector Health** – Verify `${WIKIDATA_MCP_URL}/healthz` and `${ARXIV_MCP_URL}/healthz`; log to `research/connectors-health.log`
+     - Log saved to `logs/aegis/<task>.json` (legacy `logs/vibe-check/` allowed)
+  2. **Hybrid Model Health** – Run adapter-provided model health checks when required (no unverified stubs)
+  3. **Knowledge Connector Health** – Verify adapter-defined connector health endpoints; log to `research/connectors-health.log`
   4. **Trace Context Verification** – `pnpm tsx scripts/ci/verify-trace-context.ts <logfile>` ensures W3C `trace_id` **and** `traceparent` propagate across every governed log line
-  5. **Supply-Chain Evidence** – `pnpm sbom:generate && pnpm attest:sign && pnpm verify:attest && pnpm sbom:scan`; store in `sbom/`
+  5. **Supply-Chain Evidence** – Run pack-defined SBOM/provenance/signing commands; store artifacts under `sbom/`
   6. **Identity Gate** – CI/services MUST use GitHub Actions OIDC/WIF (no static credentials)
   7. **Feature Flags** – Only OpenFeature-backed toggles are permitted; ad-hoc env-based toggles are prohibited without a waiver
   8. **HTTP Cancellation** – All HTTP/tool calls must support `AbortSignal` (or SDK equivalent) to guarantee cancelation safety
 - **Run Manifest Requirements**: `run-manifest.json` MUST include JSON pointers for each attached log artifact **and** persist the raw text submitted to policy helpers so OPA/Conftest inputs remain reproducible.
-- **Enforcement**: PR MUST attach preflight logs (vibe-check, model health, connector health, trace verification, SBOM attestation); missing logs block merge
+- **Enforcement**: PR MUST attach preflight logs (Aegis, model health, connector health, trace verification, SBOM attestation); missing logs block merge
 
 **Rationale:** Prevents governance bypass and ensures all runtime dependencies are healthy before execution begins.
 
@@ -344,19 +343,19 @@ Detection relies on CI Conftest failures, observability counters tracking `NORTH
   "log_evidence": [
     {
       "pointer": "/preflight/logs/0",
-      "artifact_path": "logs/vibe-check/arc-17.json",
+      "artifact_path": "logs/aegis/arc-17.json",
       "raw_text": "[governance-pack] 2025-10-28T19:22:11.402-07:00 LATENCY:742ms MODELS:LIVE:OK NORTH_STAR:RED_FIRST Acceptance failed as expected",
       "sha256": "d41d8cd98f00b204e9800998ecf8427e"
     },
     {
       "pointer": "/preflight/logs/1",
-      "artifact_path": "logs/vibe-check/arc-17.json",
+      "artifact_path": "logs/aegis/arc-17.json",
       "raw_text": "[governance-pack] 2025-10-28T19:27:49.115-07:00 LATENCY:285ms MODELS:LIVE:OK NORTH_STAR:GREEN_AFTER Acceptance passed"
     },
     {
       "pointer": "/preflight/logs/connector-health",
       "artifact_path": "research/connectors-health.log",
-      "raw_text": "[governance-pack] 2025-10-28T19:20:04.010-07:00 LATENCY:93ms CONNECTOR:WIKIDATA MODELS:LIVE:OK status=200"
+      "raw_text": "[governance-pack] 2025-10-28T19:20:04.010-07:00 LATENCY:93ms CONNECTOR:PRIMARY MODELS:LIVE:OK status=200"
     }
   ]
 }
@@ -401,7 +400,7 @@ Pointers MUST align with the manifest schema, artifact paths MUST remain accessi
 | Service Identity Logs (#6) | `rg -n '\"service\"'` | Logger wrapper | Patch log calls |
 | Arc Protocol (#7) | `validate-run-manifest.ts` (arc structure, milestone test, contract snapshot) | Task scaffolding enforces arc template | Add missing arc artifacts |
 | North-Star Test (#8) | `validate-run-manifest.ts` (`north_star.acceptance_test_path` required) | `pnpm changelog:new` generates acceptance test scaffold | Write missing north-star test |
-| Preflight Guards (#9) | CI checks for `logs/vibe-check/*.json`, model health logs, trace context, SBOM | PR template checklist requires preflight evidence | Execute missing guards and attach logs |
+| Preflight Guards (#9) | CI checks for `logs/aegis/*.json` (legacy `logs/vibe-check/` allowed), model health logs, trace context, SBOM | PR template checklist requires preflight evidence | Execute missing guards and attach logs |
 | Session Hygiene (#10) | `run-manifest.json` `session_resets` timestamps; reviewer audit | 10-minute reset hook calls `pnpm session:reset` | Log retrospective resets with justification |
 
 ---
@@ -412,8 +411,8 @@ Pointers MUST align with the manifest schema, artifact paths MUST remain accessi
 
 ```bash
 pnpm changelog:new --slug my-feature --tier feature  # Scaffolds charter-compliant structure + north-star test
-pnpm oversight:vibe-check --goal "<task>" --plan "<steps>" --session <id>  # Preflight guard
-pnpm models:health && pnpm models:smoke  # Verify live model engines
+pnpm oversight:aegis-check --goal "<task>" --plan "<steps>" --session <id>  # Preflight guard (legacy oversight:vibe-check allowed)
+<model-health-command>  # Verify model engines when required
 ```
 
 **During implementation:**
@@ -435,8 +434,8 @@ pnpm sbom:generate && pnpm attest:sign && pnpm verify:attest  # Supply-chain evi
 
 - Attach Evidence Triplet links (milestone test, contract snapshot, reviewer JSON)
 - Include narrated diff in body
-- Attach preflight logs: `logs/vibe-check/*.json`, model health output, connector health log, SBOM attestation
-- Reference `CHARTER_SHA256: faf6254926f327ac182261de41f0f100b4c4ac24f2ca4700949c091a66cda13a` in description
+- Attach preflight logs: `logs/aegis/*.json` (legacy `logs/vibe-check/` allowed), model health output, connector health log, SBOM attestation
+- Reference `CHARTER_SHA256:<sha256 of brainwav/governance/00-core/AGENT_CHARTER.md>` in description
 
 ---
 
@@ -444,9 +443,9 @@ pnpm sbom:generate && pnpm attest:sign && pnpm verify:attest  # Supply-chain evi
 
 This document is authoritative. Any conflicts defer to:
 
-1. `governance/rules/AGENT_CHARTER.md` (this file - full specification)
-2. `governance/rules/agentic-coding-workflow.md` (workflow integration and task lifecycle)
-3. `governance/rules/code-review-checklist.md` (verification)
+1. `brainwav/governance/00-core/AGENT_CHARTER.md` (this file - full specification)
+2. `brainwav/governance/10-flow/agentic-coding-workflow.md` (workflow integration and task lifecycle)
+3. `brainwav/governance/20-checklists/checklists.md` (Code Review section)
 
 **Workflow Integration Notes:**
 
@@ -464,7 +463,7 @@ This document is authoritative. Any conflicts defer to:
 - **Step Budget**: Maximum of 7 discrete plan/act iterations per arc before splitting into a new arc.
 - **Evidence Triplet**: Three required artifacts per arc: (1) milestone test path, (2) contract snapshot, (3) reviewer JSON.
 - **North-Star Test**: An acceptance test written before implementation that proves the feature is real (must fail initially, pass upon completion).
-- **Preflight Guards**: Six mandatory checks before file writes/network calls: vibe-check, model health, connector health, trace context, SBOM, identity gate.
+- **Preflight Guards**: Six mandatory checks before file writes/network calls: Aegis validation, model health, connector health, trace context, SBOM, identity gate.
 - **Session Hygiene**: 50-minute work / 10-minute reset cadence with context diet and hard reset triggers.
 
 ---
@@ -496,14 +495,14 @@ approver: @maintainer-handle
 requested_by: @oncall-engineer
 expiry: 2025-10-30T19:00:00Z
 reason: |
-  Wikidata upstream outage prevented live freshness probes during incident INC-4721.
+  Research connector outage prevented live freshness probes during incident INC-4721.
   Cached dataset timestamped 2025-10-28T18:55:00Z served read-only traffic while upstream recovered.
 compensation_controls:
   - Validated cached telemetry checksum (sha256:3b5d5c3712955042212316173ccf37be)
-  - Enabled read-only feature flag `connectors.wikidata.read_only`
+  - Enabled read-only feature flag `connectors.primary.read_only`
   - Added pager alert for upstream recovery polling every 15 minutes
 evidence_required:
-  - research/connectors/wikidata-cache-2025-10-28.json
+  - research/connectors/cache-2025-10-28.json
   - docs/incidents/INC-4721-status-page.pdf
   - json/run-manifest.json#/log_evidence/2
 remediation_plan:
@@ -556,7 +555,7 @@ remediation_plan:
 | AGENTS-BRD-006 | Service Identity Logs                  | `identity-guard`     | `rg -n '\"service\"'` in logs                  |
 | AGENTS-ARC-007 | Arc Protocol                           | `validate-manifest`  | `validate-run-manifest.ts` (arc structure)       |
 | AGENTS-NST-008 | North-Star Test                        | `validate-manifest`  | `validate-run-manifest.ts` (north_star path)     |
-| AGENTS-PRV-009 | Preflight Guards                       | `preflight-check`    | Check for logs in `logs/vibe-check/`, SBOM, etc. |
+| AGENTS-PRV-009 | Preflight Guards                       | `preflight-check`    | Check for logs in `logs/aegis/` (legacy `logs/vibe-check/` allowed), SBOM, etc. |
 | AGENTS-SHG-010 | Session Hygiene                        | `session-guard`      | `run-manifest.json` session_resets timestamps    |
 
 ---
@@ -574,8 +573,8 @@ remediation_plan:
 4. **Execute preflight guards**:
 
    ```bash
-   pnpm oversight:vibe-check --goal "my-feature" --plan "step1, step2, ..." --session $(uuidgen)
-   pnpm models:health && pnpm models:smoke
+   pnpm oversight:aegis-check --goal "my-feature" --plan "step1, step2, ..." --session $(uuidgen)
+   <model-health-command>
    ```
 
 5. **Create first arc** (≤ 7 steps):
@@ -620,7 +619,7 @@ remediation_plan:
 **Document Hash (for audit trail):**
 
 ```bash
-shasum -a 256 governance/rules/AGENT_CHARTER.md
+shasum -a 256 brainwav/governance/00-core/AGENT_CHARTER.md
 # 70953d4e7433e886150fcab9daa1dc8c7a735e5ec6877499fd8832720a3900f4 (full document / AGENT_CHARTER.md)
 ```
 

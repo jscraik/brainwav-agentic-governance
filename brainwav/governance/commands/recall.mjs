@@ -41,8 +41,8 @@ if (slug) {
 fs.mkdirSync(outDir, { recursive: true });
 
 // Memory API configuration
-const MEMORY_API_BASE = process.env.LOCAL_MEMORY_BASE_URL || 'http://localhost:3002/api/v1';
-const MEMORY_API_KEY = process.env.LOCAL_MEMORY_API_KEY;
+const MEMORY_API_BASE = process.env.MEMORY_ADAPTER_BASE_URL || process.env.LOCAL_MEMORY_BASE_URL;
+const MEMORY_API_KEY = process.env.MEMORY_ADAPTER_API_KEY || process.env.LOCAL_MEMORY_API_KEY;
 
 function now() {
 	return new Date().toISOString().replace(/\.\d+Z$/, 'Z');
@@ -127,6 +127,9 @@ async function main() {
 	let memories = [];
 
 	try {
+		if (!MEMORY_API_BASE) {
+			throw new Error('Memory adapter base URL is not configured. Set MEMORY_ADAPTER_BASE_URL (preferred) or LOCAL_MEMORY_BASE_URL (legacy).');
+		}
 		// Determine query type
 		if (isUUID(query)) {
 			// Direct UUID lookup
@@ -258,9 +261,9 @@ ${JSON.stringify(retrieval, null, 2)}
 \`\`\`
 
 **Troubleshooting:**
-- Verify Local Memory MCP is running on port 3002
-- Check LOCAL_MEMORY_BASE_URL environment variable
-- Ensure API key is set if required (LOCAL_MEMORY_API_KEY)
+- Verify the memory adapter endpoint is reachable
+- Check MEMORY_ADAPTER_BASE_URL (preferred) or LOCAL_MEMORY_BASE_URL (legacy)
+- Ensure API key is set if required (MEMORY_ADAPTER_API_KEY or LOCAL_MEMORY_API_KEY)
 `;
 
 		console.log(errorOutput);

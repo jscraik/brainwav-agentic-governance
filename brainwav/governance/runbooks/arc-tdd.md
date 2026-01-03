@@ -1,7 +1,7 @@
 # ArcTDD Eight-Step Runbook
 
 **Scope:** Applies to all agents completing Tier 1–3 arcs under the ArcTDD Charter.
-**Versioned with:** `governance/rules/` governance pack.
+**Versioned with:** `brainwav/governance/` governance pack.
 
 1. **Spin up the task shell**
    - Command: `pnpm changelog:new --slug "<slug>" --tier "<fix|feature|refactor>"`
@@ -15,12 +15,12 @@
 4. **Run the preflight guard trio**
 
  ```bash
-  pnpm oversight:vibe-check --goal "<task>" --plan "<steps>" --session <id>
-  pnpm models:health && pnpm models:smoke
+  pnpm oversight:aegis-check --goal "<task>" --plan "<steps>" --session <id>  # legacy: oversight:vibe-check
+  <model-health-command>
   pnpm tsx scripts/ci/verify-trace-context.ts <logfile>
   ```
 
-- Persist outputs to `logs/vibe-check/<slug>-<arc>-<timestamp>.json`, `logs/models/<slug>-<timestamp>-health.json`, `logs/trace-context/<slug>-<arc>-trace.log`
+- Persist outputs to `logs/aegis/<slug>-<arc>-<timestamp>.json` (legacy `logs/vibe-check/` allowed), `logs/models/<slug>-<timestamp>-health.json`, `logs/trace-context/<slug>-<arc>-trace.log`
 
 5. **Scaffold failing tests**
    - Create Milestone (red) tests for the planned slice
@@ -30,12 +30,12 @@
    - Append `[<service>]` recap entries after each cadence window
 7. **Seal the Evidence Triplet and gates**
    - Capture Milestone Test diff, contract snapshot, reviewer JSON pointer
-   - Verify artifacts via `pnpm evidence:triplet:verify --slug <slug>`
-   - Run `pnpm test:smart`, `pnpm lint:smart`, `pnpm typecheck:smart`, `pnpm security:scan`, coverage, mutation
+   - Verify Evidence Triplet artifacts (pack-provided command or manual checklist)
+   - Run repo-standard test/lint/typecheck/security commands, coverage, and mutation as required by profile/change class
 8. **Package for review and merge**
-   - Complete `governance/rules/code-review-checklist.md`
-   - Attach vibe-check, model health, trace, SBOM, cosign bundle evidence; update `run-manifest.json`
-   - Emit ArcTDD telemetry snapshot with `pnpm telemetry:arc-tdd --slug <slug>`
+   - Complete Code Review Checklist in `20-checklists/checklists.md`
+   - Attach Aegis, model health, trace, SBOM, cosign bundle evidence; update `run-manifest.json`
+   - Emit ArcTDD telemetry snapshot with pack-provided tooling (if enabled)
 
 ## Common Failure Modes → Fixes
 
@@ -47,5 +47,5 @@
 | 4 | No preflight evidence | PR checklist missing links or filenames stray from `<slug>-<arc>-<timestamp>` | Re-run commands; store logs with canonical names |
 | 5 | Evidence Triplet gap | Arc dir missing artifact | Produce diff/contract/reviewer JSON |
 | 6 | Recap gaps | `evidence/recaps.log` sparse | Ensure staged commits include recap updates or document override |
-| 7 | Gates failing | `pnpm test:smart` or scans red | Fix code/tests; rerun; confirm `pnpm evidence:triplet:verify` passes |
-| 8 | Unsigned artifacts | Manifest missing cosign bundle or telemetry export | Re-run SBOM + signing pipeline and `pnpm telemetry:arc-tdd` |
+| 7 | Gates failing | tests/scans red | Fix code/tests; rerun; confirm Evidence Triplet verification passes |
+| 8 | Unsigned artifacts | Manifest missing cosign bundle or telemetry export | Re-run SBOM + signing pipeline and telemetry export (pack-provided) |
