@@ -67,6 +67,8 @@ function main() {
 	const logDir = path.join(taskRoot, 'logs');
 	const testsLogDir = path.join(logDir, 'tests');
 	const securityLogDir = path.join(logDir, 'security');
+	const vibeCheckDir = path.join(logDir, 'vibe-check');
+	const academicResearchDir = path.join(logDir, 'academic-research');
 	const jsonDir = path.join(taskRoot, 'json');
 	const researchDir = path.join(taskRoot, 'research');
 	const verificationDir = path.join(taskRoot, 'verification');
@@ -79,6 +81,8 @@ function main() {
 		logDir,
 		testsLogDir,
 		securityLogDir,
+		vibeCheckDir,
+		academicResearchDir,
 		jsonDir,
 		researchDir,
 		verificationDir,
