@@ -4,6 +4,8 @@ This document defines what “Spec-Kit compatible” means in Brainwav governanc
 It is enforced by `brainwav-governance spec validate` and the `sdd` pack checks.
 Compatibility is pack-scoped; no additional toolchain is required beyond the pack.
 
+**Note:** Compatibility is file layout + required sections + stable check IDs. Brainwav does not require a separate Python toolchain to satisfy this contract.
+
 ## Layouts (supported)
 
 Exactly one of the following layouts must be used:
@@ -67,9 +69,8 @@ For `.specify` layout only:
 
 Optional:
 
-- `.specify/templates/claude-template.md`
-- `.specify/scripts/`
-- `CLAUDE.md` at repo root
+- Adapter-specific templates or scripts (pack-scoped).
+- Directory-level overrides are allowed when defined by the active pack.
 
 ## Required sections in spec.md
 

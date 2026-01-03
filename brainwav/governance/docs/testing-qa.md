@@ -29,7 +29,7 @@ Each task must include:
 - `tasks/<slug>/json/contracts-snapshot.json` – API/schema snapshot
 - `tasks/<slug>/evidence/tests.md` – Test coverage summary
 
-See `../20-checklists/checklists.md` for gate-specific requirements and `../90-infra/change-classes.json` for class-driven evidence/threshold enforcement.
+See `../20-checklists/checklists.md` for gate-specific requirements, `../90-infra/change-classes.json` for class-driven evidence/threshold enforcement, and `gold-standard-checklist.md` for CI contract mapping.
 
 ## Appendix: Verify
 

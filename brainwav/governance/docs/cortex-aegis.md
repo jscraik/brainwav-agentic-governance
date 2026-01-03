@@ -199,6 +199,19 @@ tasks/<slug>/
 
 ---
 
+## Required artifacts (core)
+
+- `tasks/<slug>/logs/aegis/initial.json` (G2 oversight evidence)
+- `tasks/<slug>/logs/aegis/final.json` (G5 oversight evidence)
+- `tasks/<slug>/evidence/review-notes.md` when the verdict is `warn`
+
+## Stable check IDs (core + pack)
+
+- Core validation emits generic evidence checks (for example `evidence.task`); Aegis-specific checks are pack-defined.
+- Aegis packs SHOULD emit `pack:<id>:aegis.required` and `pack:<id>:aegis.report.present` when enforcement is enabled.
+
+---
+
 ## When Aegis MUST Run (Profile + Change Class)
 
 In release profile, Aegis MUST run for:

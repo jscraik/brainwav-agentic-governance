@@ -1,32 +1,35 @@
 # Gold Standard Checklist (CI Contract)
 
-This page defines what is **enforced in CI**, what is **advisory**, and what is **local-only** for the gold standard baseline (**as-of 2026-01-31**).
+This page defines what is **enforced in CI**, what is **advisory**, and what is **local-only** for the gold standard baseline.
+
+**Baseline as-of:** 2026-01-31
+
+## Rule: No claims without automated proof
+
+Any item listed as “Enforced in CI (hard fail)” MUST map to:
+
+1) a CI job step (command), and
+2) a stable `checks[].id` emitted by `brainwav-governance validate --json`, when applicable,
+3) an evidence artifact or CI log reference.
 
 ## Enforced in CI (hard fail)
 
-- Governance validation (`pnpm exec brainwav-governance validate --strict`)
-- Hash drift check (either included in validate or run `pnpm exec brainwav-governance sync-hashes --check`)
-- Docs validation (repo command; may be pack-scoped)
-- AGENTS integrity (`pnpm exec brainwav-governance validate-agents --strict` if enabled)
-- Security scans (pack-scoped enforcement; release profile must pass required scanners)
-- SBOM generation (CycloneDX) when required by change class / release profile
-
-## CI Mapping (commands, check IDs, packs)
-
-| Requirement | Command (example) | Check IDs (emitted) | Profiles | Packs |
-|---|---|---|---|---|
-| Governance validation | `pnpm exec brainwav-governance validate --strict` | `policy.required_tokens`, `policy.step_budget`, `policy.config`, `governance.json.pretty`, `hash.drift`, `standards.freshness`, `file.agents`, `file.index`, `file.charter`, `file.workflow`, `file.checklists`, `evidence.task`, `portfolio.drift`, `pack.missing`, `pack.present`, `spec.*`, `core.precedence.no_pack_files`, `pointer.no_canonical_trees`, `pack.install.only_when_selected`, `structure_guard.schema_core_only` | delivery, release | core + enabled packs |
-| Hash drift | `pnpm exec brainwav-governance sync-hashes --check` | `hash.drift` | delivery, release | core |
-| AGENTS integrity | `pnpm exec brainwav-governance validate-agents --strict` | `file.agents` | release (delivery if enabled) | core |
-| Docs validation | `pnpm docs:validate` | No check IDs (standalone script) | delivery, release | docs pack (if present) |
-| Security scans | pack CI | `pack:<id>:<check>` (pack-defined) | release (delivery if enabled) | security pack |
-| SBOM generation | pack CI | `pack:<id>:<check>` (pack-defined) | release (or change class requires) | sbom pack |
+| Requirement | CI command | Stable check IDs | Evidence |
+|---|---|---|---|
+| Governance validation | `pnpm exec brainwav-governance validate --strict --json --report .agentic-governance/reports/<validate>.json` | `policy.required_tokens`, `hash.drift`, `file.agents`, `file.index`, `file.charter`, `file.workflow`, `file.checklists`, `spec.*`, `core.precedence.no_pack_files`, `pointer.no_canonical_trees`, `pack.install.only_when_selected`, `structure_guard.schema_core_only` | `.agentic-governance/reports/<validate>.json` |
+| Hash drift | included in `validate` OR `pnpm exec brainwav-governance sync-hashes --check` | `hash.drift` | `.agentic-governance/reports/<validate>.json` |
+| AGENTS integrity | `pnpm exec brainwav-governance validate --strict --json --report .agentic-governance/reports/<validate>.json` | `file.agents` | `.agentic-governance/reports/<validate>.json` |
+| Docs validation (core) | `pnpm docs:validate` | n/a (standalone script; CI exit + log are the proof) | CI job logs |
+| Security scans (pack-scoped) | pack CI command | `pack:<id>:<check>` (pack-defined) | `evidence/<security>/` |
+| SBOM + provenance (pack-scoped) | pack CI command | `pack:<id>:<check>` (pack-defined) | `sbom/<artifact>.cdx.json`, `attestations/<artifact>.json`, `dist/` |
 
 ## Advisory (warnings)
 
 - Coverage thresholds beyond required baseline
 - Mutation score targets
 - Non-blocking policy warnings in docs or governance checks
+
+**Note:** coverage/mutation strictness is driven by profile + change class (see `../90-infra/change-classes.json`).
 
 ## Local-only (doctor output)
 

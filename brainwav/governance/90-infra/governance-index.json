@@ -213,7 +213,7 @@
     },
     "governance-index.json": {
       "path": "90-infra/governance-index.json",
-      "sha256": "b62583bc2c4d7a080da1e035a613b198862f52febfee55bde1a9441ac8b1a403",
+      "sha256": "13b9cb4dcbcbaec9ec5a0c750acc4de6d6f548c922f2e335d13892c5d1f9bedc",
       "hash_mode": "exclude_self",
       "required_tokens": [
         "precedence",
@@ -434,7 +434,7 @@
     },
     "spec-kit-compat.md": {
       "path": "docs/spec-kit-compat.md",
-      "sha256": "16d72a54f619c72a70d50c46cb370333d5191054ee0c04640af738ddc7e8da97",
+      "sha256": "d144c4841739a5e1b39d8be4556aa6021028361c91d9730ba29122a828116309",
       "required_tokens": [
         "Spec-Kit Compatibility Contract",
         "Layout"
