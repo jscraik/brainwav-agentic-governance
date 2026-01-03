@@ -30,3 +30,13 @@ Each task must include:
 - `tasks/<slug>/evidence/tests.md` – Test coverage summary
 
 See `../20-checklists/checklists.md` for gate-specific requirements and `../90-infra/change-classes.json` for class-driven evidence/threshold enforcement.
+
+## Appendix: Verify
+
+- Run the repo test command(s) for the touched surface and attach logs in `tasks/<slug>/logs/tests/`.
+- Re-run `pnpm governance:validate --strict` to confirm evidence requirements are satisfied.
+
+## Appendix: Troubleshooting
+
+- Missing evidence errors: confirm `tasks/<slug>/evidence/tests.md` exists and references the test run logs.
+- Coverage/mutation warnings in delivery: check the active change class and profile in `.agentic-governance/config.json`.

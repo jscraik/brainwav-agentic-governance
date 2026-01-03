@@ -38,3 +38,13 @@ This page defines what is **enforced in CI**, what is **advisory**, and what is 
 - `brainwav/governance/90-infra/compat.json`
 - `brainwav/governance/docs/testing-qa.md`
 - `AGENTS.md`
+
+## Appendix: Verify
+
+- Run `pnpm governance:validate --strict` and confirm the summary reports `0 failed, 0 warnings`.
+- Run `pnpm docs:validate` and confirm it reports `docs validation passed`.
+
+## Appendix: Troubleshooting
+
+- `hash.drift` failures: run `pnpm governance:sync-hashes` in a writable repo and re-run validation.
+- Missing pack checks: confirm pack IDs in `.agentic-governance/config.json` match installed packs.

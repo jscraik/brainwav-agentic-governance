@@ -213,7 +213,7 @@
     },
     "governance-index.json": {
       "path": "90-infra/governance-index.json",
-      "sha256": "ead5fc13eb98d047b6c5ff6f761f8132b1a13747572456fb892a7d392839ef56",
+      "sha256": "b62583bc2c4d7a080da1e035a613b198862f52febfee55bde1a9441ac8b1a403",
       "hash_mode": "exclude_self",
       "required_tokens": [
         "precedence",
@@ -422,7 +422,7 @@
     },
     "documentation-governance.md": {
       "path": "docs/documentation-governance.md",
-      "sha256": "98c3de7980b7969331cfb633a3e818699bc15cb9f68f21fd51140897a94573a9",
+      "sha256": "d4f529d5c3b06595a4b53e3c669618cdfb3d1a609ed4dcdc66857ec0caf0aae8",
       "required_tokens": [
         "documentation governance",
         "JSDoc",
@@ -434,7 +434,7 @@
     },
     "spec-kit-compat.md": {
       "path": "docs/spec-kit-compat.md",
-      "sha256": "92987289d73586ebaaf44f32a8863905022ffecc202ab428483bdde59748331a",
+      "sha256": "16d72a54f619c72a70d50c46cb370333d5191054ee0c04640af738ddc7e8da97",
       "required_tokens": [
         "Spec-Kit Compatibility Contract",
         "Layout"

@@ -127,3 +127,13 @@ These checks are emitted by `brainwav-governance spec validate`:
 pnpm exec brainwav-governance spec validate --spec-root specs
 pnpm exec brainwav-governance spec validate --spec-root .specify/specs --compat speckit
 ```
+
+## Appendix: Verify
+
+- Run `pnpm exec brainwav-governance spec validate --spec-root specs` and confirm spec-chain checks pass.
+- If using `.specify`, run `pnpm exec brainwav-governance spec validate --spec-root .specify/specs --compat speckit`.
+
+## Appendix: Troubleshooting
+
+- `spec-chain.present` failing: ensure `spec.md`, `plan.md`, and `tasks.md` exist under the same `<slug>` directory.
+- `spec-chain.consistency` failing: check required headers in `spec.md` and absolute repo-relative cross-links.

@@ -107,3 +107,13 @@ export async function loadGovernanceIndex(path: string, expectedDigest: string):
 - Link this policy in PR descriptions when documentation or JS/TS code is touched.
 - If a package has tighter rules, cite both this file and the package `AGENTS.md`.
 - For waivers, follow the waiver process referenced by `AGENTS.md` and record the waiver id in the PR.
+
+## Appendix: Verify
+
+- Run `pnpm docs:validate` and confirm it reports `docs validation passed`.
+- Run the repo lint command to ensure JSDoc rules pass on touched files.
+
+## Appendix: Troubleshooting
+
+- Docs validation failures: confirm referenced paths exist and links are repo-relative.
+- JSDoc lint failures: add missing `@param`/`@returns` tags or update summaries to match behavior.

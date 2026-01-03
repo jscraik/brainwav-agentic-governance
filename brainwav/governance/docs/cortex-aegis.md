@@ -296,6 +296,18 @@ Integrate with OpenTelemetry by propagating `traceparent` headers.
 
 ---
 
+## Appendix: Verify
+
+- Confirm Aegis evidence exists under `tasks/<slug>/logs/aegis/` and is linked in the task evidence bundle.
+- Re-run `pnpm governance:validate --strict` and ensure oversight-related checks pass.
+
+## Appendix: Troubleshooting
+
+- Missing Aegis evidence: run oversight via the adapter CLI and save the JSON response under `tasks/<slug>/logs/aegis/`.
+- Connector health errors: verify pack-provided connector configuration and retry the health probe.
+
+---
+
 ## Related Documentation
 
 - [AGENTS.md §11 – Oversight Gate](../../../AGENTS.md#11-oversight-gate-cortex-aegis-check--academic-licensing)
