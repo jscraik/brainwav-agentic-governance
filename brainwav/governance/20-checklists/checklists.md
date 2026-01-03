@@ -217,7 +217,7 @@ CI jobs must fail closed; waivers recorded in `governance/waivers/` with expiry 
 
 ### G1 – Discover / Research (No hardcoded connectors)
 
-- [ ] Repo/project scan + Memory Adapter `/recall` executed; findings logged in `context/research.md`.
+- [ ] Repo/project scan + Local Memory MCP `/recall` executed; findings logged in `context/research.md`.
 - [ ] `/gather` run to structure discovery questions; responses captured in `context/requirements.md`.
 - [ ] Connector selection/ports are adapter-specific. Do not hardcode ports/providers in core checklists. If enabled, record connector health evidence under `research/connectors-health.log`.
 - [ ] RAIDs/assumptions documented; North-Star acceptance test path recorded.
@@ -271,8 +271,8 @@ CI jobs must fail closed; waivers recorded in `governance/waivers/` with expiry 
 
 ### G10 – Archive
 
-- [ ] Run `/memorize` to persist session context to Memory Adapter; verify entry IDs in `json/memory-ids.json`.
-- [ ] `SUMMARY.md`, `lessons-learned.md`, `archive.json` completed; Memory Adapter entries recorded (`json/memory-ids.json`).
+- [ ] Run `/memorize` to persist session context to Local Memory MCP; verify entry IDs in `json/memory-ids.json`.
+- [ ] `SUMMARY.md`, `lessons-learned.md`, `archive.json` completed; Local Memory MCP entries recorded (`json/memory-ids.json`).
 - [ ] Review checklist snapshot mirrored to `governance/audit/reviews/<PR>-<sha>.md`.
 
 ---

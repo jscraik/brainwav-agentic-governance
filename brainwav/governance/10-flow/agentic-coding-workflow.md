@@ -52,7 +52,7 @@
   - Agentic workflows for: Feature implementation, Research/Spike, Fix (bug/incident), Refactor/Cleanup, and Code Review.  
   - ArcTDD gates **G0–G10**.  
   - Mandatory evidence (task folders, Assurance logs, Evidence Triplet, SBOM/provenance data).  
-  - Tooling hooks (Aegis oversight, Memory Adapter parity, knowledge connectors, MCP usage, OpenFeature requirement).
+  - Tooling hooks (Aegis oversight, Local Memory MCP parity, knowledge connectors, MCP usage, OpenFeature requirement).
 
 - **Out of Scope**  
   - People management, HR, or roadmap governance (see `00-core/vision.md`).  
@@ -189,7 +189,7 @@ tasks/<task-slug>/
   json/
     run-manifest.json        # Arc manifest with evidence pointers
     task-status.json         # Current gate, blockers, next steps
-    memory-ids.json          # Memory Adapter entry IDs
+    memory-ids.json          # Local Memory MCP entry IDs
     checkpoints/             # Session checkpoint snapshots
     checkpoint-index.json    # Index of all checkpoints for task
 ```
@@ -332,7 +332,7 @@ tasks/dashboard-metrics-widget/
 - Ensure all required artefacts exist and are complete.
 - Create comprehensive `SUMMARY.md`.
 - Verify all subdirectories contain relevant artefacts.
-- Flag task folder as archived in Memory Adapter.
+- Flag task folder as archived in Local Memory MCP.
 
 ### 3.7 Common Mistakes
 
@@ -352,7 +352,7 @@ tasks/dashboard-metrics-widget/
 - Use descriptive folder names (kebab-case slugs).
 - Keep folder structure organized per §3.2.
 - Document everything for reproducibility.
-- Persist key decisions to Memory Adapter MCP/REST and reference `LocalMemoryEntryId` in relevant task files.
+- Persist key decisions to Local Memory MCP/REST and reference `LocalMemoryEntryId` in relevant task files.
 
 ---
 
@@ -392,7 +392,7 @@ MCP client configuration is adapter-specific. Do not hardcode editor paths or ve
 | Tool | Package/CLI | Purpose | Evidence Location |
 |------|-------------|---------|-------------------|
 | **Context Builder** | pack-provided | Repo-aware context building, planning, minimal edits | `context/research.md`, `plan/PLAN.md`, `work/implementation-log.md` |
-| **Memory Adapter** | pack-provided | Cross-session decision persistence, semantic search | `json/memory-ids.json`, configured mirror path |
+| **Local Memory MCP** | pack-provided | Cross-session decision persistence, semantic search | `json/memory-ids.json`, configured mirror path |
 | **Cortex-Aegis** | pack-provided | Governance validation, risk assessment, time freshness | `evidence/aegis-report.json`, `logs/aegis/*.json` (legacy-compatible) |
 | **Docs Connector** | pack-provided | Up-to-date library docs, version-specific examples | `context/research.md`, `plan/PLAN.md` (cited sources) |
 
@@ -400,7 +400,7 @@ MCP client configuration is adapter-specific. Do not hardcode editor paths or ve
 
 #### Gate-by-Gate Tool Usage
 
-| Gate | Context Builder | Memory Adapter | Cortex-Aegis | Docs Connector |
+| Gate | Context Builder | Local Memory MCP | Cortex-Aegis | Docs Connector |
 |------|-----------------|---------------|--------------|----------------|
 | **G0 – Initialize** | — | recall prior work | — | — |
 | **G1 – Discover** | **Context Builder** (MUST for medium+) | recall key decisions | — | resolve docs for external libs |
@@ -458,7 +458,7 @@ Use pack-provided helpers if available; otherwise record entries manually.
 | Repo context & codemaps | Context Builder | Manual file reads |
 | External library docs | Docs Connector | Fetch from source |
 | Governance validation | Cortex-Aegis | Manual checklist |
-| Decision persistence | Memory Adapter | `.github/instructions/memories.instructions.md` |
+| Decision persistence | Local Memory MCP | `.github/instructions/memories.instructions.md` |
 | Academic research | Research connectors | Direct API calls |
 
 ### 4.2 Gate Overview
@@ -489,7 +489,7 @@ Use pack-provided helpers if available; otherwise record entries manually.
 
 #### G1 – Discover / Research
 
-- **Objective** – Build context through repo scans, Memory Adapter recall, and academic sources.  
+- **Objective** – Build context through repo scans, Local Memory MCP recall, and academic sources.  
 - **Context Builder Usage** – For tasks above size threshold, MUST run **Context Builder** to:
   - Identify relevant files, symbols, and modules
   - Generate **codemaps** for key areas (APIs, types, call graphs)
@@ -542,7 +542,7 @@ Use pack-provided helpers if available; otherwise record entries manually.
     - Maintains repo context across implementation steps
   - Reference Context Builder sessions in `work/implementation-log.md` where useful
 - **Required artefacts** – Code + tests, `work/implementation-log.md` (including Context Builder session references), `logs/models/*` when live model usage is required by profile/change class, named exports only.  
-- **Checks** – Named exports, ≤40-line functions, typed boundaries, no `Math.random()`, no TODO/FIXME/HACK, cancellation enforced, `OpenFeature` for flags, connectors logged, Memory Adapter updates appended.  
+- **Checks** – Named exports, ≤40-line functions, typed boundaries, no `Math.random()`, no TODO/FIXME/HACK, cancellation enforced, `OpenFeature` for flags, connectors logged, Local Memory MCP updates appended.  
 - **Exit criteria** – Tests now pass locally; Evidence Triplet outline captured (test path, contract snapshot, reviewer pointer); implementation matches plan or deviations documented.
 
 #### G5 – Verify
@@ -593,16 +593,16 @@ Use pack-provided helpers if available; otherwise record entries manually.
 
 #### G10 – Archive
 
-- **Objective** – Close the loop; persist artefacts for audits and Memory Adapter.
+- **Objective** – Close the loop; persist artefacts for audits and Local Memory MCP.
 - **Session Retrospective (MANDATORY)** – Before archiving, conduct a structured retrospective:
   1. **Process Evaluation**: What worked well? What caused friction?
   2. **Harness Improvements**: Propose specific changes to prompts, templates, or workflows
   3. **Pattern Extraction**: Identify reusable patterns for future tasks
   4. **Anti-Pattern Documentation**: Log mistakes to avoid in similar work
   5. Store retrospective in `evidence/session-retrospective.md`
-  6. Commit actionable improvements to Memory Adapter with tag `retrospective`
+  6. Commit actionable improvements to Local Memory MCP with tag `retrospective`
   7. Update `SUMMARY.md` with retrospective insights
-- **Required artefacts** – `SUMMARY.md`, `evidence/session-retrospective.md`, `archive.json`, review checklist snapshot in `governance/audit/reviews/<PR>-<sha>.md`, Memory Adapter entry IDs recorded in `json/memory-ids.json`.  
+- **Required artefacts** – `SUMMARY.md`, `evidence/session-retrospective.md`, `archive.json`, review checklist snapshot in `governance/audit/reviews/<PR>-<sha>.md`, Local Memory MCP entry IDs recorded in `json/memory-ids.json`.  
 - **Exit criteria** – Task folder archived; Evidence Triplet + TDD plan reuse ledger indexed; `.github/instructions/memories.instructions.md` updated.
 
 ### 4.4 Phase Machine (R→G→F→REVIEW)
@@ -627,7 +627,7 @@ The phase machine maps onto ArcTDD gates as follows:
 - Time Freshness Guard normalization
 - Academic research enhancement via configured research connectors
 - Aegis validation (Oversight) after research, before any writes/long runs
-- Memory Adapter parity updates
+- Local Memory MCP parity updates
 
 **Forbidden**
 
@@ -678,7 +678,7 @@ The phase machine maps onto ArcTDD gates as follows:
 - Security scanner evidence attached (when required)
 - Structure guard validation passes (pack-scoped command)
 - Model health evidence attached when required
-- Memory Adapter parity entry appended (decisions/refactors)
+- Local Memory MCP parity entry appended (decisions/refactors)
 
 #### REVIEW — human-in-the-loop only here
 
@@ -794,7 +794,7 @@ Context accumulation degrades agent performance. Agents MUST actively prune stal
 - Current gate requirements and exit criteria
 - Active failing tests and error messages
 - Relevant codemaps and type signatures
-- Decisions logged in Memory Adapter
+- Decisions logged in Local Memory MCP
 - Evidence Triplet components
 
 **SUMMARIZE (reduce tokens):**
@@ -846,7 +846,7 @@ Use Context Builder's `manage_selection` with mode transitions:
 | `A11Y_REPORT:OK` | Accessibility audit attached |
 | `STRUCTURE_GUARD:OK` | Structure validation passed |
 | `COVERAGE:OK CHANGED_LINES:OK MUTATION:OK` | Test quality gates met |
-| `MEMORY_PARITY:OK` | Memory Adapter sync confirmed |
+| `MEMORY_PARITY:OK` | Local Memory MCP sync confirmed |
 | `TRACE_CONTEXT:OK` | Trace propagation verified |
 | `SUPPLY_CHAIN:OK sbom=cyclonedx@1.7 slsa=1.2 cosign=bundle.v3` | Supply-chain artefacts present |
 | `CONTEXT_PRUNE:OK gate=<Gn> removed=<n>KB retained=<n>KB` | Context pruning executed |
@@ -925,7 +925,7 @@ SUBAGENT_RETURN:type=<type> status=<complete|partial|timeout|error>
 2. **Summarize**: Reduce subagent reasoning trace to actionable result
 3. **Prune Context**: Discard subagent's intermediate context (see §6.2)
 4. **Log Session**: Record subagent invocation in `run-manifest.json.subagent_sessions`
-5. **Memory Sync**: If subagent produced key decisions, parent stores to Memory Adapter
+5. **Memory Sync**: If subagent produced key decisions, parent stores to Local Memory MCP
 
 #### Evidence Logging
 
@@ -1086,7 +1086,7 @@ Research shows ~4.4% false negative rate; most failures are confusion-based, not
 | **Cortex-Aegis** | Confession inputs feed risk assessment |
 | **Evidence Triplet** | Confession becomes 4th element when required |
 | **Session Retrospective** | Aggregate confessions inform retrospective |
-| **Memory Adapter** | Store confession patterns for learning |
+| **Local Memory MCP** | Store confession patterns for learning |
 
 #### Evidence Tokens
 

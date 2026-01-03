@@ -56,7 +56,7 @@
   "docs": {
     "constitution.md": {
       "path": "00-core/constitution.md",
-      "sha256": "33ac43bdc0e678045c51f9373b1dcebe1c7ea43f4fcdcb2a12e5c67382b87d9b",
+      "sha256": "3f6473b8018fd58bdb8f7fb8c51311e3c8ea4373391b45dd032c8d91eadf1ca5",
       "required_tokens": [
         "Constitution",
         "Core Principles"
@@ -114,7 +114,7 @@
     },
     "vision.md": {
       "path": "00-core/vision.md",
-      "sha256": "d178116e5a5e582bcb4d5d4e52aedcc2530e80f4e73f11276b89d6be3aef704b",
+      "sha256": "1ced4413fc3f5fa40e22aaea6fee3ed5f7c00785899d72e5e284d9bebf9287fe",
       "required_tokens": [
         "Vision",
         "North Star"
@@ -137,7 +137,7 @@
     },
     "skills-system-governance.md": {
       "path": "00-core/skills-system-governance.md",
-      "sha256": "75113346157760bc69611c4e23b5c421b01dd5c416ac5f391c036465573815ac",
+      "sha256": "7d77a4c5b3bbc92b6e0f26e846ef638cbfeab259931956709badad60f48202f4",
       "required_tokens": [
         "Skills governance",
         "Structured outputs"
@@ -159,7 +159,7 @@
     },
     "agentic-coding-workflow.md": {
       "path": "10-flow/agentic-coding-workflow.md",
-      "sha256": "b4718a27cc27da4d38011a58431836145a7d58c908b409c99a16b1eb8b7741ec",
+      "sha256": "38979f69099e193a1e893448d5cd6224b9c6d57578fd327273c9c886996a6c91",
       "required_tokens": [
         "G0 Initialize",
         "Evidence Triplet",
@@ -180,7 +180,7 @@
     },
     "assurance-system.md": {
       "path": "10-flow/assurance-system.md",
-      "sha256": "9d4c7fed5a3f663e94e0965ea6e29e80ab7163adcb91e44a637e70b702df0bdc",
+      "sha256": "2db934c5466763d20ac347bebefe4b47ad6febed8049a0f72ee421482905ad21",
       "required_tokens": [
         "Assurance System",
         "Time Freshness"
@@ -191,7 +191,7 @@
     },
     "checklists.md": {
       "path": "20-checklists/checklists.md",
-      "sha256": "91b6510f1bc4ad22d280873baf8fd15e4a0b0602bb7a795da591ca641cc5e096",
+      "sha256": "a8b8e585342da941bf8e0f2c1b3ad42712ba2b292861cd5598e466655eddfbff",
       "required_tokens": [
         "checklist",
         "quality gates"
@@ -213,7 +213,7 @@
     },
     "governance-index.json": {
       "path": "90-infra/governance-index.json",
-      "sha256": "b7ed90a5fcfe5990c87c3eac8fa644014cf90be99ae5ed59b042672b7fb4e40a",
+      "sha256": "24f7ce78fbe83ecd765281941d3ebc4e5fcb704caa9055094bb148068e8eddf6",
       "hash_mode": "exclude_self",
       "required_tokens": [
         "precedence",
@@ -270,7 +270,7 @@
     },
     "SECURITY.md": {
       "path": "SECURITY.md",
-      "sha256": "a01db279af10d3cf91949d4ab904b18d25588598d34ea9c47b39cb6708713b1e",
+      "sha256": "196fd9d3e49dd6199f9b43f96db0cb76e91bca1ca2b0aa126f78b7bc643d4e59",
       "required_tokens": [
         "Security Policy",
         "Standards & References",
@@ -305,7 +305,7 @@
     },
     "README.md": {
       "path": "README.md",
-      "sha256": "58fbc254019f2d64dc7e204f6e44d46146fe687e64a0574fe6247af2bdeebe43",
+      "sha256": "4c5c4d2fcabd9d5dd580ddf9b0a5274fe0ef25c8fc3f79b94f48825ab50e1123",
       "required_tokens": [
         "governance",
         "structure"
@@ -328,7 +328,7 @@
     },
     "session-continuity.md": {
       "path": "10-flow/session-continuity.md",
-      "sha256": "60804a895aedec4ec27d06ae2d4045fc0484caa0597822e1e56dcfad5169ed0d",
+      "sha256": "20f357f776897f55fd571b3bc32c6d18f41a604f8d767fa1ef84e94715861729",
       "required_tokens": [
         "session",
         "checkpoint",
@@ -340,7 +340,7 @@
     },
     "memory-governance.md": {
       "path": "10-flow/memory-governance.md",
-      "sha256": "16ab48a3189c11158e09f31298beb0afd3693b2d823dd876a675610afbd1d9f1",
+      "sha256": "a48f92cb996762e94da9eb214a85c8c5217e4362eb2b5c9fd5889448615fcd09",
       "required_tokens": [
         "memory",
         "retention",

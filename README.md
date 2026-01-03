@@ -244,7 +244,7 @@ Local profile selection (creative/delivery/release) lives in `.agentic-governanc
 The framework ships executable commands under `brainwav/governance/commands/`. Run them with Node.js:
 
 ```bash
-# Recall context from Memory Adapter
+# Recall context from Local Memory MCP
 TASK_SLUG=my-task node brainwav/governance/commands/recall.mjs "governance workflow" --limit=5
 
 # Store task context to memory
@@ -259,7 +259,7 @@ INCIDENT_ID=INC-742 node brainwav/governance/commands/incident-review.mjs
 
 | Command | Markdown Spec | Executable | Purpose |
 |---------|---------------|------------|---------|
-| `/memorize` | `memorize.md` | `memorize.mjs` | Store governance context to Memory Adapter |
+| `/memorize` | `memorize.md` | `memorize.mjs` | Store governance context to Local Memory MCP |
 | `/recall` | `recall.md` | `recall.mjs` | Retrieve context via semantic search |
 | `/daily-summary` | `daily-summary.md` | `daily-summary.mjs` | Generate standup summary with git status |
 | `/incident-review` | `incident-review.md` | `incident-review.mjs` | Prepare structured post-incident review |
@@ -326,7 +326,7 @@ tasks/<slug>/
 - CI gates: Semgrep (block on policy rules), Gitleaks (`ANY=block`), OSV/pnpm audit (block on high/critical runtime deps), Trivy (vuln/misconfig/secret/license), CycloneDX SBOM, Sigstore Cosign v3 attestation.
 - Evidence of each scanner runs during G5, and waivers must be recorded + time-boxed per `AGENTS.md` §27.
 
-### MCP & Memory Adapter Integration
+### MCP & Local Memory Integration
 
 - MCP adapters handle context building, planning, and documentation retrieval.
 - Memory adapters enforce parity between local instructions and the configured memory backend.

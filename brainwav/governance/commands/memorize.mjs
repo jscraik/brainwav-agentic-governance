@@ -31,8 +31,8 @@ const mode = process.env.MEM_MODE ?? (hasId ? 'update' : 'new');
 const tag = `topic_context_${new Date().getUTCFullYear()}`;
 
 // Memory API configuration
-const MEMORY_API_BASE = process.env.MEMORY_ADAPTER_BASE_URL || process.env.LOCAL_MEMORY_BASE_URL;
-const MEMORY_API_KEY = process.env.MEMORY_ADAPTER_API_KEY || process.env.LOCAL_MEMORY_API_KEY;
+const MEMORY_API_BASE = process.env.LOCAL_MEMORY_BASE_URL || process.env.MEMORY_ADAPTER_BASE_URL;
+const MEMORY_API_KEY = process.env.LOCAL_MEMORY_API_KEY || process.env.MEMORY_ADAPTER_API_KEY;
 
 function now() {
 	return new Date().toISOString().replace(/\.\d+Z$/, 'Z');
@@ -117,7 +117,7 @@ async function recallMemories(query, limit = 5) {
 
 async function main() {
 	if (!MEMORY_API_BASE) {
-		throw new Error('Memory adapter base URL is not configured. Set MEMORY_ADAPTER_BASE_URL (preferred) or LOCAL_MEMORY_BASE_URL (legacy).');
+		throw new Error('Local Memory MCP base URL is not configured. Set LOCAL_MEMORY_BASE_URL (preferred) or MEMORY_ADAPTER_BASE_URL (legacy).');
 	}
 
 	let retrieval;

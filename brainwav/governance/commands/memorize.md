@@ -25,8 +25,8 @@ argument-hint: [new | update (memory-id | tag) | (blank for auto)]
 
 ## Configuration
 
-- **Endpoint**: set `MEMORY_ADAPTER_BASE_URL` (preferred) or `LOCAL_MEMORY_BASE_URL` (legacy)
-- **Auth**: set `MEMORY_ADAPTER_API_KEY` (preferred) or `LOCAL_MEMORY_API_KEY` (legacy) if required by the adapter
+- **Endpoint**: set `LOCAL_MEMORY_BASE_URL` (preferred) or `MEMORY_ADAPTER_BASE_URL` (legacy)
+- **Auth**: set `LOCAL_MEMORY_API_KEY` (preferred) or `MEMORY_ADAPTER_API_KEY` (legacy) if required by the adapter
 
 ## Mode Selection
 

@@ -89,7 +89,7 @@ Core governance remains project-neutral; do not hardcode monorepo assumptions in
 
 **MCP** for external tools (contracts with Zod; audited via MCP audit events).  
 **A2A** for inter-agent comms (event envelopes; no direct cross-domain imports).  
-**Memory Adapter** for persistent context with adapter-defined API parity (see §II.3 & §III Documentation).
+**Local Memory MCP** for persistent context with adapter-defined API parity (see §II.3 & §III Documentation).
 
 **Structured Outputs (REQUIRED)**: Any model output that drives code/files/network **must** be produced via **function/tool calling** or **JSON‑Schema–enforced structured outputs**. Free‑text is prohibited for machine‑consumed steps.
 
@@ -167,7 +167,7 @@ Repo-standard test frameworks (e.g., Vitest, pytest); property-based for critica
 
 Each package requires README with purpose, setup, API, examples, service identity notes.  
 Per-task artifacts stored under `~/tasks/[feature]/`.  
-**Memory Adapter parity**: decisions/rationales appended to `.github/instructions/memories.instructions.md` **and** persisted via the configured Memory Adapter API.
+**Local Memory MCP parity**: decisions/rationales appended to `.github/instructions/memories.instructions.md` **and** persisted via the configured Local Memory MCP API.
 
 ### Runtime Surfaces & Auth
 

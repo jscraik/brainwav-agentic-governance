@@ -305,7 +305,7 @@ Failure to meet any item keeps the PR in a blocked state (`agents-guard` job).
 
 - Runbook for escalation: `brainwav/governance/runbooks/incident.md`
 - Governance reference: `brainwav/governance/10-flow/agentic-coding-workflow.md` §0.1 and §G5
-- CLI helper source: `scripts/oversight-vibe-check.mjs`
+- CLI helper source: `scripts/oversight-aegis-check.mjs` (legacy: `scripts/oversight-vibe-check.mjs`)
 - Oversight evidence index: `brainwav/governance/audit/`
 
 ---

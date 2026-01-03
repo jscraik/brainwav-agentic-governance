@@ -292,7 +292,7 @@ const results = await memory.search({
 
 All significant memories must be written to:
 
-1. **Memory Adapter** - Primary storage with semantic search
+1. **Local Memory MCP** - Primary storage with semantic search
 2. **Repository mirror** - path is configurable. Default mirror location is a repo-owned documentation file (e.g., `.github/instructions/memories.instructions.md`) but may be overridden by `.agentic-governance/config.json`.
 
 ### 7.2 Sync Verification

@@ -11,7 +11,7 @@ alwaysApply: true
 This governance framework enables a self-contained, local-first **Agentic Development Runtime** that:
 
 1) orchestrates agent workflows with strict phase gates,  
-2) persists knowledge via a **Memory Adapter** with adapter-defined parity,  
+2) persists knowledge via a **Local Memory MCP** with adapter-defined parity,  
 3) exposes **only** controlled surfaces — **MCP**, **A2A**, **REST**, and **external model adapters** — guarded by policy, and  
 4) ships an **A11y-first Ops Dashboard** for health, logs, metrics, traces, and manual controls, and  
 5) applies uniformly across **every adopting project** so agents and developers share one contract regardless of repository.
@@ -67,7 +67,7 @@ This governance framework enables a self-contained, local-first **Agentic Develo
 - Central bus for topics/intents; policies for routing, retries/backoff, auditing.
 - **No direct cross-domain imports**; use envelopes/contracts only.
 
-### 3.4 Memory Adapter
+### 3.4 Local Memory MCP
 - Single source of truth for memories (facts, episodes, embeddings, artifacts).
 - CRUD + search APIs; retention/expiry; export/import.
 - **Parity rule**: every write available via adapter-defined surfaces. Evidence persisted to `.github/instructions/memories.instructions.md`.
@@ -193,7 +193,7 @@ This vision doc is governance-focused. Runtime host/app specifics (e.g., dashboa
 5. **Scaffold then implement** – Establish failing milestone tests, wire OpenFeature flags, then execute micro-TDD loops (G3→G4) while emitting phase tokens (`PHASE_TRANSITION:R->G`, etc.) and updating `work/implementation-log.md`.
 6. **Verify & evidence** – Run coverage/mutation/a11y/security suites (G5), attach SBOM + SLSA artifacts, capture contract snapshots, and update `evidence/tests.md` + `verification/*` outputs.
 7. **Review & document** – Execute AI + HITL reviews (G6/G7), complete the Code Review Checklist, refresh READMEs/runbooks, and ensure `implementation-plan.md#reuse-ledger` + `SUMMARY.md` are current.
-8. **Ship, monitor, archive** – Roll out per `ops/rollout-plan.md`, watch telemetry, finalize `archive.json`, sync Memory Adapter parity, and close the task with Evidence Triplet pointers recorded in the run manifest.
+8. **Ship, monitor, archive** – Roll out per `ops/rollout-plan.md`, watch telemetry, finalize `archive.json`, sync Local Memory MCP parity, and close the task with Evidence Triplet pointers recorded in the run manifest.
 
 Every step emits the mandated tokens in §8 and inherits the phase machine rules in §7, ensuring teams in any adopting project progress identically.
 

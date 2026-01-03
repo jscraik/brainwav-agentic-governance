@@ -21,6 +21,7 @@ const COPY_LIST = [
 	'scripts/cortex-governance-bootstrap.mjs',
 	'scripts/readiness-check.mjs',
 	'scripts/ensure-tools.mjs',
+	'scripts/oversight-aegis-check.mjs',
 	'scripts/oversight-vibe-check.mjs',
 	'scripts/sync-governance-hashes.mjs'
 ];

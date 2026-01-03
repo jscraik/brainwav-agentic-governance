@@ -153,7 +153,7 @@ Store all research evidence for governance compliance:
 cat ./tasks/<slug>/logs/academic-research/compliant-findings.json \
   > ./tasks/<slug>/logs/academic-research/final-findings.json
 
-# Memory Adapter parity with license compliance
+# Local Memory MCP parity with license compliance
 echo "## License-Compliant Academic Research Findings for <task>" >> ~/.github/instructions/memories.instructions.md
 echo "- Date: $(date)" >> ~/.github/instructions/memories.instructions.md
 echo "- Research sources: adapter-defined connectors" >> ~/.github/instructions/memories.instructions.md

@@ -53,7 +53,7 @@ Skills governance is enforced across all skill lifecycle stages and CI gates.
 
 The Skills System provides structured reference knowledge that:
 
-- Complements Memory Adapter (experiential)
+- Complements Local Memory MCP (experiential)
 - Increases compliance with best practices
 - Accelerates agent proficiency
 - Ensures consistency across implementations
@@ -80,7 +80,7 @@ The Skills System provides structured reference knowledge that:
 **Creation Requirements (all MUST):**
 
 1. **Research Phase:** Summarize sources; record license checks.
-2. **Validation Phase:** ≥ 5 successful applications (Memory Adapter evidence).
+2. **Validation Phase:** ≥ 5 successful applications (Local Memory MCP evidence).
 3. **Documentation Phase:** Fill template (frontmatter + structured sections).
 4. **Review Phase:** Peer review for accuracy, ethics, security, a11y.
 5. **Testing Phase:** Schema + content checks; security scanners clean.
@@ -88,7 +88,7 @@ The Skills System provides structured reference knowledge that:
 
 **Required Evidence:**
 
-- Memory Adapter entries (≥ 5) with outcomes and links
+- Local Memory MCP entries (≥ 5) with outcomes and links
 - Effectiveness rate ≥ 80% (initial), computed from application records
 - Clear problem statement, solution approach, examples, and acceptance checks
 - Research citations and license validation summary
@@ -188,7 +188,7 @@ skill_apply(args: { id: string; context: object }) -> returns { planSteps: strin
 }
 ```
 
-**Memory Adapter Write (example):**
+**Local Memory MCP Write (example):**
 
 ```javascript
 memoryStore({
@@ -299,7 +299,7 @@ pnpm skills:security-scan --changed
 
 ### 6.3 PR Requirements
 
-1. Evidence links (Memory Adapter outcomes, ≥5 for new skills)
+1. Evidence links (Local Memory MCP outcomes, ≥5 for new skills)
 2. Peer review approval
 3. Validator/scanner logs attached
 4. README updates (if needed)

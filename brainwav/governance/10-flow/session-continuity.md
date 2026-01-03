@@ -67,7 +67,7 @@ startup_sequence:
   0_recall_context:
     action: "Run /recall command"
     command: "/recall <task-slug>"
-    purpose: "Retrieve prior session context from Memory Adapter"
+    purpose: "Retrieve prior session context from Local Memory MCP"
     reference: "commands/recall.md"
     
   1_read_progress:
@@ -163,7 +163,7 @@ If health check fails at session start:
 
 Checkpoints stored in:
 - **Primary**: `tasks/<slug>/json/checkpoints/<checkpoint_id>.json`
-- **Mirror**: Memory Adapter (for semantic search)
+- **Mirror**: Local Memory MCP (for semantic search)
 - **Index**: `tasks/<slug>/json/checkpoint-index.json`
 
 ---
@@ -198,7 +198,7 @@ shutdown_sequence:
   3b_memorize:
     action: "Run /memorize command"
     command: "/memorize update <task-slug>"
-    purpose: "Persist session decisions to Memory Adapter"
+    purpose: "Persist session decisions to Local Memory MCP"
     reference: "commands/memorize.md"
     
   4_update_status:
