@@ -176,6 +176,20 @@ function ensurePackOptionsConfig(repoRootPath, packs, packOptions) {
 }
 
 /**
+ * Ensure the fixture config profile matches the run profile.
+ * @param {string} repoRootPath - Repo root.
+ * @param {string} profile - Profile to enforce.
+ * @returns {void} No return value.
+ */
+function ensureProfileConfig(repoRootPath, profile) {
+	const configPath = path.join(repoRootPath, '.agentic-governance', 'config.json');
+	if (!fs.existsSync(configPath)) return;
+	const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+	config.profile = profile;
+	fs.writeFileSync(configPath, `${JSON.stringify(config, null, 2)}\n`);
+}
+
+/**
  * Run install/upgrade/validate/doctor for a fixture.
  * @param {{name: string, packs: string[], packOptions?: Record<string, unknown>, mode?: string, profile?: string}} fixture - Fixture definition.
  * @returns {void} No return value.
@@ -211,6 +225,7 @@ function runFixtureLifecycle(fixture) {
 		} else {
 			runCli(['install', ...commonArgs], repoRoot);
 		}
+		ensureProfileConfig(tempRoot, profile);
 
 		if (fixture.packOptions) {
 			writePackOptions(tempRoot, fixture.packOptions);
@@ -228,6 +243,7 @@ function runFixtureLifecycle(fixture) {
 		} else {
 			runCli(['install', ...commonArgs], repoRoot);
 		}
+		ensureProfileConfig(tempRoot, profile);
 
 		if (mode === 'pointer') {
 			runCli(['upgrade', ...commonArgs, '--no-install'], repoRoot);
