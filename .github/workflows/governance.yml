@@ -140,9 +140,14 @@ jobs:
     needs: [readiness, hash-drift, dep-boundary, governance-validate]
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.26.0
       - uses: actions/setup-node@v4
         with:
           node-version: '24.11.0'
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile=false
       - name: Semgrep
         uses: returntocorp/semgrep-action@v1
         with:
@@ -152,16 +157,13 @@ jobs:
         with:
           args: "--no-git"
       - name: OSV-Scanner
-        uses: google/osv-scanner-action@v1
+        uses: google/osv-scanner-action@v2.3.0
         with:
           scan-args: "."
       - name: CycloneDX SBOM
-        uses: CycloneDX/gh-action@v3
-        with:
-          run-id: npm
-          output-format: json
-          path: .
-          version: latest
+        run: |
+          mkdir -p sbom
+          pnpm dlx @cyclonedx/cyclonedx-npm --output-format JSON --output-file sbom/bom.json
 
   scripts-smoke:
     runs-on: ubuntu-latest
