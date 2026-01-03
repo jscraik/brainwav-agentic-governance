@@ -2,7 +2,7 @@
 
 **Status:** Authoritative maintainer documentation  
 **Audience:** Core maintainers updating governance infrastructure  
-**Last Updated:** 2025-12-03
+**Last Updated:** 2026-01-03
 
 ---
 
@@ -194,3 +194,29 @@ If hashes become systematically corrupted:
 - **Structure Reference**: `README.md`
 - **CI Workflows**: `.github/workflows/*governance*.yml`
 - **Hash Sync Script**: `scripts/sync-governance-hashes.mjs` (canonical entrypoint via `brainwav-governance validate`)
+
+## Release Signing (SSH)
+
+All release tags MUST be signed using SSH signing.
+
+### One-time setup
+
+```bash
+git config --global gpg.format ssh
+git config --global user.signingkey ~/.ssh/id_ed25519.pub
+git config --global commit.gpgsign false
+git config --global tag.gpgsign true
+```
+
+### Create a signed tag
+
+```bash
+git tag -s v0.x.y -m "Release v0.x.y"
+git push origin v0.x.y
+```
+
+### Verification
+
+```bash
+git tag -v v0.x.y
+```

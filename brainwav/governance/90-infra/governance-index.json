@@ -202,7 +202,7 @@
     },
     "governance-maintainers.md": {
       "path": "90-infra/governance-maintainers.md",
-      "sha256": "8699690553096b105914c69e94f0d742118edb8577dc3331dbfda17314c32d7f",
+      "sha256": "e41177492f276de518fbd0a7378135d077c277baedab2e39eaf982c6f8df25bc",
       "required_tokens": [
         "hash sync",
         "maintainer"
@@ -213,7 +213,7 @@
     },
     "governance-index.json": {
       "path": "90-infra/governance-index.json",
-      "sha256": "ecabc0ff1398954bf745dbf12f8a13299805dc8a54092f5716a22467d9016372",
+      "sha256": "fa23069db257357553b0e6a53a547b1a23cf28d4b2a1b049144f734d690a857a",
       "hash_mode": "exclude_self",
       "required_tokens": [
         "precedence",
