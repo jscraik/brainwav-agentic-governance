@@ -8,7 +8,6 @@ on:
 env:
   GOVERNANCE_MODE: delivery
   GOVERNANCE_PROFILE: delivery
-  CORTEX_AEGIS_HTTP_URL: ${{ secrets.CORTEX_AEGIS_HTTP_URL }}
 
 jobs:
   readiness:
@@ -123,8 +122,10 @@ jobs:
 
   oversight:
     runs-on: ubuntu-latest
-    if: ${{ env.CORTEX_AEGIS_HTTP_URL != '' }}
+    if: ${{ secrets.CORTEX_AEGIS_HTTP_URL != '' }}
     needs: [readiness, hash-drift, dep-boundary, docs-validate, agents-integrity, governance-validate]
+    env:
+      CORTEX_AEGIS_HTTP_URL: ${{ secrets.CORTEX_AEGIS_HTTP_URL }}
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
