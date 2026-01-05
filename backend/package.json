@@ -1,0 +1,36 @@
+{
+  "name": "@brainwav/amyga-backend",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "AMYGA Governance Backend - Acceleration Layer",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=24.11.0 <25"
+  },
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "db:migrate": "tsx src/db/migrate.ts",
+    "db:reindex": "tsx src/scripts/reindex.ts",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.7.0",
+    "express": "^4.21.2",
+    "ws": "^8.18.0",
+    "chokidar": "^4.0.3",
+    "glob": "^11.0.0",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.5",
+    "@types/ws": "^8.5.13",
+    "typescript": "^5.9.3",
+    "tsx": "^4.19.2",
+    "vitest": "^2.1.8"
+  }
+}
