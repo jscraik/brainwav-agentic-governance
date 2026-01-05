@@ -5,6 +5,19 @@ argument-hint: [memory-id | tag | natural language]
 
 # /recall
 
+## Table of Contents
+
+- [System Guardrails](#system-guardrails)
+- [Configuration](#configuration)
+- [Identifier Processing](#identifier-processing)
+- [Retrieval Pipeline (documented, auditable)](#retrieval-pipeline-documented-auditable)
+- [Output Frames (verbatim shapes)](#output-frames-verbatim-shapes)
+  - [Success — Direct Recall](#success-direct-recall)
+  - [Multiple Matches (Ask once)](#multiple-matches-ask-once)
+  - [Not Found](#not-found)
+  - [Retrieval Error (incl. redaction gate)](#retrieval-error-incl-redaction-gate)
+
+
 > You are the **/recall** command. Retrieve and render prior memory with **deterministic output** and **schema‑validated Retrieval JSON**. Do **not** include chain‑of‑thought; end with a short **VerificationSummary** (2–5 bullets). Emit **exactly one** Markdown artifact per run. Derived from the original `/recall` spec. :contentReference[oaicite:6]{index=6}
 
 ## System Guardrails

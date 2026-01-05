@@ -1,0 +1,84 @@
+{
+  "tier": "refactor",
+  "change_class": "docs",
+  "arcs": [
+    {
+      "phase": "plan",
+      "summary": "Audit documentation for TOC compliance and brand/vale gaps.",
+      "steps": [
+        "Identify docs missing TOCs (>400 words).",
+        "Define additions for brand assets and Vale config."
+      ]
+    },
+    {
+      "phase": "implement",
+      "summary": "Add TOCs, brand assets, and Vale config; update README and package manifest.",
+      "steps": [
+        "Insert missing TOCs and headings.",
+        "Add brand assets and reference docs.",
+        "Add Vale config and rules.",
+        "Update README and package.json."
+      ]
+    },
+    {
+      "phase": "verify",
+      "summary": "Validate docs and hashes; run Vale lint.",
+      "steps": [
+        "pnpm docs:validate",
+        "pnpm governance:sync-hashes",
+        "pnpm governance:sync-hashes:check",
+        "vale README.md docs/packs.md docs/references/BRAND_GUIDELINES.md docs/references/DOC_COAUTHORING.md"
+      ]
+    }
+  ],
+  "spec": {
+    "current_state": "Docs lacked TOCs in multiple long files; no brand assets, brand guideline reference, or Vale config.",
+    "desired_state": "Docs have TOCs where required, brand assets and guidelines are present, and Vale linting is configured."
+  },
+  "verification": {
+    "success_criteria": [
+      "Docs validation passes.",
+      "Governance hash drift check passes.",
+      "Vale lint runs without warnings for key docs."
+    ],
+    "commands": [
+      "pnpm docs:validate",
+      "pnpm governance:sync-hashes",
+      "pnpm governance:sync-hashes:check",
+      "vale README.md docs/packs.md docs/references/BRAND_GUIDELINES.md docs/references/DOC_COAUTHORING.md"
+    ]
+  },
+  "learn": {
+    "insights": [
+      "TOC generation should be automated for long governance docs.",
+      "Vale rules should be expanded over time as style needs evolve."
+    ],
+    "followups": []
+  },
+  "decision_hierarchy": {
+    "deterministic_tools": [
+      "rg",
+      "vale"
+    ],
+    "cli_invocations": [
+      "pnpm cortex:governance-bootstrap",
+      "pnpm docs:validate",
+      "pnpm governance:sync-hashes",
+      "pnpm governance:sync-hashes:check",
+      "vale README.md docs/packs.md docs/references/BRAND_GUIDELINES.md docs/references/DOC_COAUTHORING.md",
+      "cp ~/Downloads/brand-mark* brand/"
+    ],
+    "prompts": [],
+    "agents_used": [
+      "docs-expert"
+    ]
+  },
+  "evidence_triplet": {
+    "milestone_test": "logs/tests/milestone.log",
+    "contract_snapshot": "json/contracts-snapshot.json",
+    "reviewer_pointer": "json/reviewer.json"
+  },
+  "governance": {
+    "rules_index": "brainwav/governance/90-infra/governance-index.json"
+  }
+}

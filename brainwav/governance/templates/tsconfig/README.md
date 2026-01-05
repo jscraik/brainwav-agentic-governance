@@ -1,5 +1,39 @@
 # brAInwav TypeScript Configuration Templates
 
+## Table of Contents
+
+- [Available Templates](#available-templates)
+  - [1. `tsconfig.lib.json` - Standard Library Configuration](#1-tsconfiglibjson-standard-library-configuration)
+  - [2. `tsconfig.spec.json` - Test Configuration](#2-tsconfigspecjson-test-configuration)
+- [Creating a New TypeScript Package](#creating-a-new-typescript-package)
+  - [Step 1: Create Package Structure](#step-1-create-package-structure)
+  - [Step 2: Copy Main Config](#step-2-copy-main-config)
+  - [Step 3: Adjust extends Path (if needed)](#step-3-adjust-extends-path-if-needed)
+  - [Step 4: Add Test Config (if package has tests)](#step-4-add-test-config-if-package-has-tests)
+  - [Step 5: Create package.json](#step-5-create-packagejson)
+  - [Step 6: Verify Build](#step-6-verify-build)
+- [Migrating Existing Packages](#migrating-existing-packages)
+  - [Option 1: Manual Migration](#option-1-manual-migration)
+  - [Option 2: Automated Migration (Phase 2)](#option-2-automated-migration-phase-2)
+- [Template Field Reference](#template-field-reference)
+  - [Required Fields (DO NOT REMOVE)](#required-fields-do-not-remove)
+  - [Optional Fields (Customize as needed)](#optional-fields-customize-as-needed)
+  - [Fields to AVOID](#fields-to-avoid)
+- [Common Issues & Solutions](#common-issues-solutions)
+  - [Issue: Build emits to wrong location](#issue-build-emits-to-wrong-location)
+  - [Issue: Tests not found by vitest](#issue-tests-not-found-by-vitest)
+  - [Issue: Cross-package import errors](#issue-cross-package-import-errors)
+  - [Issue: Type declarations not generated](#issue-type-declarations-not-generated)
+- [brAInwav Standards Checklist](#brainwav-standards-checklist)
+- [Validation](#validation)
+- [Examples](#examples)
+  - [Example 1: Simple Library Package](#example-1-simple-library-package)
+  - [Example 2: Service Package with Scripts](#example-2-service-package-with-scripts)
+  - [Example 3: App Package](#example-3-app-package)
+- [Related Documentation](#related-documentation)
+- [Updates & Versioning](#updates-versioning)
+
+
 **Location**: `governance/templates/tsconfig/`  
 **Purpose**: Standard TypeScript configurations for monorepo projects  
 **Maintained by**: brAInwav Development Team

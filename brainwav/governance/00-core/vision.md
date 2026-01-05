@@ -6,6 +6,40 @@ alwaysApply: true
 
 # Agentic Governance Vision Document — Project-Neutral (v1.2, 2025-12-03)
 
+## Table of Contents
+
+- [0) North Star (End State)](#0-north-star-end-state)
+- [1) Core Principles](#1-core-principles)
+- [2) System Boundaries (Allowed Interfaces)](#2-system-boundaries-allowed-interfaces)
+- [3) Architecture Overview](#3-architecture-overview)
+  - [3.1 ASBR Orchestrator (LangGraph)](#31-asbr-orchestrator-langgraph)
+  - [3.2 MCP (Single Hub)](#32-mcp-single-hub)
+  - [3.3 A2A Hub](#33-a2a-hub)
+  - [3.4 Local Memory MCP](#34-local-memory-mcp)
+  - [3.5 RAG Pipeline](#35-rag-pipeline)
+  - [3.6 Agents](#36-agents)
+  - [3.7 Connectors & External Surfaces](#37-connectors-external-surfaces)
+  - [3.8 Ops Dashboard (React)](#38-ops-dashboard-react)
+  - [3.9 Observability & Security](#39-observability-security)
+- [4) Packages: Vision & "Done Means"](#4-packages-vision-done-means)
+  - [4.1 `packages/mcp-server`](#41-packagesmcp-server)
+  - [4.2 `packages/mcp-core`](#42-packagesmcp-core)
+  - [4.3 `packages/mcp-registry`](#43-packagesmcp-registry)
+  - [4.4 `packages/a2a`](#44-packagesa2a)
+  - [4.5 `packages/memory-core`](#45-packagesmemory-core)
+  - [4.6 `packages/rag`](#46-packagesrag)
+  - [4.7 `packages/agents`](#47-packagesagents)
+  - [4.8 `packages/orchestration`](#48-packagesorchestration)
+  - [4.9 `packages/connectors`](#49-packagesconnectors)
+  - [4.10 Platform Runtime Surfaces (scope note)](#410-platform-runtime-surfaces-scope-note)
+- [5) Non-Goals](#5-non-goals)
+- [6) Success Metrics](#6-success-metrics)
+- [7) Phase Machine & HITL Gating (Runtime Policy)](#7-phase-machine-hitl-gating-runtime-policy)
+- [8) Evidence Protocol (Emitted & Verified)](#8-evidence-protocol-emitted-verified)
+- [9) Project-Neutral Procedure & Steps](#9-project-neutral-procedure-steps)
+- [10) Glossary](#10-glossary)
+
+
 ## 0) North Star (End State)
 
 This governance framework enables a self-contained, local-first **Agentic Development Runtime** that:

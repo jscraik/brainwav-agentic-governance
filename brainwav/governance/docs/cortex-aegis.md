@@ -7,6 +7,43 @@ owner: "Governance Team"
 
 # Cortex Aegis (Oversight Gate, Neutral Governance)
 
+## Table of Contents
+
+- [Overview](#overview)
+- [Purpose & Scope](#purpose-scope)
+- [When to Run Oversight (Aegis)](#when-to-run-oversight-aegis)
+- [Academic Research Integration (Pack-scoped)](#academic-research-integration-pack-scoped)
+  - [License Validation Requirements](#license-validation-requirements)
+- [Installation](#installation)
+- [Configuration](#configuration)
+  - [Endpoint / Transport](#endpoint-transport)
+  - [MCP Client Configuration](#mcp-client-configuration)
+  - [Environment Variables](#environment-variables)
+- [MCP Tools](#mcp-tools)
+  - [`cortex_aegis_validate`](#cortexaegisvalidate)
+- [Oversight Invocation](#oversight-invocation)
+  - [MCP Tool Invocation (Direct)](#mcp-tool-invocation-direct)
+  - [JSON-RPC / HTTP Fallback](#json-rpc-http-fallback)
+  - [Connector Outage Protocol](#connector-outage-protocol)
+- [Integration with ArcTDD Gates](#integration-with-arctdd-gates)
+  - [Required Inputs](#required-inputs)
+  - [Required Outputs](#required-outputs)
+- [Required artifacts (core)](#required-artifacts-core)
+- [Stable check IDs (core + pack)](#stable-check-ids-core-pack)
+- [When Aegis MUST Run (Profile + Change Class)](#when-aegis-must-run-profile-change-class)
+- [Response Handling](#response-handling)
+  - [Pass Verdict](#pass-verdict)
+  - [Warn Verdict](#warn-verdict)
+  - [Block Verdict](#block-verdict)
+- [Evidence & Observability](#evidence-observability)
+  - [Evidence Package Checklist](#evidence-package-checklist)
+  - [Observability Signals](#observability-signals)
+- [Appendix: Verify](#appendix-verify)
+- [Appendix: Troubleshooting](#appendix-troubleshooting)
+- [Related Documentation](#related-documentation)
+- [Changelog](#changelog)
+
+
 > Project-neutral oversight and assurance MCP server for all agentic governance workflows.
 
 ---

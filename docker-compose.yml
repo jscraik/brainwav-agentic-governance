@@ -1,0 +1,117 @@
+# brAInwav Governance Tools - Docker Compose
+#
+# This compose file provides a local development environment with all
+# security tools pre-installed for the Standard and Enterprise tiers.
+#
+# Usage:
+#   docker-compose up -d              # Start services
+#   docker-compose run --rm governance validate  # Run validation
+#   docker-compose down               # Stop services
+
+version: '3.8'
+
+services:
+  # Starter tier - Node.js + pnpm only (no external tools)
+  governance-starter:
+    build:
+      context: .
+      dockerfile: Dockerfile.governance-tools
+      target: starter
+    image: brainwav/governance-tools:starter-local
+    container_name: brainwav-governance-starter
+    working_dir: /workspace
+    volumes:
+      - .:/workspace
+      - node_modules_starter:/workspace/node_modules
+    environment:
+      - BRAINWAV_TIER=starter
+    command: brainwav-governance --help
+    profiles:
+      - starter
+
+  # Standard tier - Workflow + basic security checks
+  governance-standard:
+    build:
+      context: .
+      dockerfile: Dockerfile.governance-tools
+      target: standard
+    image: brainwav/governance-tools:standard-local
+    container_name: brainwav-governance-standard
+    working_dir: /workspace
+    volumes:
+      - .:/workspace
+      - node_modules_standard:/workspace/node_modules
+    environment:
+      - BRAINWAV_TIER=standard
+    # Mount common cache directories for tools
+    tmpfs:
+      - /tmp:size=100M
+    command: brainwav-governance --help
+    profiles:
+      - standard
+      - default  # Default tier if no profile specified
+
+  # Enterprise tier - Full compliance suite
+  governance-enterprise:
+    build:
+      context: .
+      dockerfile: Dockerfile.governance-tools
+      target: enterprise
+    image: brainwav/governance-tools:enterprise-local
+    container_name: brainwav-governance-enterprise
+    working_dir: /workspace
+    volumes:
+      - .:/workspace
+      - node_modules_enterprise:/workspace/node_modules
+      # Cache directories for faster subsequent runs
+      - trivy_cache:/root/.cache/trivy
+      - go_cache:/root/go/cache
+      - cargo_registry:/root/.cargo/registry
+    environment:
+      - BRAINWAV_TIER=enterprise
+      - TRIVY_CACHE_DIR=/root/.cache/trivy
+    tmpfs:
+      - /tmp:size=200M
+    command: brainwav-governance --help
+    profiles:
+      - enterprise
+
+  # Development service with hot-reload for CLI development
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.governance-tools
+      target: standard
+    image: brainwav/governance-tools:dev
+    container_name: brainwav-governance-dev
+    working_dir: /workspace
+    volumes:
+      - .:/workspace
+      - node_modules_dev:/workspace/node_modules
+    environment:
+      - NODE_ENV=development
+      - BRAINWAV_DEV=1
+    command: sh -c "pnpm install && pnpm test:cli"
+    profiles:
+      - dev
+
+volumes:
+  # Separate node_modules for each tier to avoid conflicts
+  node_modules_starter:
+    name: brainwav_node_modules_starter
+  node_modules_standard:
+    name: brainwav_node_modules_standard
+  node_modules_enterprise:
+    name: brainwav_node_modules_enterprise
+  node_modules_dev:
+    name: brainwav_node_modules_dev
+  # Tool cache volumes for faster runs
+  trivy_cache:
+    name: brainwav_trivy_cache
+  go_cache:
+    name: brainwav_go_cache
+  cargo_registry:
+    name: brainwav_cargo_registry
+
+# Named volumes persist between runs for better performance
+# Use 'docker-compose down -v' to clean up all volumes

@@ -1,5 +1,53 @@
 # Agentic Governance Framework
 
+## Table of Contents
+
+- [Packaging](#packaging)
+- [Core + Packs + Adapters](#core-packs-adapters)
+- [📂 Directory Structure](#directory-structure)
+- [🚀 Quick Start](#quick-start)
+  - [For Engineers & Agents](#for-engineers-agents)
+  - [For Reviewers](#for-reviewers)
+  - [For Maintainers](#for-maintainers)
+  - [For Adopters](#for-adopters)
+- [📚 Core Documents (00-core/)](#core-documents-00-core)
+  - [constitution.md](#constitutionmd)
+  - [AGENT_CHARTER.md](#agentchartermd)
+  - [RULES_OF_AI.md → AGENT_CHARTER.md](#rulesofaimd-agentchartermd)
+- [🔄 Workflow Documents (10-flow/)](#workflow-documents-10-flow)
+  - [governance-quickstart.md](#governance-quickstartmd)
+  - [agentic-coding-workflow.md](#agentic-coding-workflowmd)
+  - [cortex-aegis.md](#cortex-aegismd)
+- [✅ Quality Checklists (20-checklists/)](#quality-checklists-20-checklists)
+  - [checklistsgovernance-os.md](#checklistsgovernance-osmd)
+  - [Legacy checklist files](#legacy-checklist-files)
+- [⚙️ Infrastructure Files (90-infra/)](#infrastructure-files-90-infra)
+  - [governance-index.json](#governance-indexjson)
+  - [generated/](#generated)
+  - [governance-maintainers.md](#governance-maintainersmd)
+  - [GOVERNANCE_HASH_UPDATE.md → governance-maintainers.md](#governancehashupdatemd-governance-maintainersmd)
+  - [structure-guard.json](#structure-guardjson)
+  - [export-freeze.snapshot.json](#export-freezesnapshotjson)
+  - [dependency-cruiser-memory.cjs](#dependency-cruiser-memorycjs)
+- [🔄 Document Lifecycle](#document-lifecycle)
+  - [Precedence Order](#precedence-order)
+  - [Recent Consolidations (2025-11-22)](#recent-consolidations-2025-11-22)
+- [🔧 Common Tasks](#common-tasks)
+  - [Finding the Right Document](#finding-the-right-document)
+  - [Making Changes](#making-changes)
+- [📖 External References](#external-references)
+  - [Related Root Documents](#related-root-documents)
+  - [Related Documentation](#related-documentation)
+- [🆘 Getting Help](#getting-help)
+  - [Document Questions](#document-questions)
+  - [Emergency Governance Issues](#emergency-governance-issues)
+- [🏢 Project-Specific Governance](#project-specific-governance)
+  - [Project Governance Contacts](#project-governance-contacts)
+  - [Project-Specific Channels](#project-specific-channels)
+  - [Local Governance Additions](#local-governance-additions)
+  - [Project Document Registry](#project-document-registry)
+
+
 **Status**: Canonical governance structure  
 **Last Updated**: 2026-01-01  
 **Maintainers**: brAInwav Development Team

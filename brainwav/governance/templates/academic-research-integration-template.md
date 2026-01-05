@@ -1,5 +1,26 @@
 # Academic Research Integration Template
 
+## Table of Contents
+
+- [Required Workflow Steps](#required-workflow-steps)
+  - [Step 1: Pre-Research Setup](#step-1-pre-research-setup)
+  - [Step 2: Research Query Generation](#step-2-research-query-generation)
+  - [Step 3: Multi-Source Academic Research with License Validation](#step-3-multi-source-academic-research-with-license-validation)
+  - [Step 4: License Validation and Content Filtering](#step-4-license-validation-and-content-filtering)
+  - [Step 5: License-Compliant Research Synthesis and Plan Enhancement](#step-5-license-compliant-research-synthesis-and-plan-enhancement)
+  - [Step 6: License-Compliant, Research-Backed Plan Format](#step-6-license-compliant-research-backed-plan-format)
+  - [Step 7: Aegis Oversight with Research and License Integration](#step-7-aegis-oversight-with-research-and-license-integration)
+  - [Step 8: Evidence Storage and License Compliance](#step-8-evidence-storage-and-license-compliance)
+- [Required Evidence Package](#required-evidence-package)
+  - [Files Required for CI Compliance:](#files-required-for-ci-compliance)
+  - [Evidence Validation Criteria:](#evidence-validation-criteria)
+- [Quality Standards](#quality-standards)
+  - [Research Quality Metrics:](#research-quality-metrics)
+  - [Plan Enhancement Standards:](#plan-enhancement-standards)
+- [Integration Scripts](#integration-scripts)
+  - [Automated Research Integration:](#automated-research-integration)
+
+
 **Purpose**: Standard workflow for integrating academic research into planning and implementation cycles.
 
 **Status**: Mandatory when research/oversight packs are enabled and the active profile/change class requires academic research (see assurance-system.md).

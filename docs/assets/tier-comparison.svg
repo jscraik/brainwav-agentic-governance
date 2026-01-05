@@ -1,0 +1,201 @@
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&amp;display=swap');
+      .title { font-family: 'Poppins', sans-serif; font-size: 32px; font-weight: 700; fill: #141413; }
+      .subtitle { font-family: 'Poppins', sans-serif; font-size: 18px; font-weight: 400; fill: #b0aea5; }
+      .tier-title { font-family: 'Poppins', sans-serif; font-size: 24px; font-weight: 700; }
+      .tier-subtitle { font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 400; fill: #b0aea5; }
+      .feature-text { font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 400; fill: #141413; }
+      .price { font-family: 'Poppins', sans-serif; font-size: 28px; font-weight: 700; }
+      .price-sub { font-family: 'Poppins', sans-serif; font-size: 12px; font-weight: 400; fill: #b0aea5; }
+      .check { fill: #788c5d; }
+      .cross { fill: #b0aea5; }
+    </style>
+    <linearGradient id="starter-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#faf9f5;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e8e6dc;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="standard-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#e8e6dc;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#d97757;stop-opacity:0.1" />
+    </linearGradient>
+    <linearGradient id="enterprise-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#d97757;stop-opacity:0.2" />
+      <stop offset="100%" style="stop-color:#d97757;stop-opacity:0.4" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="600" fill="#faf9f5"/>
+
+  <!-- Title -->
+  <text x="400" y="50" text-anchor="middle" class="title">brAInwav Governance Tiers</text>
+  <text x="400" y="75" text-anchor="middle" class="subtitle">Progressive enhancement: Start simple, scale as you grow</text>
+
+  <!-- Starter Tier -->
+  <g transform="translate(50, 120)">
+    <rect width="210" height="420" rx="12" fill="url(#starter-gradient)" stroke="#e8e6dc" stroke-width="2"/>
+    <text x="105" y="40" text-anchor="middle" class="tier-title" fill="#141413">Starter</text>
+    <text x="105" y="65" text-anchor="middle" class="tier-subtitle">Solo devs &amp; small teams</text>
+    <text x="105" y="110" text-anchor="middle" class="price" fill="#788c5d">Free</text>
+    <text x="105" y="130" text-anchor="middle" class="price-sub">MIT License</text>
+
+    <!-- Features -->
+    <g transform="translate(20, 160)">
+      <circle cx="10" cy="10" r="10" class="check"/>
+      <path d="M5 10l8 8M13 10l8-8" stroke="white" stroke-width="2" fill="none"/>
+      <text x="30" y="15" class="feature-text">Step Budget (≤7 steps)</text>
+    </g>
+    <g transform="translate(20, 190)">
+      <circle cx="10" cy="10" r="10" class="check"/>
+      <path d="M5 10l8 8M13 10l8-8" stroke="white" stroke-width="2" fill="none"/>
+      <text x="30" y="15" class="feature-text">Evidence Triplet</text>
+    </g>
+    <g transform="translate(20, 220)">
+      <circle cx="10" cy="10" r="10" class="check"/>
+      <path d="M5 10l8 8M13 10l8-8" stroke="white" stroke-width="2" fill="none"/>
+      <text x="30" y="15" class="feature-text">Task Folders</text>
+    </g>
+    <g transform="translate(20, 250)">
+      <circle cx="10" cy="10" r="10" class="check"/>
+      <path d="M5 10l8 8M13 10l8-8" stroke="white" stroke-width="2" fill="none"/>
+      <text x="30" y="15" class="feature-text">Hash Validation</text>
+    </g>
+    <g transform="translate(20, 280)">
+      <circle cx="10" cy="10" r="10" class="check"/>
+      <path d="M5 10l8 8M13 10l8-8" stroke="white" stroke-width="2" fill="none"/>
+      <text x="30" y="15" class="feature-text">Basic CI Templates</text>
+    </g>
+    <g transform="translate(20, 310)">
+      <circle cx="10" cy="10" r="10" class="cross"/>
+      <path d="M6 6l8 8M14 6l-8 8" stroke="white" stroke-width="2" fill="none"/>
+      <text x="30" y="15" class="feature-text">Security Scanners</text>
+    </g>
+    <g transform="translate(20, 340)">
+      <circle cx="10" cy="10" r="10" class="cross"/>
+      <path d="M6 6l8 8M14 6l-8 8" stroke="white" stroke-width="2" fill="none"/>
+      <text x="30" y="15" class="feature-text">Compliance Mapping</text>
+    </g>
+    <g transform="translate(20, 370)">
+      <circle cx="10" cy="10" r="10" class="cross"/>
+      <path d="M6 6l8 8M14 6l-8 8" stroke="white" stroke-width="2" fill="none"/>
+      <text x="30" y="15" class="feature-text">Oversight Integration</text>
+    </g>
+  </g>
+
+  <!-- Standard Tier -->
+  <g transform="translate(295, 120)">
+    <rect width="210" height="420" rx="12" fill="url(#standard-gradient)" stroke="#d97757" stroke-width="2"/>
+    <text x="105" y="40" text-anchor="middle" class="tier-title" fill="#d97757">Standard</text>
+    <text x="105" y="65" text-anchor="middle" class="tier-subtitle">Startups &amp; growth teams</text>
+    <text x="105" y="110" text-anchor="middle" class="price" fill="#788c5d">Free</text>
+    <text x="105" y="130" text-anchor="middle" class="price-sub">MIT License</text>
+
+    <!-- Features -->
+    <g transform="translate(20, 160)">
+      <circle cx="10" cy="10" r="10" class="check"/>
+      <path d="M5 10l8 8M13 10l8-8" stroke="white" stroke-width="2" fill="none"/>
+      <text x="30" y="15" class="feature-text">Everything in Starter</text>
+    </g>
+    <g transform="translate(20, 190)">
+      <circle cx="10" cy="10" r="10" class="check"/>
+      <path d="M5 10l8 8M13 10l8-8" stroke="white" stroke-width="2" fill="none"/>
+      <text x="30" y="15" class="feature-text">semgrep (policy)</text>
+    </g>
+    <g transform="translate(20, 220)">
+      <circle cx="10" cy="10" r="10" class="check"/>
+      <path d="M5 10l8 8M13 10l8-8" stroke="white" stroke-width="2" fill="none"/>
+      <text x="30" y="15" class="feature-text">gitleaks (secrets)</text>
+    </g>
+    <g transform="translate(20, 250)">
+      <circle cx="10" cy="10" r="10" class="check"/>
+      <path d="M5 10l8 8M13 10l8-8" stroke="white" stroke-width="2" fill="none"/>
+      <text x="30" y="15" class="feature-text">osv-scanner (deps)</text>
+    </g>
+    <g transform="translate(20, 280)">
+      <circle cx="10" cy="10" r="10" class="check"/>
+      <path d="M5 10l8 8M13 10l8-8" stroke="white" stroke-width="2" fill="none"/>
+      <text x="30" y="15" class="feature-text">Full CI Integration</text>
+    </g>
+    <g transform="translate(20, 310)">
+      <circle cx="10" cy="10" r="10" class="cross"/>
+      <path d="M6 6l8 8M14 6l-8 8" stroke="white" stroke-width="2" fill="none"/>
+      <text x="30" y="15" class="feature-text">Container Scanning</text>
+    </g>
+    <g transform="translate(20, 340)">
+      <circle cx="10" cy="10" r="10" class="cross"/>
+      <path d="M6 6l8 8M14 6l-8 8" stroke="white" stroke-width="2" fill="none"/>
+      <text x="30" y="15" class="feature-text">SBOM &amp; Signing</text>
+    </g>
+    <g transform="translate(20, 370)">
+      <circle cx="10" cy="10" r="10" class="cross"/>
+      <path d="M6 6l8 8M14 6l-8 8" stroke="white" stroke-width="2" fill="none"/>
+      <text x="30" y="15" class="feature-text">Formal Compliance</text>
+    </g>
+  </g>
+
+  <!-- Enterprise Tier -->
+  <g transform="translate(540, 120)">
+    <rect width="210" height="420" rx="12" fill="url(#enterprise-gradient)" stroke="#d97757" stroke-width="3"/>
+    <text x="105" y="40" text-anchor="middle" class="tier-title" fill="#d97757">Enterprise</text>
+    <text x="105" y="65" text-anchor="middle" class="tier-subtitle">Regulated industries</text>
+    <text x="105" y="110" text-anchor="middle" class="price" fill="#d97757">$299+</text>
+    <text x="105" y="130" text-anchor="middle" class="price-sub">/month or Self-hosted</text>
+
+    <!-- Features -->
+    <g transform="translate(20, 160)">
+      <circle cx="10" cy="10" r="10" class="check"/>
+      <path d="M5 10l8 8M13 10l8-8" stroke="white" stroke-width="2" fill="none"/>
+      <text x="30" y="15" class="feature-text">Everything in Standard</text>
+    </g>
+    <g transform="translate(20, 190)">
+      <circle cx="10" cy="10" r="10" class="check"/>
+      <path d="M5 10l8 8M13 10l8-8" stroke="white" stroke-width="2" fill="none"/>
+      <text x="30" y="15" class="feature-text">trivy (containers)</text>
+    </g>
+    <g transform="translate(20, 220)">
+      <circle cx="10" cy="10" r="10" class="check"/>
+      <path d="M5 10l8 8M13 10l8-8" stroke="white" stroke-width="2" fill="none"/>
+      <text x="30" y="15" class="feature-text">cosign (signing)</text>
+    </g>
+    <g transform="translate(20, 250)">
+      <circle cx="10" cy="10" r="10" class="check"/>
+      <path d="M5 10l8 8M13 10l8-8" stroke="white" stroke-width="2" fill="none"/>
+      <text x="30" y="15" class="feature-text">cyclonedx (SBOM)</text>
+    </g>
+    <g transform="translate(20, 280)">
+      <circle cx="10" cy="10" r="10" class="check"/>
+      <path d="M5 10l8 8M13 10l8-8" stroke="white" stroke-width="2" fill="none"/>
+      <text x="30" y="15" class="feature-text">OWASP/NIST/ISO</text>
+    </g>
+    <g transform="translate(20, 310)">
+      <circle cx="10" cy="10" r="10" class="check"/>
+      <path d="M5 10l8 8M13 10l8-8" stroke="white" stroke-width="2" fill="none"/>
+      <text x="30" y="15" class="feature-text">Cortex-Aegis</text>
+    </g>
+    <g transform="translate(20, 340)">
+      <circle cx="10" cy="10" r="10" class="check"/>
+      <path d="M5 10l8 8M13 10l8-8" stroke="white" stroke-width="2" fill="none"/>
+      <text x="30" y="15" class="feature-text">SLA Support</text>
+    </g>
+    <g transform="translate(20, 370)">
+      <circle cx="10" cy="10" r="10" class="check"/>
+      <path d="M5 10l8 8M13 10l8-8" stroke="white" stroke-width="2" fill="none"/>
+      <text x="30" y="15" class="feature-text">Custom Packs</text>
+    </g>
+  </g>
+
+  <!-- Upgrade Arrows -->
+  <g transform="translate(265, 320)">
+    <path d="M0 0 L20 0 L20 -10 L35 10 L20 30 L20 20 L0 20 Z" fill="#d97757" opacity="0.6"/>
+  </g>
+  <g transform="translate(510, 320)">
+    <path d="M0 0 L20 0 L20 -10 L35 10 L20 30 L20 20 L0 20 Z" fill="#d97757" opacity="0.8"/>
+  </g>
+
+  <!-- Bottom CTA -->
+  <text x="400" y="570" text-anchor="middle" class="feature-text" fill="#b0aea5">
+    Upgrade anytime: pnpm exec brainwav-governance upgrade --profile &lt;tier&gt;
+  </text>
+</svg>

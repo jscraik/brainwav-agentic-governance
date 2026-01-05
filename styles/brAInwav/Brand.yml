@@ -1,0 +1,8 @@
+extends: substitution
+message: "Use 'brAInwav' for the brand name."
+level: warning
+swap:
+  Brainwav: brAInwav
+  BrainWav: brAInwav
+  BrainWAV: brAInwav
+  Brainwav's: brAInwav's

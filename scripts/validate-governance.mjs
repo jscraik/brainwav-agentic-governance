@@ -11,6 +11,13 @@ import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 import { formatPointerHint, resolveGovernancePaths } from './governance-paths.mjs';
 import {
+	CANONICAL_ROOTS,
+	CANONICAL_SEGMENTS,
+	ROOT_DOCS,
+	SCAN_EXTENSIONS,
+	SCAN_SKIP_DIRS
+} from './lib/constants.mjs';
+import {
 	buildAgentsStub,
 	buildCliInstructions,
 	buildGovernanceIndexStub,
@@ -33,51 +40,11 @@ function read(file) {
 	return fs.readFileSync(file, 'utf8');
 }
 
-const ROOT_DOCS = new Set(['README.md', 'CODESTYLE.md', 'SECURITY.md', 'AGENTS.md']);
 const POINTER_STUB_FILES = new Map([
 	['AGENTS.md', 'AGENTS'],
 	['CODESTYLE.md', 'CODESTYLE'],
 	['SECURITY.md', 'SECURITY'],
 	['docs/GOVERNANCE.md', 'GOVERNANCE']
-]);
-const CANONICAL_PATH_SEGMENTS = [
-	'00-core',
-	'10-flow',
-	'20-checklists',
-	'30-compliance',
-	'90-infra'
-];
-const CANONICAL_ROOTS = [
-	'brainwav/governance',
-	'brainwav/governance-pack'
-];
-const POINTER_SCAN_EXTENSIONS = new Set([
-	'.md',
-	'.markdown',
-	'.mdx',
-	'.json',
-	'.yaml',
-	'.yml',
-	'.txt'
-]);
-const POINTER_SCAN_SKIP_DIRS = new Set([
-	'.agentic-governance',
-	'.git',
-	'.idea',
-	'.next',
-	'.pnpm',
-	'.swiftpm',
-	'.turbo',
-	'.vscode',
-	'Pods',
-	'DerivedData',
-	'build',
-	'coverage',
-	'dist',
-	'node_modules',
-	'out',
-	'.build',
-	'.cache'
 ]);
 
 /**
@@ -156,9 +123,9 @@ function checkTasks(rootPath) {
 		if (!fs.existsSync(manifestPath)) return;
 		const manifest = JSON.parse(read(manifestPath));
 		const arcs = manifest.arcs || [];
-	if (arcs.length > 7) {
+		if (arcs.length > 7) {
 			failures.push(`task ${slug}: arcs length ${arcs.length} exceeds Step Budget <=7`);
-	}
+		}
 	});
 	return failures;
 }
@@ -341,7 +308,7 @@ function checkPointerStubs(pointer, targetRoot, indexPath) {
 		}
 	}
 
-	const bannedRoots = CANONICAL_PATH_SEGMENTS.map((segment) =>
+	const bannedRoots = CANONICAL_SEGMENTS.map((segment) =>
 		path.join(targetRoot, segment)
 	);
 	CANONICAL_ROOTS.forEach((segment) => {
@@ -383,7 +350,7 @@ function checkPointerStubs(pointer, targetRoot, indexPath) {
 		const entries = fs.readdirSync(dir, { withFileTypes: true });
 		entries.forEach((entry) => {
 			const entryPath = path.join(dir, entry.name);
-			if (POINTER_SCAN_SKIP_DIRS.has(entry.name)) return;
+			if (SCAN_SKIP_DIRS.has(entry.name)) return;
 			if (entryPath.startsWith(pointerDir)) return;
 			if (entryPath.startsWith(overlayDir)) return;
 			if (entryPath.startsWith(nodeModulesDir)) return;
@@ -391,7 +358,7 @@ function checkPointerStubs(pointer, targetRoot, indexPath) {
 				visit(entryPath);
 				return;
 			}
-			if (!POINTER_SCAN_EXTENSIONS.has(path.extname(entry.name))) return;
+			if (!SCAN_EXTENSIONS.has(path.extname(entry.name))) return;
 			const relPath = path.relative(targetRoot, entryPath).replace(/\\/g, '/');
 			if (POINTER_STUB_FILES.has(relPath)) return;
 			const matchesForbidden = forbiddenNamePatterns.some((pattern) => pattern.test(entry.name));

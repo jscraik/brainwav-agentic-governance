@@ -29,7 +29,7 @@
 - **Feature flags**: <yes/no, names>
 - **Rollback plan**: <summary>
 
-## 6) Evidence Hooks (Brainwav)
+## 6) Evidence Hooks (brAInwav)
 - **Evidence Triplet**: plan anchor, failing->passing test, reviewer proof.
 - **Risk register**: tasks/<slug>/plan/risk-register.md updated.
 - **Oversight**: Cortex-Aegis at G2/G5 when risk >= medium.

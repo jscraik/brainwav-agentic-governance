@@ -1,5 +1,10 @@
 # ArcTDD Eight-Step Runbook
 
+## Table of Contents
+
+- [Common Failure Modes → Fixes](#common-failure-modes-fixes)
+
+
 **Scope:** Applies to all agents completing Tier 1–3 arcs under the ArcTDD Charter.
 **Versioned with:** `brainwav/governance/` governance pack.
 

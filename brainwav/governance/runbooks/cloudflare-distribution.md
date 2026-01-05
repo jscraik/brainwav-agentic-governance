@@ -1,5 +1,15 @@
 # Cloudflare Worker Distribution Runbook
 
+## Table of Contents
+
+- [Artifacts to serve](#artifacts-to-serve)
+- [Build the distributable](#build-the-distributable)
+- [Worker layout (serving static pack)](#worker-layout-serving-static-pack)
+- [Consumer workflow (new or existing repo)](#consumer-workflow-new-or-existing-repo)
+- [Update cadence](#update-cadence)
+- [Notes](#notes)
+
+
 > Publish the governance pack once and serve it to all projects (new or existing) via a Cloudflare Worker endpoint.
 
 ## Artifacts to serve

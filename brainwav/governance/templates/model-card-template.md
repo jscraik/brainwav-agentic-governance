@@ -1,5 +1,47 @@
 # Model Card Template
 
+## Table of Contents
+
+- [Model Details](#model-details)
+  - [Basic Information](#basic-information)
+  - [Model Description](#model-description)
+  - [AgentFacts & Verification](#agentfacts-verification)
+  - [Training Information](#training-information)
+- [Intended Use](#intended-use)
+  - [Primary Use Cases](#primary-use-cases)
+  - [Users](#users)
+  - [Out-of-Scope Uses](#out-of-scope-uses)
+- [Factors & Limitations](#factors-limitations)
+  - [Known Limitations](#known-limitations)
+  - [Failure Modes](#failure-modes)
+  - [Language Support](#language-support)
+- [Evaluation Results](#evaluation-results)
+  - [Benchmark Performance](#benchmark-performance)
+  - [Internal Evaluation](#internal-evaluation)
+  - [Adversarial Testing](#adversarial-testing)
+- [Ethical Considerations](#ethical-considerations)
+  - [Bias Assessment](#bias-assessment)
+  - [Safety Measures](#safety-measures)
+  - [Privacy Considerations](#privacy-considerations)
+- [Environmental Impact](#environmental-impact)
+  - [Training Impact](#training-impact)
+  - [Inference Impact](#inference-impact)
+- [Technical Specifications](#technical-specifications)
+  - [Input/Output](#inputoutput)
+  - [API Details](#api-details)
+  - [Integration Configuration](#integration-configuration)
+- [Governance Integration](#governance-integration)
+  - [Compliance Status](#compliance-status)
+  - [Approval Chain](#approval-chain)
+  - [Version Pinning](#version-pinning)
+  - [Runtime Governance Hooks](#runtime-governance-hooks)
+- [Maintenance](#maintenance)
+  - [Update History](#update-history)
+  - [Deprecation Plan](#deprecation-plan)
+  - [Contact](#contact)
+- [References](#references)
+
+
 **Version**: 1.0.0  
 **Standard**: Aligned with Hugging Face Model Card, Google Model Card Toolkit  
 **Last Updated**: 2025-12-04

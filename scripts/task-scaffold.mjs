@@ -6,10 +6,11 @@
  * Usage:
  *   pnpm task:scaffold --slug my-task [--root tasks]
  */
-import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
+
+import { ensureDir, writeIfMissing } from './lib/fs-utils.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(__dirname, '..');
@@ -35,26 +36,6 @@ function parseArgs() {
 }
 
 /**
- * Ensure a directory exists.
- * @param {string} dir - Directory path.
- * @returns {void} No return value.
- */
-function ensureDir(dir) {
-	fs.mkdirSync(dir, { recursive: true });
-}
-
-/**
- * Write file contents if missing.
- * @param {string} filePath - File path.
- * @param {string} content - File contents.
- * @returns {void} No return value.
- */
-function writeIfMissing(filePath, content) {
-	if (fs.existsSync(filePath)) return;
-	fs.writeFileSync(filePath, `${content}\n`);
-}
-
-/**
  * CLI entry point for task scaffolding.
  * @returns {void} No return value.
  */
@@ -67,7 +48,7 @@ function main() {
 	const logDir = path.join(taskRoot, 'logs');
 	const testsLogDir = path.join(logDir, 'tests');
 	const securityLogDir = path.join(logDir, 'security');
-	const vibeCheckDir = path.join(logDir, 'vibe-check');
+	const aegisDir = path.join(logDir, 'aegis');
 	const academicResearchDir = path.join(logDir, 'academic-research');
 	const jsonDir = path.join(taskRoot, 'json');
 	const researchDir = path.join(taskRoot, 'research');
@@ -81,7 +62,7 @@ function main() {
 		logDir,
 		testsLogDir,
 		securityLogDir,
-		vibeCheckDir,
+		aegisDir,
 		academicResearchDir,
 		jsonDir,
 		researchDir,
@@ -143,7 +124,7 @@ function main() {
 	writeIfMissing(path.join(jsonDir, 'plan-bundle.v1.json'), '{}');
 	writeIfMissing(path.join(jsonDir, 'memory-ids.json'), '{}');
 
-	writeIfMissing(path.join(logDir, 'vibe-check/.gitkeep'), '');
+	writeIfMissing(path.join(logDir, 'aegis/.gitkeep'), '');
 	writeIfMissing(path.join(logDir, 'academic-research/.gitkeep'), '');
 
 	console.log(`[brAInwav] Scaffolded task at ${path.relative(repoRoot, taskRoot)}`);

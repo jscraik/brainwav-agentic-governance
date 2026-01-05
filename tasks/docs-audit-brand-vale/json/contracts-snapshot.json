@@ -1,0 +1,55 @@
+{
+  "scope": "documentation",
+  "docs_updated": [
+    "README.md",
+    "docs/packs.md",
+    "brainwav/governance/README.md",
+    "brainwav/governance/00-core/agent-verification-policy.md",
+    "brainwav/governance/00-core/llm-threat-controls.md",
+    "brainwav/governance/00-core/skills-system-governance.md",
+    "brainwav/governance/00-core/vision.md",
+    "brainwav/governance/10-flow/assurance-system.md",
+    "brainwav/governance/10-flow/runtime-governance-service.md",
+    "brainwav/governance/10-flow/session-continuity.md",
+    "brainwav/governance/90-infra/governance-maintainers.md",
+    "brainwav/governance/commands/memorize.md",
+    "brainwav/governance/commands/recall.md",
+    "brainwav/governance/docs/cortex-aegis.md",
+    "brainwav/governance/docs/spec-kit-compat.md",
+    "brainwav/governance/runbooks/arc-tdd.md",
+    "brainwav/governance/runbooks/cloudflare-distribution.md",
+    "brainwav/governance/templates/README.md",
+    "brainwav/governance/templates/academic-research-integration-template.md",
+    "brainwav/governance/templates/constitution-template.md",
+    "brainwav/governance/templates/feature-spec-template.md",
+    "brainwav/governance/templates/model-card-template.md",
+    "brainwav/governance/templates/research-template.md",
+    "brainwav/governance/templates/tdd-plan-template.md",
+    "brainwav/governance/templates/tsconfig/README.md",
+    "brainwav/governance-pack/README.md",
+    "brainwav/governance/templates/sdd/plan.md",
+    "brainwav/governance/templates/sdd/spec.md",
+    "specs/000-governance-classification/plan.md",
+    "specs/000-governance-classification/spec.md"
+  ],
+  "brand_assets_added": [
+    "brand/brand-mark.webp",
+    "brand/brand-mark@2x.webp",
+    "brand/brand-mark.png",
+    "brand/brand-mark@2x.png",
+    "brand/README.md"
+  ],
+  "brand_reference_docs": [
+    "docs/references/BRAND_GUIDELINES.md"
+  ],
+  "doc_reference_docs": [
+    "docs/references/CHECKLIST.md",
+    "docs/references/CODE_DOC_CHECKLIST.md",
+    "docs/references/DOC_COAUTHORING.md"
+  ],
+  "vale_config": [
+    ".vale.ini",
+    "styles/brAInwav/Brand.yml",
+    "styles/brAInwav/LinkText.yml"
+  ]
+}

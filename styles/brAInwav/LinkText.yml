@@ -1,0 +1,6 @@
+extends: substitution
+message: "Avoid vague link text like '%s'. Use descriptive link text instead."
+level: warning
+ignorecase: true
+swap:
+  click here: use descriptive link text

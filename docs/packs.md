@@ -4,6 +4,12 @@ This catalog is generated from `brainwav/governance-pack/packs` manifests.
 If `AGENTS.pack.md` or `CODESTYLE.pack.md` is absent, the corresponding section
 is synthesized from the manifest during install/upgrade.
 
+## Table of Contents
+
+- [Pack catalog](#pack-catalog)
+
+## Pack catalog
+
 | Pack ID | Description | Depends on | Runner | Pack docs | Validate checks | Doctor checks |
 | --- | --- | --- | --- | --- | --- | --- |
 | a11y | Accessibility gates and reporting requirements. | - | ubuntu-latest | - | - | - |
@@ -20,7 +26,7 @@ is synthesized from the manifest during install/upgrade.
 | react-next | React 19 + Next.js 16 (RSC/App Router) rules. | - | ubuntu-latest | - | - | - |
 | react-vite | React 19 + Vite UI conventions. | - | ubuntu-latest | - | - | - |
 | rust-cli | Rust CLI/TUI standards and toolchain policy. | - | ubuntu-latest | - | - | - |
-| sdd | Spec-driven development (spec -> plan -> tasks) with Brainwav evidence hooks. | - | ubuntu-latest | AGENTS.pack.md | spec-present, plan-present, tasks-present, traceability | - |
+| sdd | Spec-driven development (spec -> plan -> tasks) with brAInwav evidence hooks. | - | ubuntu-latest | AGENTS.pack.md | spec-present, plan-present, tasks-present, traceability | - |
 | security-appsec | AppSec controls and verification gates for runtime systems. | - | ubuntu-latest | - | - | - |
 | storybook | Storybook setup and a11y/interaction policy. | - | ubuntu-latest | - | - | - |
 | supply-chain | SBOM, provenance, signing, and supply-chain posture gates. | - | ubuntu-latest | - | - | - |

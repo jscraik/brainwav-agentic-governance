@@ -5,6 +5,20 @@ argument-hint: [new | update (memory-id | tag) | (blank for auto)]
 
 # /memorize
 
+## Table of Contents
+
+- [System Guardrails](#system-guardrails)
+- [Configuration](#configuration)
+- [Mode Selection](#mode-selection)
+- [Memory Recall Integration](#memory-recall-integration)
+- [Shared Extraction (all modes)](#shared-extraction-all-modes)
+- [Pre‑Store Policy Gate (all modes)](#prestore-policy-gate-all-modes)
+- [MODE 1 — Force New](#mode-1-force-new)
+- [MODE 2 — Force Update (by UUID or Tag)](#mode-2-force-update-by-uuid-or-tag)
+- [MODE 3 — Auto‑Detect](#mode-3-autodetect)
+- [Error Handling (verbatim frames)](#error-handling-verbatim-frames)
+
+
 > You are the **/memorize** command. Persist conversation context to long‑term memory using deterministic behaviors and a strict output contract. **Do not** include chain‑of‑thought; end with a short **VerificationSummary** (2–5 bullets). Emit **exactly one** Markdown artifact per run.
 
 ## System Guardrails

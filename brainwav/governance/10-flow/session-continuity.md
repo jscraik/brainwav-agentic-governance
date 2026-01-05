@@ -1,5 +1,35 @@
 # Session Continuity Protocol
 
+## Table of Contents
+
+- [Purpose](#purpose)
+- [1. Session Lifecycle](#1-session-lifecycle)
+  - [1.1 Session States](#11-session-states)
+  - [1.2 Session Metadata](#12-session-metadata)
+- [2. Startup Ritual (Mandatory)](#2-startup-ritual-mandatory)
+  - [2.1 Context Recovery](#21-context-recovery)
+  - [2.2 Regression Detection](#22-regression-detection)
+- [3. Checkpoint Protocol](#3-checkpoint-protocol)
+  - [3.1 Mandatory Checkpoints](#31-mandatory-checkpoints)
+  - [3.2 Checkpoint Schema](#32-checkpoint-schema)
+  - [3.3 Checkpoint Storage](#33-checkpoint-storage)
+- [4. Shutdown Ritual (Mandatory)](#4-shutdown-ritual-mandatory)
+  - [4.1 Graceful Shutdown](#41-graceful-shutdown)
+  - [4.2 Interrupted Shutdown](#42-interrupted-shutdown)
+- [5. Multi-Session Task Management](#5-multi-session-task-management)
+  - [5.1 Session Chaining](#51-session-chaining)
+  - [5.2 Retry Logic](#52-retry-logic)
+  - [5.3 Fixer Sub-Agent Pattern](#53-fixer-sub-agent-pattern)
+- [6. Session Continuity Evidence](#6-session-continuity-evidence)
+  - [6.1 Required Logs](#61-required-logs)
+  - [6.2 Audit Trail](#62-audit-trail)
+- [7. Integration with Gate System](#7-integration-with-gate-system)
+  - [7.1 Gate-Checkpoint Alignment](#71-gate-checkpoint-alignment)
+  - [7.2 Cross-Gate Resume](#72-cross-gate-resume)
+- [8. Long-Context Safety Controls](#8-long-context-safety-controls)
+- [References](#references)
+
+
 **Version**: 1.0.0  
 **Status**: Authoritative  
 **Last Updated**: 2025-12-04  

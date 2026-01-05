@@ -1,5 +1,20 @@
 # Agent Verification & KYA Policy
 
+## Table of Contents
+
+- [1. Purpose](#1-purpose)
+- [2. Scope](#2-scope)
+- [Enforcement by Profile](#enforcement-by-profile)
+- [Check IDs (stable)](#check-ids-stable)
+- [3. AgentFacts Metadata Requirements](#3-agentfacts-metadata-requirements)
+- [4. Validation Pipeline](#4-validation-pipeline)
+- [5. Trust & Revocation](#5-trust-revocation)
+- [6. Integration Requirements](#6-integration-requirements)
+- [7. Tooling](#7-tooling)
+- [8. Audit & Reporting](#8-audit-reporting)
+- [9. References](#9-references)
+
+
 **Version**: 1.0.0  
 **Status**: Authoritative  
 **Last Updated**: 2025-12-04  

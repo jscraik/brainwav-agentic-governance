@@ -1,5 +1,35 @@
 # Governance Maintainers Guide
 
+## Table of Contents
+
+- [Purpose](#purpose)
+- [Infrastructure Files Overview](#infrastructure-files-overview)
+  - [governance-index.json](#governance-indexjson)
+  - [index.json](#indexjson)
+  - [structure-guard.json](#structure-guardjson)
+  - [export-freeze.snapshot.json](#export-freezesnapshotjson)
+  - [dependency-cruiser-memory.cjs](#dependency-cruiser-memorycjs)
+- [Hash Update Procedure](#hash-update-procedure)
+  - [Quick Start](#quick-start)
+  - [What Gets Updated](#what-gets-updated)
+  - [Manual Hash Generation](#manual-hash-generation)
+  - [When to Run Hash Sync](#when-to-run-hash-sync)
+  - [CI Integration](#ci-integration)
+  - [Troubleshooting](#troubleshooting)
+- [Document Lifecycle](#document-lifecycle)
+  - [Adding New Governance Documents](#adding-new-governance-documents)
+  - [Consolidating Documents](#consolidating-documents)
+  - [Deprecating Documents](#deprecating-documents)
+- [Emergency Procedures](#emergency-procedures)
+  - [Governance System Failure](#governance-system-failure)
+  - [Hash Corruption](#hash-corruption)
+- [Related Resources](#related-resources)
+- [Release Signing (SSH)](#release-signing-ssh)
+  - [One-time setup](#one-time-setup)
+  - [Create a signed tag](#create-a-signed-tag)
+  - [Verification](#verification)
+
+
 **Status:** Authoritative maintainer documentation  
 **Audience:** Core maintainers updating governance infrastructure  
 **Last Updated:** 2026-01-03

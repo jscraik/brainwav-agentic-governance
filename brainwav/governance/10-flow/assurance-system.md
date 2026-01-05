@@ -1,5 +1,37 @@
 # Assurance System for Agentic Workflows
 
+## Table of Contents
+
+- [1. What is the Assurance System?](#1-what-is-the-assurance-system)
+- [2. Time Freshness Policy](#2-time-freshness-policy)
+  - [2.1 Context Anchoring](#21-context-anchoring)
+  - [2.2 Secret Handling](#22-secret-handling)
+  - [2.3 Freshness Validation](#23-freshness-validation)
+- [3. When to Call the Assurance System](#3-when-to-call-the-assurance-system)
+  - [3.1 Mandatory Invocation](#31-mandatory-invocation)
+  - [3.2 Optional but Recommended](#32-optional-but-recommended)
+- [4. Academic Research Integration (Profile-Driven)](#4-academic-research-integration-profile-driven)
+  - [4.1 Available Academic MCP Providers](#41-available-academic-mcp-providers)
+  - [4.2 Research Workflow](#42-research-workflow)
+  - [4.3 License Validation Requirements](#43-license-validation-requirements)
+- [5. Implementation Guidelines](#5-implementation-guidelines)
+  - [5.1 MCP Tool Invocation](#51-mcp-tool-invocation)
+  - [4.2 Response Handling](#42-response-handling)
+  - [4.3 Output Schema](#43-output-schema)
+- [5. Configuration & Integration](#5-configuration-integration)
+  - [5.1 Server Configuration](#51-server-configuration)
+  - [5.2 Task Integration Points](#52-task-integration-points)
+- [6. Legacy Compatibility (Vibe Check → Cortex-Aegis)](#6-legacy-compatibility-vibe-check-cortex-aegis)
+  - [6.1 Vibe Check Migration](#61-vibe-check-migration)
+  - [6.2 Connector Outage Protocol](#62-connector-outage-protocol)
+- [7. Related Documentation](#7-related-documentation)
+  - [3.2 Legacy server setup (pack-scoped)](#32-legacy-server-setup-pack-scoped)
+  - [3.3 JSON-RPC Fallback](#33-json-rpc-fallback)
+- [4. Evidence Package (merge gate)](#4-evidence-package-merge-gate)
+- [5. Error Handling and Escalation](#5-error-handling-and-escalation)
+- [6. Related Resources](#6-related-resources)
+
+
 > The autonomous quality and governance assurance system for AI-native software development.
 
 ---

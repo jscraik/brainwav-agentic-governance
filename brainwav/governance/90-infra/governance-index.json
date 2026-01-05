@@ -1,7 +1,7 @@
 {
   "description": "Governance document index with precedence order and SHA verification",
-  "version": "2025.12.2",
-  "updated": "2026-01-03",
+  "version": "2025.12.3",
+  "updated": "2026-01-05",
   "note": "Core governance docs only. Pack-scoped artifacts (Nx configs, dependency-cruiser configs, generated snapshots) must not be included in precedence/infra; they are installed only by packs or treated as generated outputs.",
   "precedence": [
     "00-core/constitution.md",
@@ -25,6 +25,23 @@
     "docs/spec-kit-compat.md",
     "SECURITY.md"
   ],
+  "skills": {
+    "required_skills": [
+      "feature-implementation",
+      "bug-fix",
+      "refactor",
+      "research"
+    ],
+    "validation_rules": {
+      "metadata_required": true,
+      "version_required": true,
+      "triggers_required": true,
+      "workflow_steps_required": true,
+      "success_criteria_required": true,
+      "max_workflow_steps": 7
+    },
+    "directory": ".claude/skills/"
+  },
   "infra": [
     "90-infra/compat.json",
     "90-infra/standards.versions.json",
@@ -67,11 +84,14 @@
     },
     "AGENT_CHARTER.md": {
       "path": "00-core/AGENT_CHARTER.md",
-      "sha256": "807e59093696d78180fbe975c6cf9679c0e4bc6a4f366cf408c428e159c0354b",
+      "sha256": "77d2a4d34c74dccecde111b781eb3cb5d61623c8e394a1a8170c1ed5ba83fa82",
       "required_tokens": [
         "Service Identity Logs",
         "MODELS:LIVE:OK",
-        "NORTH_STAR:RED_FIRST"
+        "NORTH_STAR:RED_FIRST",
+        "Four-Perspective Accountability Model",
+        "AI Participation Modes",
+        "accountability matrix"
       ],
       "class": "normative",
       "owner": "brAInwav Development Team",
@@ -79,7 +99,7 @@
     },
     "agent-verification-policy.md": {
       "path": "00-core/agent-verification-policy.md",
-      "sha256": "8fa6f20b2dc7eeec33d6ec135c6cbc709539367223fe623629128746897efcf2",
+      "sha256": "8f8edc5df9e90888c86381b5b30a42029141631fb16e391fe4ceb31264a5fe1d",
       "required_tokens": [
         "AgentFacts",
         "trust score",
@@ -114,7 +134,7 @@
     },
     "vision.md": {
       "path": "00-core/vision.md",
-      "sha256": "1ced4413fc3f5fa40e22aaea6fee3ed5f7c00785899d72e5e284d9bebf9287fe",
+      "sha256": "150d0555c30b94f1ef8f317ae208b07bc40d0d1cbf885e1801c08605a7bc00b5",
       "required_tokens": [
         "Vision",
         "North Star"
@@ -125,7 +145,7 @@
     },
     "llm-threat-controls.md": {
       "path": "00-core/llm-threat-controls.md",
-      "sha256": "0bc9cc843da4619b28309bda6bf4d8da3991cd4fbf5b5b99dc82001eeb9d608a",
+      "sha256": "dd0213f8e785a75d870b3a65373de6bbce841dfe2510e04858ad9477e7497eec",
       "required_tokens": [
         "LLM01",
         "LLM06",
@@ -137,7 +157,7 @@
     },
     "skills-system-governance.md": {
       "path": "00-core/skills-system-governance.md",
-      "sha256": "7d77a4c5b3bbc92b6e0f26e846ef638cbfeab259931956709badad60f48202f4",
+      "sha256": "3e95ee17da0440356af7d91ed1e5cfb996f8d5f966bbb19ab637e46f8a6c1e1c",
       "required_tokens": [
         "Skills governance",
         "Structured outputs"
@@ -159,7 +179,7 @@
     },
     "agentic-coding-workflow.md": {
       "path": "10-flow/agentic-coding-workflow.md",
-      "sha256": "38979f69099e193a1e893448d5cd6224b9c6d57578fd327273c9c886996a6c91",
+      "sha256": "3233584ddabb5aab6f3be3f5557c2d076ff127c9a9902c313d6b14c928995423",
       "required_tokens": [
         "G0 Initialize",
         "Evidence Triplet",
@@ -171,16 +191,20 @@
         "Just-in-Time Docs",
         "Session Retrospective",
         "Subagent Governance",
-        "Confession Protocol"
+        "Confession Protocol",
+        "Layered Test Execution Strategy",
+        "TESTS_LAYER_1:OK",
+        "TESTS_LAYER_2:OK",
+        "TESTS_LAYER_3:OK"
       ],
-      "note": "Consolidates Phase Machine (§4.4), Task Folder Layout (§3), Hard Rules (§6.1), Context Pruning (§6.2), Evidence Tokens (§6.3), Subagent Governance (§6.4), Confession Protocol (§6.5), MCP Integration Matrix (§4.1)",
+      "note": "Consolidates Phase Machine (§4.4), Task Folder Layout (§3), Hard Rules (§6.1), Context Pruning (§6.2), Evidence Tokens (§6.3), Subagent Governance (§6.4), Confession Protocol (§6.5), MCP Integration Matrix (§4.1), Layered Test Execution (§6.6)",
       "class": "normative",
       "owner": "brAInwav Development Team",
       "change_class": "docs"
     },
     "assurance-system.md": {
       "path": "10-flow/assurance-system.md",
-      "sha256": "2db934c5466763d20ac347bebefe4b47ad6febed8049a0f72ee421482905ad21",
+      "sha256": "5b2696c669a1ee2de947d5c3ebdc4127f75af0d2f4f82d63b7879d6759cbefbc",
       "required_tokens": [
         "Assurance System",
         "Time Freshness"
@@ -202,7 +226,7 @@
     },
     "governance-maintainers.md": {
       "path": "90-infra/governance-maintainers.md",
-      "sha256": "e41177492f276de518fbd0a7378135d077c277baedab2e39eaf982c6f8df25bc",
+      "sha256": "10475e966317e09f545701483a1125c22a01a106d16470c322f9693feedb90cc",
       "required_tokens": [
         "hash sync",
         "maintainer"
@@ -213,7 +237,7 @@
     },
     "governance-index.json": {
       "path": "90-infra/governance-index.json",
-      "sha256": "142be5b6cff4f3dcf9643fe9acd2323de91316cbb97888ab2c9a06c3ff8dfd84",
+      "sha256": "10187787921238ccdbc3c6fd29c279c9c8fb937c2ad1ae41ba902cff6ecd97e1",
       "hash_mode": "exclude_self",
       "required_tokens": [
         "precedence",
@@ -305,7 +329,7 @@
     },
     "README.md": {
       "path": "README.md",
-      "sha256": "4c5c4d2fcabd9d5dd580ddf9b0a5274fe0ef25c8fc3f79b94f48825ab50e1123",
+      "sha256": "1b6ab1afceeea84e4092e1cec19325e487d540dffc5a10a88a20a7e1de3d63ec",
       "required_tokens": [
         "governance",
         "structure"
@@ -328,7 +352,7 @@
     },
     "session-continuity.md": {
       "path": "10-flow/session-continuity.md",
-      "sha256": "20f357f776897f55fd571b3bc32c6d18f41a604f8d767fa1ef84e94715861729",
+      "sha256": "c0a41e51fda571b8bf40ab157dadef8458625754a78cafbacea1fddb621a4df7",
       "required_tokens": [
         "session",
         "checkpoint",
@@ -352,7 +376,7 @@
     },
     "runtime-governance-service.md": {
       "path": "10-flow/runtime-governance-service.md",
-      "sha256": "7bbafbc3c5e8d6651ab1ed7544fd8e609fc850d9c3422ef6c3321e630b86cdc2",
+      "sha256": "fb8ce6198dfff06e3bd0dc24ef4ca4ad974d3893d0c326fadb4626e350e38c7d",
       "required_tokens": [
         "sentinel",
         "trust factor",
@@ -434,7 +458,7 @@
     },
     "spec-kit-compat.md": {
       "path": "docs/spec-kit-compat.md",
-      "sha256": "d144c4841739a5e1b39d8be4556aa6021028361c91d9730ba29122a828116309",
+      "sha256": "feab6dfac74824374c33c0058cbc8aa4aa346202d220eafaf1a1027597ce64fc",
       "required_tokens": [
         "Spec-Kit Compatibility Contract",
         "Layout"

@@ -37,7 +37,7 @@
   **Mitigation**: Keep scope narrow and document verification command.
 - **Assumptions**: SDD pack remains required for delivery profile validation.
 
-## 6) Evidence Hooks (Brainwav)
+## 6) Evidence Hooks (brAInwav)
 - **Evidence Triplet**: plan anchor, failing->passing test, reviewer proof.
 - **Service identity logging**: required when new runtime surfaces or tools are touched.
 - **Time freshness**: required when using external sources.

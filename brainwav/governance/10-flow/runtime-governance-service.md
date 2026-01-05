@@ -1,5 +1,20 @@
 # Runtime Governance-as-a-Service Blueprint
 
+## Table of Contents
+
+- [1. Purpose](#1-purpose)
+- [2. Architecture Overview](#2-architecture-overview)
+- [3. Control Plane Functions (NIST AI RMF Mapping)](#3-control-plane-functions-nist-ai-rmf-mapping)
+- [4. Trust Factor & Risk Scoring](#4-trust-factor-risk-scoring)
+- [5. Policy Authoring & Distribution](#5-policy-authoring-distribution)
+- [6. Sentinel & Coordinator Pattern](#6-sentinel-coordinator-pattern)
+- [7. MCP & Memory Controls](#7-mcp-memory-controls)
+- [8. Runtime Evidence Requirements](#8-runtime-evidence-requirements)
+- [9. Integration with ArcTDD Gates](#9-integration-with-arctdd-gates)
+- [10. Operations](#10-operations)
+- [11. References](#11-references)
+
+
 **Version**: 1.0.0  
 **Status**: Authoritative  
 **Last Updated**: 2025-12-04  

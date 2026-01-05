@@ -4,12 +4,14 @@
  * @license Apache-2.0
  */
 import assert from 'node:assert/strict';
+import { execSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { execSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { runGovernanceUpgrade } from './upgrade-governance.mjs';
+
+import { writeFile } from './lib/fs-utils.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(__dirname, '..');
@@ -21,17 +23,6 @@ const repoRoot = path.resolve(__dirname, '..');
 function makeTempRepo() {
 	const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'brainwav-governance-'));
 	return tempRoot;
-}
-
-/**
- * Write a file ensuring parent directory exists.
- * @param {string} target - Target file path.
- * @param {string} content - File content.
- * @returns {void} No return value.
- */
-function writeFile(target, content) {
-	fs.mkdirSync(path.dirname(target), { recursive: true });
-	fs.writeFileSync(target, content);
 }
 
 /**

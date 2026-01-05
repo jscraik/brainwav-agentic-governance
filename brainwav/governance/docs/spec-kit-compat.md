@@ -1,10 +1,25 @@
 # Spec-Kit Compatibility Contract
 
-This document defines what “Spec-Kit compatible” means in Brainwav governance.
+## Table of Contents
+
+- [Layouts (supported)](#layouts-supported)
+- [Required files](#required-files)
+- [Enforcement policy (profile + change class)](#enforcement-policy-profile-change-class)
+- [Naming](#naming)
+- [Required sections in spec.md](#required-sections-in-specmd)
+- [Required cross-links](#required-cross-links)
+- [Lifecycle rules](#lifecycle-rules)
+- [Checks (stable IDs)](#checks-stable-ids)
+- [CLI usage](#cli-usage)
+- [Appendix: Verify](#appendix-verify)
+- [Appendix: Troubleshooting](#appendix-troubleshooting)
+
+
+This document defines what “Spec-Kit compatible” means in brAInwav governance.
 It is enforced by `brainwav-governance spec validate` and the `sdd` pack checks.
 Compatibility is pack-scoped; no additional toolchain is required beyond the pack.
 
-**Note:** Compatibility is file layout + required sections + stable check IDs. Brainwav does not require a separate Python toolchain to satisfy this contract.
+**Note:** Compatibility is file layout + required sections + stable check IDs. brAInwav does not require a separate Python toolchain to satisfy this contract.
 
 ## Layouts (supported)
 

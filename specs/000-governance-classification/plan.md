@@ -30,7 +30,7 @@
 - **Feature flags**: No.
 - **Rollback plan**: Remove specs/000-governance-classification if SDD pack is removed.
 
-## 6) Evidence Hooks (Brainwav)
+## 6) Evidence Hooks (brAInwav)
 - **Evidence Triplet**: plan anchor, failing->passing test, reviewer proof.
 - **Risk register**: tasks/<slug>/plan/risk-register.md updated.
 - **Oversight**: Cortex-Aegis at G2/G5 when risk >= medium.

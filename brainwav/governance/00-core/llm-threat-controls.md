@@ -1,5 +1,16 @@
 # LLM Threat Controls — OWASP Top 10 Alignment
 
+## Table of Contents
+
+- [How to use this document](#how-to-use-this-document)
+- [Enforcement by Profile](#enforcement-by-profile)
+- [Control Catalog (with Evidence Hooks)](#control-catalog-with-evidence-hooks)
+- [Extensions (beyond OWASP)](#extensions-beyond-owasp)
+- [Reporting Template](#reporting-template)
+- [Project-Specific Threat Controls](#project-specific-threat-controls)
+- [References](#references)
+
+
 **Status:** Authoritative reference for oversight mapping  
 **Scope:** Applies to all agents, reviewers, and CI guardrails when assessing LLM-centric risk.  
 **Standards Alignment:** OWASP Top 10 for LLM Apps (2025), NIST AI RMF 1.0, NIST Generative AI Profile, W3C Trace Context, CycloneDX 1.7, SLSA v1.2.

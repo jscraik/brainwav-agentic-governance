@@ -1,9 +1,9 @@
-# brAInwav ArcTDD Charter (Full Specification v2.0.0)
+# brAInwav ArcTDD Charter (Full Specification v2.1.0)
 
-**Status:** MANDATORY - Must be included in ALL agent instruction files  
-**Enforcement:** CI validates presence via SHA-256 checksum  
-**Last Updated:** 2025-10-29
-**Version:** 2.1.1
+**Status:** MANDATORY - Must be included in ALL agent instruction files
+**Enforcement:** CI validates presence via SHA-256 checksum
+**Last Updated:** 2026-01-05
+**Version:** 2.1.0
 
 ---
 
@@ -140,6 +140,81 @@ When documents overlap or conflict, follow this order (highest → lowest):
 3. **AGENTS.md** (root) — operational rules for agents; repo defaults
 4. **Package-level `AGENTS.md`** — may tighten rules; cannot weaken repo standards
 5. **Model guides** (`GPT-5-Codex.md`, `CLAUDE.md`, `QWEN.md`, `GEMINI.md`) — adapter specifics only
+
+### Four-Perspective Accountability Model [AGENTS-4PM-011]
+
+All agent-executed work MUST balance four perspectives to ensure shared responsibility and prevent single-blind spots:
+
+| Perspective | Role | Responsibilities | Veto Authority |
+|-------------|------|-------------------|----------------|
+| **Product** | Requirements & Value | • Define acceptance criteria<br>• Validate user value<br>• Prioritize outcomes | Can reject: Missing value, unclear requirements, wrong problem |
+| **Dev** | Implementation & Quality | • Write code that passes tests<br>• Follow coding standards<br>• Document decisions | Can reject: Violates coding rules, missing tests, unclear implementation |
+| **QA** | Testing & Verification | • Verify tests prove behavior<br>• Check evidence completeness<br>• Validate no regressions | Can reject: Insufficient test coverage, missing evidence, flaky tests |
+| **AI Agent** | Autonomous Execution | • Propose solutions within constraints<br>• Ask clarifying questions (≤3)<br>• Execute with proof | Can reject: Missing context, unclear constraints, insufficient information |
+
+#### Accountability Matrix
+
+Every task MUST document perspective sign-off:
+
+```yaml
+accountability:
+  product:
+    owner: "@product-owner"
+    status: "approved" | "clarification_needed" | "rejected"
+    notes: "Acceptance criteria clear, user value validated"
+  dev:
+    owner: "@dev-owner"
+    status: "approved" | "standards_violation" | "rejected"
+    notes: "Code follows AGENT_CHARTER.md rules"
+  qa:
+    owner: "@qa-owner"
+    status: "approved" | "insufficient_coverage" | "rejected"
+    notes: "Tests prove behavior, evidence triplet complete"
+  ai_agent:
+    mode: "delegated" | "collaborative" | "consultative"
+    status: "completed" | "blocked" | "escalated"
+    notes: "Executed within step budget, all preflight guards passed"
+```
+
+#### AI Participation Modes
+
+**Delegated Mode** (AI 80%+ autonomy):
+- **When**: Well-understood features, clear requirements, low-risk code paths
+- **AI Responsibility**: Propose implementation, write tests, execute changes
+- **Human Responsibility**: Review final output, approve merge
+- **Example**: "Add CRUD API for User entity with standard fields"
+
+**Collaborative Mode** (50/50 AI/Human):
+- **When**: New features, ambiguous requirements, medium-risk changes
+- **AI Responsibility**: Propose options, write code, run tests
+- **Human Responsibility**: Steer architecture, approve each step, final decision
+- **Example**: "Refactor payment processing to support new payment provider"
+
+**Consultative Mode** (AI analysis only):
+- **When**: High-risk changes, architecture decisions, incidents
+- **AI Responsibility**: Analyze options, provide trade-offs, answer questions
+- **Human Responsibility**: Make all decisions, approve every change
+- **Example**: "Migrate from monolith to microservices architecture"
+
+#### Mode Selection Criteria
+
+| Factor | Delegated | Collaborative | Consultative |
+|--------|-----------|---------------|--------------|
+| Complexity (1-10) | 1-3 | 4-7 | 8-10 |
+| Risk Level | Low | Medium | High |
+| Requirement Clarity | High | Medium | Low |
+| Domain Knowledge | Established | Some | New |
+| Example Tasks | CRUD, UI tweaks, simple refactors | New features, bug fixes, standard refactors | Architecture migrations, security fixes, incident response |
+
+#### Enforcement
+
+- `run-manifest.json` MUST include `accountability` section with perspective status
+- CI checks for all four perspectives before allowing merge
+- If any perspective rejects, task is blocked until concerns addressed
+- AI Agent MUST automatically select appropriate mode based on criteria above
+- Human CAN override AI mode selection with justification
+
+**Rationale**: Four-perspective model ensures no single blind spot, prevents AI from executing without clear accountability, and maintains shared responsibility across product/dev/QA/AI dimensions.
 
 ### Production Truthfulness Standards
 
@@ -398,6 +473,7 @@ Pointers MUST align with the manifest schema, artifact paths MUST remain accessi
 | Proof Required (#4) | CI Evidence Triplet check | Template scaffolds tests | Add retroactive proof |
 | Recap Rule (#5) | Token counter | Template auto-generates | Trim to ≤500 tokens |
 | Service Identity Logs (#6) | `rg -n '\"service\"'` | Logger wrapper | Patch log calls |
+| Four-Perspective Model (#11) | `validate-run-manifest.ts` (`accountability` section required) | Task scaffolding enforces perspective matrix | Add missing perspective sign-offs |
 | Arc Protocol (#7) | `validate-run-manifest.ts` (arc structure, milestone test, contract snapshot) | Task scaffolding enforces arc template | Add missing arc artifacts |
 | North-Star Test (#8) | `validate-run-manifest.ts` (`north_star.acceptance_test_path` required) | `pnpm changelog:new` generates acceptance test scaffold | Write missing north-star test |
 | Preflight Guards (#9) | CI checks for `logs/aegis/*.json` (legacy `logs/vibe-check/` allowed), model health logs, trace context, SBOM | PR template checklist requires preflight evidence | Execute missing guards and attach logs |
@@ -553,6 +629,7 @@ remediation_plan:
 | AGENTS-PRF-004 | Proof Required (Evidence Triplet)      | `evidence-check`     | `scripts/governance/validate-evidence-triplet.ts`|
 | AGENTS-RCP-005 | Recap ≤ 500 tokens                     | `recap-guard`        | Token counter in `evidence/recaps.log`           |
 | AGENTS-BRD-006 | Service Identity Logs                  | `identity-guard`     | `rg -n '\"service\"'` in logs                  |
+| AGENTS-4PM-011 | Four-Perspective Accountability        | `validate-manifest`  | `validate-run-manifest.ts` (accountability section) |
 | AGENTS-ARC-007 | Arc Protocol                           | `validate-manifest`  | `validate-run-manifest.ts` (arc structure)       |
 | AGENTS-NST-008 | North-Star Test                        | `validate-manifest`  | `validate-run-manifest.ts` (north_star path)     |
 | AGENTS-PRV-009 | Preflight Guards                       | `preflight-check`    | Check for logs in `logs/aegis/` (legacy `logs/vibe-check/` allowed), SBOM, etc. |
@@ -597,6 +674,13 @@ remediation_plan:
 ---
 
 ## 📜 **VERSION HISTORY**
+
+### v2.1.0 (2026-01-05)
+
+- **Added** Four-Perspective Accountability Model (#11) - Product, Dev, QA, AI Agent perspectives
+- Added AI Participation Modes (Delegated/Collaborative/Consultative) with selection criteria
+- Added accountability matrix requirement for run-manifest.json
+- Updated enforcement matrix with AGENTS-4PM-011 rule
 
 ### v2.0.0 (2025-10-20)
 

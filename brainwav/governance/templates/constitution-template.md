@@ -1,5 +1,42 @@
 # Project Constitution Template
 
+## Table of Contents
+
+- [Purpose](#purpose)
+- [I. Core Principles](#i-core-principles)
+  - [1. Gold Production Standards (NON-NEGOTIABLE)](#1-gold-production-standards-non-negotiable)
+  - [2. Test-Driven Development (MANDATORY)](#2-test-driven-development-mandatory)
+  - [3. Accessibility First (WCAG 2.2 AA)](#3-accessibility-first-wcag-22-aa)
+  - [4. Monorepo Integrity](#4-monorepo-integrity)
+  - [5. Agent-First Architecture](#5-agent-first-architecture)
+  - [6. Security by Default](#6-security-by-default)
+- [II. Development Workflow](#ii-development-workflow)
+  - [Phase 0: Task Initialization](#phase-0-task-initialization)
+  - [Phase 1: Research](#phase-1-research)
+  - [Phase 2: Planning](#phase-2-planning)
+  - [Phase 3: Implementation](#phase-3-implementation)
+  - [Phase 4: Verification](#phase-4-verification)
+  - [Phase 5: Archive](#phase-5-archive)
+  - [Phase 6: Reality Filter](#phase-6-reality-filter)
+- [III. Quality Standards](#iii-quality-standards)
+  - [Code Quality](#code-quality)
+  - [Testing Requirements](#testing-requirements)
+  - [Documentation](#documentation)
+  - [Observability](#observability)
+- [IV. Feature Development Standards](#iv-feature-development-standards)
+  - [Priority-Based User Stories](#priority-based-user-stories)
+  - [Acceptance Criteria](#acceptance-criteria)
+  - [Technical Debt Management](#technical-debt-management)
+- [V. Compliance & Governance](#v-compliance-governance)
+  - [Open Source Licensing](#open-source-licensing)
+  - [Privacy & Data Protection](#privacy-data-protection)
+  - [Identity/Branding Requirements](#identitybranding-requirements)
+- [VI. Amendment Process](#vi-amendment-process)
+  - [Proposing Changes](#proposing-changes)
+  - [Conflict Resolution](#conflict-resolution)
+- [VII. Enforcement](#vii-enforcement)
+
+
 **Version**: 1.0.0  
 **Ratified**: 2025-10-08  
 **Last Amended**: 2025-10-08  

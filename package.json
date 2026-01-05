@@ -68,13 +68,11 @@
     "ensure-tools": "scripts/ensure-tools.mjs",
     "cortex-governance-bootstrap": "scripts/cortex-governance-bootstrap.mjs",
     "readiness-check": "scripts/readiness-check.mjs",
-    "oversight-vibe-check": "scripts/oversight-vibe-check.mjs",
     "oversight-aegis-check": "scripts/oversight-aegis-check.mjs"
   },
   "scripts": {
     "ensure:tools": "node scripts/ensure-tools.mjs",
     "cortex:governance-bootstrap": "node scripts/cortex-governance-bootstrap.mjs",
-    "oversight:vibe-check": "node scripts/oversight-vibe-check.mjs",
     "oversight:aegis-check": "node scripts/oversight-aegis-check.mjs",
     "readiness:check": "node scripts/readiness-check.mjs",
     "governance:sync-hashes": "node scripts/sync-governance-hashes.mjs",

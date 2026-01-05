@@ -1107,6 +1107,272 @@ CONFESSION:BLOCKED strategic_deception_suspected=true
 
 #### Prompt Template for Confession
 
+---
+
+### 6.6 Layered Test Execution Strategy
+
+> **MCAF-inspired improvement:** Run tests in layers (change-specific → related → full) for fast feedback and efficient CI resource usage. This strategy prevents running the entire test suite for every small change while still ensuring comprehensive coverage.
+
+#### Core Principle
+
+**Test execution follows a three-layer pyramid:**
+
+1. **Layer 1: Change-Specific** (fastest, most targeted)
+   - Only tests directly touching changed files
+   - Typical runtime: 10-30 seconds
+   - Run on every commit
+
+2. **Layer 2: Related Module** (medium scope)
+   - Tests for modules affected by the change
+   - Typical runtime: 1-3 minutes
+   - Run before PR submission
+
+3. **Layer 3: Full Suite** (comprehensive)
+   - All tests across the entire codebase
+   - Typical runtime: 5-15+ minutes
+   - Run on high-risk changes and before merge
+
+#### Layer Selection Matrix
+
+| Change Type | Layer 1 Required | Layer 2 Required | Layer 3 Required |
+|-------------|------------------|------------------|------------------|
+| **Documentation** | ✅ Skip (no tests) | ❌ | ❌ |
+| **Bug fix** | ✅ Yes | ✅ Yes | ⚠️ Only if SEV ≥ 2 |
+| **Feature (low risk)** | ✅ Yes | ✅ Yes | ❌ |
+| **Feature (high risk)** | ✅ Yes | ✅ Yes | ✅ Yes |
+| **Refactor (local)** | ✅ Yes | ✅ Yes | ❌ |
+| **Refactor (cross-cutting)** | ✅ Yes | ✅ Yes | ✅ Yes |
+| **Security fix** | ✅ Yes | ✅ Yes | ✅ Yes |
+| **Performance change** | ✅ Yes | ✅ Yes | ✅ Yes (with benchmarks) |
+| **Infrastructure/CI** | ✅ Yes | ✅ Yes | ✅ Yes |
+
+#### Execution Commands
+
+**Layer 1: Change-Specific Tests**
+
+```bash
+# Tests for files modified in this change
+pnpm test --changed
+
+# Or using git to find affected tests
+git diff --name-only main | grep '\.spec\.' | xargs pnpm test
+
+# Evidence token: TESTS_LAYER_1:OK files=<n> duration_ms=<n>
+```
+
+**Layer 2: Related Module Tests**
+
+```bash
+# Tests for affected modules (e.g., auth, payment, user-service)
+pnpm test --related <module-name>
+
+# Or by path pattern
+pnpm test -- --testPathPattern="src/(auth|session)/"
+
+# Evidence token: TESTS_LAYER_2:OK modules=<list> duration_ms=<n>
+```
+
+**Layer 3: Full Test Suite**
+
+```bash
+# All tests (only for high-risk changes or before merge)
+pnpm test
+
+# Or with coverage
+pnpm test -- --coverage
+
+# Evidence token: TESTS_LAYER_3:OK total=<n> duration_ms=<n> coverage=<n>%
+```
+
+#### Gate-Specific Requirements
+
+| Gate | Required Layer | Rationale |
+|------|----------------|-----------|
+| **G4 – Implement** | Layer 1 only | Fast feedback during TDD micro-loops |
+| **G5 – Verify** | Layer 1 + Layer 2 | Validate change works in context |
+| **G6 – Review** | Layer 1 + Layer 2 | Reviewer sees change-specific + related results |
+| **G7 – Merge** | Layer 1 + Layer 2 + (Layer 3 if high-risk) | Comprehensive validation before merge |
+| **G8 – Ship** | Layer 1 + Layer 2 + Layer 3 | Full suite in production-like environment |
+
+#### Evidence Requirements
+
+All test executions MUST be logged in `evidence/tests.md`:
+
+```markdown
+## Test Execution (G5)
+
+### Layer 1: Change-Specific
+- **Command**: `pnpm test --changed`
+- **Files**: `src/auth/oauth.spec.ts`, `src/auth/token.spec.ts`
+- **Duration**: 18.2 seconds
+- **Result**: ✅ PASS (12/12 tests)
+- **Evidence**: `evidence/test-results/layer1-changed.log`
+- **Token**: `TESTS_LAYER_1:OK files=2 duration_ms=18200`
+
+### Layer 2: Related Module
+- **Command**: `pnpm test --related auth`
+- **Modules**: `auth`, `session`, `user-service`
+- **Duration**: 94.5 seconds
+- **Result**: ✅ PASS (87/87 tests)
+- **Evidence**: `evidence/test-results/layer2-related.log`
+- **Token**: `TESTS_LAYER_2:OK modules=3 duration_ms=94500`
+
+### Layer 3: Full Suite (Skipped)
+- **Reason**: Low-risk change (documentation update only)
+- **Waiver**: Approved by @reviewer (risk=low)
+- **Token**: `TESTS_LAYER_3:SKIPPED risk=low waiver=approved`
+```
+
+#### CI Integration
+
+**GitHub Actions Example:**
+
+```yaml
+name: Layered Tests
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  # Layer 1: Fast feedback on every commit
+  test-changed:
+    name: Layer 1 - Changed Files
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pnpm install
+      - run: pnpm test --changed
+        continue-on-error: false
+      - run: echo "TESTS_LAYER_1:OK" >> $GITHUB_STEP_SUMMARY
+
+  # Layer 2: Related modules (run after Layer 1 passes)
+  test-related:
+    name: Layer 2 - Related Modules
+    runs-on: ubuntu-latest
+    needs: test-changed
+    steps:
+      - uses: actions/checkout@v4
+      - run: pnpm install
+      - run: pnpm test --related ${{ steps.modules.outputs.list }}
+        continue-on-error: false
+      - run: echo "TESTS_LAYER_2:OK" >> $GITHUB_STEP_SUMMARY
+
+  # Layer 3: Full suite (only for high-risk changes)
+  test-full:
+    name: Layer 3 - Full Suite
+    runs-on: ubuntu-latest
+    needs: [test-changed, test-related]
+    if: contains(github.event.pull_request.labels.*.name, 'high-risk')
+    steps:
+      - uses: actions/checkout@v4
+      - run: pnpm install
+      - run: pnpm test -- --coverage
+        continue-on-error: false
+      - run: echo "TESTS_LAYER_3:OK" >> $GITHUB_STEP_SUMMARY
+```
+
+#### Failure Analysis and Recovery
+
+**When tests fail at any layer:**
+
+1. **Stop execution** – Do not proceed to next layer
+2. **Analyze failure** – Check if it's a test issue vs. code issue
+3. **Fix and re-run** – Only re-run the failed layer
+4. **Document findings** – Add to `evidence/tests.md`
+
+**Failure Modes:**
+
+| Failure Type | Action | Evidence Token |
+|--------------|--------|----------------|
+| **Flaky test** | Fix test, re-run same layer | `TESTS_FLAKY:OK test=<name>` |
+| **Real regression** | Fix code, re-run Layer 1 → Layer 2 | `TESTS_REGRESSION:FIXED` |
+| **Environmental** | Fix environment, re-run affected layer | `TESTS_ENV:FIXED` |
+| **Data issue** | Fix test data, re-run same layer | `TESTS_DATA:FIXED` |
+
+#### Coverage Delta Reporting
+
+Track coverage changes for modified files only:
+
+```bash
+# Generate coverage delta for changed files
+pnpm test --changed --coverage -- --coverageThreshold='{"global":{"lines":90,"branches":80}}'
+
+# Evidence token
+# COVERAGE_DELTA:OK changed_files=5 coverage_change=+2.3%
+```
+
+**Coverage Delta Evidence:**
+
+```markdown
+## Coverage Delta (Layer 1)
+
+| File | Lines Before | Lines After | Change |
+|------|--------------|-------------|--------|
+| `src/auth/oauth.ts` | 82% | 94% | +12% ✅ |
+| `src/auth/token.spec.ts` | 100% | 100% | 0% |
+| `src/session/manager.ts` | 76% | 89% | +13% ✅ |
+
+**Overall**: +8.3% coverage on changed files
+**Threshold**: ≥ 90% for changed files
+**Result**: ✅ PASS
+```
+
+#### Performance Benchmarks (When Applicable)
+
+For performance-sensitive changes, add benchmark comparisons:
+
+```bash
+# Run benchmarks for affected modules
+pnpm benchmark --related <module-name>
+
+# Evidence token
+# BENCHMARK_DELTA:OK module=<name> improvement=<n>% duration_ms=<n>
+```
+
+#### Anti-Patterns
+
+❌ **DON'T:**
+
+- Run full test suite for documentation changes
+- Skip Layer 2 for cross-cutting refactorings
+- Proceed to next layer when current layer fails
+- Ignore test failures without analysis
+- Run tests without evidence logging
+
+✅ **DO:**
+
+- Select layers based on change risk and scope
+- Stop at first failure and analyze
+- Re-run only the failed layer after fixes
+- Document all test executions with evidence tokens
+- Use coverage delta to measure improvement
+
+#### Integration with Skills System
+
+The layered test strategy is integrated into all skills:
+
+| Skill | Layer 1 | Layer 2 | Layer 3 |
+|-------|---------|---------|---------|
+| **feature-implementation** | New/modified tests | Related module | High-risk features only |
+| **bug-fix** | Regression tests | Affected module | SEV ≥ 2 incidents |
+| **refactor** | Changed tests | Related module | Cross-cutting refactorings |
+| **research** | Prototype tests (if any) | - | - |
+
+#### Evidence Tokens Summary
+
+| Token | Purpose |
+|-------|---------|
+| `TESTS_LAYER_1:OK files=<n> duration_ms=<n>` | Change-specific tests passed |
+| `TESTS_LAYER_2:OK modules=<list> duration_ms=<n>` | Related module tests passed |
+| `TESTS_LAYER_3:OK total=<n> duration_ms=<n> coverage=<n>%` | Full suite passed |
+| `TESTS_LAYER_3:SKIPPED risk=<low> waiver=<approved>` | Full suite waived (low risk) |
+| `COVERAGE_DELTA:OK changed_files=<n> coverage_change=<n>%` | Coverage delta meets threshold |
+| `TESTS_FLAKY:OK test=<name>` | Flaky test identified and fixed |
+| `TESTS_REGRESSION:FIXED` | Real regression fixed and re-tested |
+
+---
+
 ```text
 ## Confession Report Request
 

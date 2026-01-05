@@ -1,0 +1,22 @@
+{
+  "task": "docs-audit-brand-vale",
+  "tier": "refactor",
+  "change_class": "docs",
+  "steps": [
+    "Audit docs for TOC compliance and brand signature gaps.",
+    "Add missing TOCs and headings where needed.",
+    "Add brand assets and brand guideline references.",
+    "Add Vale config and minimal rules; lint key docs.",
+    "Update README and package manifest for new docs/config.",
+    "Sync governance hashes and re-run docs validation.",
+    "Capture evidence and review notes."
+  ],
+  "risks": [
+    "Large number of doc-only changes may increase review surface.",
+    "Vale rules are minimal and may require future expansion."
+  ],
+  "mitigations": [
+    "Keep changes structural (TOCs, references, lint config) without altering policy content.",
+    "Record Vale scope and results; revisit rules as needed."
+  ]
+}

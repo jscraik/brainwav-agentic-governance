@@ -1,5 +1,29 @@
 # Governance Templates
 
+## Table of Contents
+
+- [Templates](#templates)
+  - [1. constitution-template.md](#1-constitution-templatemd)
+  - [2. feature-spec-template.md](#2-feature-spec-templatemd)
+  - [3. research-template.md](#3-research-templatemd)
+  - [4. tdd-plan-template.md (v2.0 - TDD Coach Conformant)](#4-tdd-plan-templatemd-v20-tdd-coach-conformant)
+- [Usage](#usage)
+  - [Automated Template Usage](#automated-template-usage)
+  - [Documentation Validation Updates](#documentation-validation-updates)
+  - [Manual Template Customization](#manual-template-customization)
+  - [Template Variables](#template-variables)
+- [Governance Standards Enforcement](#governance-standards-enforcement)
+- [Template Maintenance](#template-maintenance)
+  - [Version Control](#version-control)
+  - [Updating Templates](#updating-templates)
+  - [Adding New Templates](#adding-new-templates)
+- [Related Documentation](#related-documentation)
+- [Examples](#examples)
+  - [Example Task Files Generated from Templates](#example-task-files-generated-from-templates)
+  - [Example Template Substitution](#example-template-substitution)
+- [Support](#support)
+
+
 This directory contains templates for the enhanced task management workflow combining governance standards with spec-kit-inspired best practices, including the `sdd` (spec -> plan -> tasks) templates and the `agent-loop` runner assets.
 
 ## Templates

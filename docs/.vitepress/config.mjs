@@ -1,5 +1,5 @@
 /**
- * VitePress Configuration for AMYGA Governance Documentation
+ * VitePress Configuration for AMYGA Governance Documentation.
  * @license Apache-2.0
  */
 
@@ -39,10 +39,7 @@ export default {
 
   // Markdown Configuration
   markdown: {
-    lineNumbers: true,
-    config: (md) => {
-      // Add any markdown-it plugins here
-    }
+    lineNumbers: true
   },
 
   // Build Configuration
@@ -59,7 +56,8 @@ export default {
 };
 
 /**
- * Navigation menu
+ * Navigation menu.
+ * @returns {Array<{text: string, link?: string, items?: Array}>} Navigation items.
  */
 function nav() {
   return [
@@ -76,7 +74,8 @@ function nav() {
 }
 
 /**
- * Sidebar menu
+ * Sidebar menu.
+ * @returns {object} Sidebar configuration by path.
  */
 function sidebar() {
   return {

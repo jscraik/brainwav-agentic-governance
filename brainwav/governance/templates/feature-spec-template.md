@@ -1,5 +1,43 @@
 # Feature Specification: [FEATURE_NAME]
 
+## Table of Contents
+
+- [Executive Summary](#executive-summary)
+- [User Scenarios & Testing *(mandatory)*](#user-scenarios-testing-mandatory)
+  - [User Story 1: [Brief Descriptive Title] (Priority: P1)](#user-story-1-brief-descriptive-title-priority-p1)
+  - [User Story 2: [Brief Descriptive Title] (Priority: P2)](#user-story-2-brief-descriptive-title-priority-p2)
+  - [User Story 3: [Brief Descriptive Title] (Priority: P3)](#user-story-3-brief-descriptive-title-priority-p3)
+  - [Edge Cases & Error Scenarios](#edge-cases-error-scenarios)
+- [Requirements *(mandatory)*](#requirements-mandatory)
+  - [Functional Requirements](#functional-requirements)
+  - [Non-Functional Requirements](#non-functional-requirements)
+- [Technical Constraints](#technical-constraints)
+  - [Must Use](#must-use)
+  - [Must Avoid](#must-avoid)
+  - [Integration Points](#integration-points)
+- [Architecture & Design](#architecture-design)
+  - [System Components](#system-components)
+  - [Data Model](#data-model)
+  - [API Contracts](#api-contracts)
+- [Dependencies](#dependencies)
+  - [Internal Dependencies (governance framework packages)](#internal-dependencies-governance-framework-packages)
+  - [External Dependencies (npm/pypi)](#external-dependencies-npmpypi)
+  - [Service Dependencies](#service-dependencies)
+- [Implementation Phases](#implementation-phases)
+  - [Phase 1: Foundation (P1 Stories)](#phase-1-foundation-p1-stories)
+  - [Phase 2: Enhancement (P2 Stories)](#phase-2-enhancement-p2-stories)
+  - [Phase 3: Polish (P3 Stories)](#phase-3-polish-p3-stories)
+- [Success Metrics](#success-metrics)
+  - [Quantitative](#quantitative)
+  - [Qualitative](#qualitative)
+- [Risks & Mitigations](#risks-mitigations)
+- [Open Questions](#open-questions)
+- [Compliance Checklist](#compliance-checklist)
+- [Appendix](#appendix)
+  - [References](#references)
+  - [Glossary](#glossary)
+
+
 **Task ID**: `[task-id-slug]`  
 **Feature Branch**: `feature/[task-id-slug]`  
 **Created**: [YYYY-MM-DD]  

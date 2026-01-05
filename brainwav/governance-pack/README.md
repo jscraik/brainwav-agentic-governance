@@ -1,5 +1,19 @@
 # Governance Pack Layering
 
+## Table of Contents
+
+- [Layout](#layout)
+- [Merge Order](#merge-order)
+- [Layering contract](#layering-contract)
+- [Adoption profiles (project-neutral)](#adoption-profiles-project-neutral)
+- [Pointer mode distribution](#pointer-mode-distribution)
+- [Operational action sets (Q1–Q5)](#operational-action-sets-q1q5)
+- [Variables](#variables)
+- [Enforcement Wiring (future)](#enforcement-wiring-future)
+- [Output targets](#output-targets)
+- [Render to dist](#render-to-dist)
+
+
 This pack supports a **core + packs + adapters** model so it can be reused across orgs and projects without forcing every repo to install every tool.
 
 ## Layout

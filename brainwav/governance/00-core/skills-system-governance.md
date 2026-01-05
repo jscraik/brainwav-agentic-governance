@@ -19,6 +19,40 @@ standards_alignment:
 
 # Skills System Governance
 
+## Table of Contents
+
+- [0. Operative Guardrails (binding)](#0-operative-guardrails-binding)
+  - [Canonical Governance Distribution](#canonical-governance-distribution)
+- [1. Purpose & Principles](#1-purpose-principles)
+  - [1.1 Purpose](#11-purpose)
+  - [1.2 Core Principles](#12-core-principles)
+- [2. Skill Lifecycle](#2-skill-lifecycle)
+  - [2.1 Creation](#21-creation)
+  - [2.2 Validation Standards](#22-validation-standards)
+  - [2.3 Storage](#23-storage)
+  - [2.4 Discovery](#24-discovery)
+  - [2.5 Application](#25-application)
+  - [2.6 Updates & Deprecation](#26-updates-deprecation)
+  - [2.7 Retirement](#27-retirement)
+- [3. Effectiveness Tracking](#3-effectiveness-tracking)
+  - [3.1 Metrics](#31-metrics)
+  - [3.2 Gates & Remediation](#32-gates-remediation)
+- [4. Persuasive Framing Standards](#4-persuasive-framing-standards)
+- [5. Integration with Cortex‑OS](#5-integration-with-cortexos)
+  - [5.1 Agentic Coding Workflow Touchpoints](#51-agentic-coding-workflow-touchpoints)
+  - [5.2 Testing Standards](#52-testing-standards)
+  - [5.3 Code Style](#53-code-style)
+- [6. CI/CD Integration](#6-cicd-integration)
+  - [6.1 Automated Validation](#61-automated-validation)
+  - [6.2 Pre-commit Hooks](#62-pre-commit-hooks)
+  - [6.3 PR Requirements](#63-pr-requirements)
+- [7. Governance Enforcement](#7-governance-enforcement)
+  - [7.1 Review Checklist (must pass before merge)](#71-review-checklist-must-pass-before-merge)
+  - [7.2 Metrics & Escalation](#72-metrics-escalation)
+- [8. Future Enhancements](#8-future-enhancements)
+- [9. References](#9-references)
+
+
 Skills governance is enforced across all skill lifecycle stages and CI gates.
 
 **Authority**: This document is part of the Governance Pack and is binding for all agent and human activities involving skills.
